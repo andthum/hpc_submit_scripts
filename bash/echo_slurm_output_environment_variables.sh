@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# MIT License
+# Copyright (c) 2021  All authors listed in the file AUTHORS.rst
+
+# Echo some Slurm output environment variables.  See
+# https://slurm.schedmd.com/sbatch.html#SECTION_OUTPUT-ENVIRONMENT-VARIABLES
+
+echo "SLURM_CLUSTER_NAME      = ${SLURM_CLUSTER_NAME}"
+echo "SLURM_SUBMIT_HOST       = ${SLURM_SUBMIT_HOST}"
+echo "SLURM_SUBMIT_DIR        = ${SLURM_SUBMIT_DIR}"
+echo "PWD (Working directory) = ${PWD}"
+echo "SLURM_EXPORT_ENV        = ${SLURM_EXPORT_ENV}"
+echo
+echo "SLURM_JOB_ID            = ${SLURM_JOB_ID}"
+echo "SLURM_JOB_NAME          = ${SLURM_JOB_NAME}"
+echo "SLURM_JOB_DEPENDENCY    = ${SLURM_JOB_DEPENDENCY}"
+echo "SLURM_RESTART_COUNT     = ${SLURM_RESTART_COUNT}"
+echo "SLURM_JOB_ACCOUNT       = ${SLURM_JOB_ACCOUNT}"
+echo "SLURM_JOB_PARTITION     = ${SLURM_JOB_PARTITION}"
+echo "SLURM_JOB_NUM_NODES     = ${SLURM_JOB_NUM_NODES}"
+echo "SLURM_JOB_NODELIST      = ${SLURM_JOB_NODELIST}"
+echo "SLURM_NODEID            = ${SLURM_NODEID}"
+echo "SLURMD_NODENAME         = ${SLURMD_NODENAME}"
+echo
+echo "SLURM_NTASKS            = ${SLURM_NTASKS}"
+echo "SLURM_NTASKS_PER_NODE   = ${SLURM_NTASKS_PER_NODE}"
+echo "SLURM_NTASKS_PER_SOCKET = ${SLURM_NTASKS_PER_SOCKET}"
+echo "SLURM_NTASKS_PER_CORE   = ${SLURM_NTASKS_PER_CORE}"
+echo "SLURM_NTASKS_PER_GPU    = ${SLURM_NTASKS_PER_GPU}"
+echo "SLURM_TASKS_PER_NODE    = ${SLURM_TASKS_PER_NODE}"
+echo
+echo "SLURM_CPUS_ON_NODE      = ${SLURM_CPUS_ON_NODE}"
+echo "SLURM_JOB_CPUS_PER_NODE = ${SLURM_JOB_CPUS_PER_NODE}"
+echo "SLURM_CPUS_PER_TASK     = ${SLURM_CPUS_PER_TASK}"
+echo "SLURM_CPUS_PER_GPU      = ${SLURM_CPUS_PER_GPU}"
+echo "SLURM_THREADS_PER_CORE  = ${SLURM_THREADS_PER_CORE}"
+echo
+echo "SLURM_GPUS              = ${SLURM_GPUS}"
+echo "SLURM_GPUS_ON_NODE      = ${SLURM_GPUS_ON_NODE}"
+echo "SLURM_GPUS_PER_NODE     = ${SLURM_GPUS_PER_NODE}"
+echo "SLURM_GPUS_PER_SOCKET   = ${SLURM_GPUS_PER_SOCKET}"
+echo "SLURM_GPUS_PER_TASK     = ${SLURM_GPUS_PER_TASK}"
+echo "SLURM_GPU_BIND          = ${SLURM_GPU_BIND}"
+echo
+echo "SLURM_MEM_PER_NODE (MB) = ${SLURM_MEM_PER_NODE}"
+echo "SLURM_MEM_PER_CPU (MB)  = ${SLURM_MEM_PER_CPU}"
+echo "SLURM_MEM_PER_GPU (MB)  = ${SLURM_MEM_PER_GPU}"
+echo
+echo "OMP_NUM_THREADS         = ${OMP_NUM_THREADS}"

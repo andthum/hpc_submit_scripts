@@ -1,0 +1,111 @@
+# Format and Lint code
+#
+# See:
+# https://docs.github.com/en/actions/guides/building-and-testing-python
+
+name: Tests
+
+on:
+  push:
+    branches: [main, develop]
+    tags: ["v[0-9].[0-9].[0-9]*"]
+  pull_request:
+    # Run this workflow on every PR, except for PRs that only changes
+    # files from the following ignore list.
+    paths-ignore:
+      - ./.github/*template**
+      - ./.github/*TEMPLATE**
+      - ./.readthedocs.yaml
+      - ./LICENSE.txt
+      - ./*.rst
+      - "**/README"
+      - "**/README.*"
+      - "**/*.md"
+      - "**/*.eps"
+      - "**/*.EPS"
+      - "**/*.jpg"
+      - "**/*.JPG"
+      - "**/*.jpeg"
+      - "**/*.JPEG"
+      - "**/*.pdf"
+      - "**/*.PDF"
+      - "**/*.png"
+      - "**/*.PNG"
+      - "**/*.svg"
+      - "**/*.SVG"
+      - "**/*.tif"
+      - "**/*.TIF"
+      - "**/*.tiff"
+      - "**/*.TIFF"
+  release:
+    types: [published, created, edited, prereleased, released]
+
+jobs:
+  lint:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.9]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Export ${HOME}/.local/bin to ${PATH}
+      # Executable Python binaries are ususally stored there
+      run: echo "${HOME}/.local/bin" >> ${GITHUB_PATH}
+    - name: Get pip cache dir
+      # pip's cache path depends on the operating system, see
+      # https://github.com/actions/cache/blob/main/examples.md#python---pip
+      # This requires pip >=20.1
+      id: pip-cache
+      run: |
+        python -m pip install --user --upgrade pip
+        echo "::set-output name=dir::$(pip cache dir)"
+    - name: Create/Restore cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ${{ steps.pip-cache.outputs.dir }}/**
+          ~/.cache/black/**
+          ./.cache/black/**
+        key: ${{ runner.os }}-${{ matrix.python-version }}-${{ github.job }}
+        restore-keys: |
+          ${{ runner.os }}-${{ matrix.python-version }}-
+          ${{ runner.os }}-
+    - name: Install/Upgrade setuptools and wheel
+      run: python -m pip install --user --upgrade setuptools wheel
+    - name: Install/Upgrade black
+      run: python -m pip install --user --upgrade black
+    - name: Check Python code formatting with black
+      run: python -m black ./ --check --line-length 79
+    - name: Install/Upgrade flake8 and flake8-docstrings extension
+      run: python -m pip install --user --upgrade flake8 flake8-docstrings
+    - name: Lint Python code and docstrings with flake8
+      # Use setup.cfg to configure flake8
+      run: python -m flake8 ./
+    - name: Install/upgrade shfmt
+      run: |
+        sudo apt update
+        sudo apt install snapd
+        sudo snap install shfmt
+    - name: Check Bash code formatting with shfmt
+      # TODO: The `-not -path "./analysis/*"` option of `find` should be
+      # removed once all bash files are revised to be compliant with
+      # shfmt.  But as long as this is not the case, only check those
+      # files that are already formatted.
+      run: for file in $(find . -not -path "./analysis/*" -name "*.sh"); do shfmt -ln bash -i 4 -ci -d ${file}; done
+    - name: Install/upgrade shellcheck
+      run: |
+        sudo apt update
+        sudo apt install shellcheck
+    - name: Lint Bash code with shellcheck
+      # Use shellcheckrc to configure shellcheck
+      # TODO: The `-not -path "./analysis/*"` option of `find` should be
+      # removed once all bash files are revised to be compliant with
+      # shellcheck.  But as long as this is not the case, only check
+      # those files that are already formatted.
+      run: for file in $(find . -not -path "./analysis/*" -name "*.sh"); do shellcheck --format=quiet ${file}; done
