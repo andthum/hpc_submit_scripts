@@ -31,6 +31,20 @@ When writing documentation, please
       spaces between the end of a sentence and the beginning of a new
       sentence.
 
+Convention for section levels in the documentation:
+
+    * Parts: Over- and underlined with ``#``
+    * Chapters: Over- and underlined with ``*``
+    * Sections: Underlined with ``=``
+    * Subsections: Underlined with ``-`` (also used in docstrings of
+        functions and other objects.  See the |NumPy_docstring_convention|)
+    * Subsubsections: Underlined with ``^``
+    * Paragraphs: Underlined with ``"``
+    * Subparagraphs: Underlined with ``'``
+
+Order of characters in nested `bullet lists`_: ``*``, ``-``, ``+``
+(afterwards start again with ``*``).
+
 
 Python
 ======
@@ -91,9 +105,8 @@ See also:
 
 If you want to contribute to this project, you should first create your
 own copy of the project (a.k.a. fork_).  This step must be done only
-once (unless you don't delete your fork after your contribution was
-merged).  If you already have your own fork of this project, go ahead to
-Step 1.
+once (as long as you don't delete your fork).  If you already have your
+own fork of this project, go ahead to Step 1.
 
 Go to the `project repository`_ on GitHub and press the Fork button in
 the top-right corner (note that you need a GitHub account for
@@ -150,18 +163,19 @@ Topic branch naming conventions:
     * Use short and descriptive, lowercase names.
     * Do *not* name your topic branch ``main``, ``master``,
       ``develop``, ``devel``, ``dev``, ``stable``, ``release``, ``rel``,
-      ``fix``, ``bug``, ``feature``, ``feat``, because these are
-      commonly used names for special branches or branch groups.
+      ``fix``, ``bug``, ``feature``, ``feat`` or ``doc``, because these
+      are commonly used names for special branches or branch groups.
     * Use slashes to sparate parts of your branch name.  However, be
       aware of the following limitation:  If a branch ``spam`` exists,
       no branch named ``spam/eggs`` can be created.  Likewise, if a
       branch ``spam/eggs`` exists, no branch names ``spam`` can be
       created (but ``spam/anything`` is possible).  The reason is that
       branches are implemented as paths.  You cannot create a directory
-      (file) ``spam`` if a file (directory) ``spam`` already exsits.
-      This means, once you started branch naming without a sub-token,
-      you cannot add a sub-token later.  This is the reason why you
-      should never name your branches simply ``fix`` or ``feat``.
+      ``spam`` if a file ``spam`` already exsits and the other way
+      round.  This means, once you started branch naming without a
+      sub-token, you cannot add a sub-token later.  This is the reason
+      why you should never name your branches simply ``fix``, ``feat``
+      or ``doc``.
     * Use hyphens to separate words.
     * Use group tokens at the beginning of your branch names:
 
@@ -185,8 +199,8 @@ Add your changes to the project.
 Don't forget to write unit tests for your code.
 
 
-4. Run formatters and linters
------------------------------
+4. Format and lint your code
+----------------------------
 
 Check your code quality by using code formatters and linters.
 
@@ -259,7 +273,9 @@ Commit message conventions:
       "[lmod/palma/README.rst]: Fix typo".  In this way other developers
       and maintainers immediatly know which file has been changed.  If
       you have a complex commit affecting several files, break it down
-      into smaller commits (also see above).
+      into smaller commits (also see above).  If the path is too long to
+      get the summary line within 50 characters, only name the file that
+      has been changed.
     * After that should come a blank line followed by a more thorough
       description.  It should be wrapped to 72 characters and explain
       what changes were made and especially why they were made.  Think
@@ -297,7 +313,7 @@ from step one, because this brings your fork's ``main`` branch out of
 sync with the upstream ``main`` branch.
 
 
-9. Push your commits to your fork on GitHub
+8. Push your commits to your fork on GitHub
 -------------------------------------------
 
 .. code-block:: bash
@@ -305,22 +321,23 @@ sync with the upstream ``main`` branch.
     git push origin topic/branch
 
 
-10. Create a pull request
+9. Create a pull request
 ------------------------
 
 In order to get your changes merged in the upstream repository, you have
 to `open a pull request from your fork`_.
 
 Go to the repository of your fork on GitHub.  GitHub should notice that
-you pushed a new topic branch and provide you a button in the top-right
-corner to open a pull request to the upstream repository.  Click that
-button and fill out the provided pull request template.  Give the pull
-request a meaningful title and description that explains what changes
-you have done and why you have done them.
+you pushed a new topic branch and provide you with a button in the
+top-right corner to open a pull request to the upstream repository.
+Click that button and fill out the provided pull request template.  Give
+the pull request a meaningful title and description that explains what
+changes you have done and why you have done them.
 
-Either your pull request is merged directly into the upstream repository
-or, more likely, you are asked to make some changes.  In this case,
-please go back to Step 3 and incorporate the requested changes.
+Either your pull request is merged directly into the upstream
+repository, your pull request is rejected or you are asked to make some
+changes.  In the latter case, please go back to Step 3 and incorporate
+the requested changes.
 
 
 Publish a new release
@@ -342,8 +359,8 @@ Additionally, pre-release, post-release and developmental release
 specifiers can be appended.
 
 
-1. Make a new tag
------------------
+1. Create a new tag
+-------------------
 
 .. code-block:: bash
 
@@ -351,8 +368,8 @@ specifiers can be appended.
     git tag -m "Release Description" vMAJOR.MINOR.PATCH
 
 
-2. Push
--------
+2. Push the tag to the upstream repository
+------------------------------------------
 
 .. important::
 
@@ -365,6 +382,7 @@ specifiers can be appended.
 
 
 .. _reStructuredText: https://docutils.sourceforge.io/rst.html
+.. _bullet lists: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#bullet-lists
 .. _PEP20: https://www.python.org/dev/peps/pep-0020/
 .. _PEP8: https://www.python.org/dev/peps/pep-0008/
 .. _Numpy docstring convention: https://numpydoc.readthedocs.io/en/latest/format.html
