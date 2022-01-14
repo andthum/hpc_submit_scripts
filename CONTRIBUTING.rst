@@ -36,8 +36,7 @@ Convention for section levels in the documentation:
     * Parts: Over- and underlined with ``#``
     * Chapters: Over- and underlined with ``*``
     * Sections: Underlined with ``=``
-    * Subsections: Underlined with ``-`` (also used in docstrings of
-        functions and other objects.  See the |NumPy_docstring_convention|)
+    * Subsections: Underlined with ``-``
     * Subsubsections: Underlined with ``^``
     * Paragraphs: Underlined with ``"``
     * Subparagraphs: Underlined with ``'``
