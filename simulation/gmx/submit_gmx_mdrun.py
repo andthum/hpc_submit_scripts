@@ -363,7 +363,7 @@ def extract_ints_from_str(str):
     return ints
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # noqa: C901
     parser = argparse.ArgumentParser(
         description=(
             "Start or continue a molecular dynamics (MD) simulation with"
