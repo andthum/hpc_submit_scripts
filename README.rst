@@ -31,13 +31,15 @@ adopt them to your HPC system.
 Project Tree / Contents
 =======================
 
-    * :file:`analysis`:  Slurm job scripts to analyse MD simulations.
-    * :file:`bash`:  Standalone Bash script that are used by some of the
+    * :bash:`analysis`:  Slurm job scripts to analyse MD simulations.
+    * :bash:`bash`:  Standalone Bash script that are used by some of the
+    * :bash:`analysis`:  Slurm job scripts to analyze MD simulations.
+    * :bash:`bash`:  Standalone Bash script that are used by some of the
       Slurm job scripts.
-    * :file:`img`:  Image files for use in the documentation.
-    * :file:`lmod`:  Bash scripts that can be sourced to load Lmod_
+    * :bash:`img`:  Image files for use in the documentation.
+    * :bash:`lmod`:  Bash scripts that can be sourced to load Lmod_
       modules into the current shell.
-    * :file:`simulation`:  Slurm job scripts to run MD simulations.
+    * :bash:`simulation`:  Slurm job scripts to run MD simulations.
 
 Refer to the README's of the different subdirectories for further
 details.
@@ -45,7 +47,7 @@ details.
 The Slurm job scripts can conveniently be submitted via Python_ scripts
 that reside in the same subdirectory as the job scripts.  Python scripts
 that submit Slurm job scripts to the Slurm Workload Manager start with
-:file:`submit_*.py`.  For help how to use these scripts type
+:bash:`submit_*.py`.  For help how to use these scripts type
 :bash:`python3 path/to/the/script.py -h` in a terminal or read the
 docstring inside the script.
 
@@ -84,8 +86,9 @@ HPC Terminology
 ===============
 
 For all newcomers to high-performance computing (especially our Bachelor
-Students):  You might want to take a look at :doc:`TERMINOLOGY.rst` to
-get an overview of the different terms used in the context of HPC.
+Students):  You might want to take a look at
+`TERMINOLOGY.rst <./TERMINOLOGY.rst>` to get an overview of the
+different terms used in the context of HPC.
 
 
 Support
@@ -98,8 +101,8 @@ on GitHub_.
 Contributing
 ============
 
-Please see :doc:`CONTRIBUTING.rst` for a list of rules to follow when
-contributing to this project.
+Please see `CONTRIBUTING.rst <./CONTRIBUTING.rst>` for a list of rules
+to follow when contributing to this project.
 
 
 License
@@ -119,9 +122,9 @@ the scripts or adopt them to your needs.
 .. _GitHub: https://github.com/
 .. _MIT License: https://mit-license.org/
 
-.. |Test_Status| image:: https://github.com/andthum/slurm-scripts/actions/workflows/tests.yml/badge.svg
+.. |Test_Status| image:: https://github.com/andthum/hpc_submit_scripts/actions/workflows/tests.yml/badge.svg
     :alt: Test Status
-    :target: https://github.com/andthum/mdtools/actions/workflows/tests.yml
+    :target: https://github.com/andthum/hpc_submit_scripts/actions/workflows/tests.yml
 .. |MIT_License| image:: https://img.shields.io/badge/License-MIT-blue.svg
     :alt: MIT License
     :target: https://mit-license.org/
