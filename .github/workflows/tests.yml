@@ -108,4 +108,4 @@ jobs:
       # removed once all bash files are revised to be compliant with
       # shellcheck.  But as long as this is not the case, only check
       # those files that are already formatted.
-      run: for file in $(find . -not -path "./analysis/*" -name "*.sh"); do shellcheck ${file}; done
+      run: for file in $(find . -not -path "./analysis/*" -name "*.sh"); do shellcheck --format=quiet ${file}; done
