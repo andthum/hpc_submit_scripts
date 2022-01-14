@@ -31,8 +31,6 @@ adopt them to your HPC system.
 Project Tree / Contents
 =======================
 
-    * :bash:`analysis`:  Slurm job scripts to analyse MD simulations.
-    * :bash:`bash`:  Standalone Bash script that are used by some of the
     * :bash:`analysis`:  Slurm job scripts to analyze MD simulations.
     * :bash:`bash`:  Standalone Bash script that are used by some of the
       Slurm job scripts.
