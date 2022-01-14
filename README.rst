@@ -9,6 +9,9 @@ HPC Submit Scripts
 |Test_Status| |MIT_License| |Made_with_Bash| |Made_with_Python|
 |Code_style_black|
 
+.. contents:: Contents
+    :depth: 2
+
 
 Introduction
 ============
