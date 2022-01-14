@@ -2,8 +2,9 @@
     :language: bash
 
 
+***********
 Terminology
-===========
+***********
 
 This page contains a non-exhaustive list of terms that are in my opinion
 important for getting a basic understanding of an HPC system and how to
@@ -12,9 +13,12 @@ use it.
 Users of the Palma2 HPC cluster of the University of Münster should also
 refer to the `Palma2 Wiki`_.
 
+.. contents:: Contents
+    :depth: 2
+
 
 High Performance Computing (HPC)
---------------------------------
+================================
 
     * **Local machine**:  Your local desktop or laptop computer.
     * **Cluster**:  A group of computers (so-called nodes), connected by
@@ -46,7 +50,7 @@ High Performance Computing (HPC)
 
 
 Slurm Workload Manager
-----------------------
+======================
 
 The Slurm_ (Simple Linux Utility for Resource Management) Workload
 Manager is a popular computer program that organizes and schedules the
@@ -76,7 +80,7 @@ used and each user gets a fair amount of computing time.
 
 
 Parallel Computing
-------------------
+==================
 
 Terms that you will probably come across when you perform computations
 on multiple CPUs:
