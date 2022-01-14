@@ -1,3 +1,7 @@
+.. role:: bash(code)
+    :language: bash
+
+
 ###################################
 Scripts to Load Environment Modules
 ###################################
@@ -20,7 +24,7 @@ specific modules to get access to specific software.  Note that the
 scripts must be sourced to make the modules available in the parent
 shell.
 
-    * :file:`palma`:  Bash scripts that load modules on the Palma2 HPC
+    * :bash:`palma`:  Bash scripts that load modules on the Palma2 HPC
       cluster of the University of Münster, ordered into subdirectories
       according to the different software stacks on Palma2 (refer to the
       `Palma2 Wiki`_ for more information about the module system on
