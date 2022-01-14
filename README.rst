@@ -87,7 +87,7 @@ HPC Terminology
 
 For all newcomers to high-performance computing (especially our Bachelor
 Students):  You might want to take a look at
-`TERMINOLOGY.rst <./TERMINOLOGY.rst>` to get an overview of the
+`TERMINOLOGY.rst <./TERMINOLOGY.rst>`_ to get an overview of the
 different terms used in the context of HPC.
 
 
@@ -101,7 +101,7 @@ on GitHub_.
 Contributing
 ============
 
-Please see `CONTRIBUTING.rst <./CONTRIBUTING.rst>` for a list of rules
+Please see `CONTRIBUTING.rst <./CONTRIBUTING.rst>`_ for a list of rules
 to follow when contributing to this project.
 
 
