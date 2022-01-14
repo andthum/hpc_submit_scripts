@@ -2,13 +2,17 @@
     :language: bash
 
 
+************
 Contributing
-============
+************
 
 Thank you for your willingness to contribute to this project!  Any help
 is highly appreciated!
 
 Please adhere to the following rules when contributing to this project.
+
+.. contents:: Contents
+    :depth: 2
 
 
 Documentation
@@ -80,7 +84,7 @@ stable, it can be merged back into the ``main`` branch.
 The following demonstrates an example workflow that can be used as
 reference.
 
-.. seealso::
+See also:
 
     * Git Book chapter `Contributing to a Project`_.
     * GitHub Docs `Contributing to projects`_.
@@ -164,8 +168,12 @@ Topic branch naming conventions:
       should never name your branches simply ``fix`` or ``feat``.
     * Use hyphens to separate words.
     * Use group tokens at the beginning of your branch names:
+
         - ``fix/<possible-sub-token>/<description>`` for a bug fixes.
         - ``feat/<possible-sub-token>/<description>`` for new features.
+        - ``doc/<possible-sub-token>/<description>`` for a
+          documentaion-only branches.
+
     * Use sub-tokens where applicable and meaningful.
     * If you adress a specif issue or feature request, reference this
       in your branch name, e.g. ``feat/issue/n15``, but
@@ -178,7 +186,7 @@ Topic branch naming conventions:
 
 Add your changes to the project.
 
-Don't forget to write unit tests for your code^^.
+Don't forget to write unit tests for your code.
 
 
 4. Run formatters and linters
@@ -387,4 +395,4 @@ specifiers can be appended.
 .. _reordering: https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History#_reordering_commits
 .. _squashing: https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History#_squashing
 .. _open a pull request from your fork: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork
-.. _`semantic versioning`: http://semver.org/
+.. _semantic versioning: http://semver.org/
