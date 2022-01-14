@@ -21,3 +21,6 @@ enable=quote-safe-variables
 #   Example: var=hello; echo $var
 #   Fix:     var=hello; echo ${var}
 enable=require-variable-braces
+
+# SC2230: which is non-standard. Use builtin command -v instead.
+disable=SC2230
