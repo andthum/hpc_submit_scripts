@@ -1,3 +1,7 @@
+.. role:: bash(code)
+    :language: bash
+
+
 ############
 Bash Scripts
 ############
