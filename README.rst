@@ -88,7 +88,7 @@ get an overview of the different terms used in the context of HPC.
 Support
 =======
 
-If you have any questions, feel free to use the `Questen&Answer`_ forum
+If you have any questions, feel free to use the `Question&Answer`_ forum
 on GitHub_.
 
 
@@ -112,7 +112,7 @@ the scripts or adopt them to your needs.
 .. _research group of Professor Heuer: https://www.uni-muenster.de/Chemie.pc/en/forschung/heuer/index.html
 .. _Lmod: https://lmod.readthedocs.io/en/latest/index.html
 .. _Python: https://www.python.org/
-.. _Questen&Answer: https://github.com/andthum/hpc_submit_scripts/discussions/categories/q-a
+.. _Question&Answer: https://github.com/andthum/hpc_submit_scripts/discussions/categories/q-a
 .. _GitHub: https://github.com/
 .. _MIT License: https://mit-license.org/
 
