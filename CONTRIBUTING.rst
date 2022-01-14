@@ -295,21 +295,24 @@ up your commits by reordering_ and/or squashing_.
 
 
 .. 8. Rebase onto the target branch
---------------------------------
-While you were working on your topic branch, the upstream repository
-might have changed.  To avoid merge conflicts and to have an (almost)
-linear history, pull the latest changes from the upstream repository and
-rebase_ your topic branch onto the target branch (which is usually the
-``main`` branch):
-.. code-block:: bash
-    git fetch upstream
-    git checkout main
-    git merge upstream/main
-    git checkout topic/branch
-    git rebase main
-This will probably lead to problems when starting a new contribution
-from step one, because this brings your fork's ``main`` branch out of
-sync with the upstream ``main`` branch.
+   --------------------------------
+   
+   While you were working on your topic branch, the upstream repository
+   might have changed.  To avoid merge conflicts and to have an (almost)
+   linear history, pull the latest changes from the upstream repository and
+   rebase_ your topic branch onto the target branch (which is usually the
+   ``main`` branch):
+   
+       .. code-block:: bash
+           git fetch upstream
+           git checkout main
+           git merge upstream/main
+           git checkout topic/branch
+           git rebase main
+
+   This will probably lead to problems when starting a new contribution
+   from step one, because this brings your fork's ``main`` branch out of
+   sync with the upstream ``main`` branch.
 
 
 8. Push your commits to your fork on GitHub
