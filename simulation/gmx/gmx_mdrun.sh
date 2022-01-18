@@ -18,17 +18,20 @@ echo "Start time = ${start_time}"
 # Argument Parsing                                                     #
 ########################################################################
 
-bash_dir=${1}      # Directory containing bash scripts used by this script
-system=${2}        # The name of the system to simulate
-settings=${3}      # The simulation settings to use
-structure=${4}     # Name of the file that contains the starting structure
-continue=${5}      # Continue a previous simulation? {0, 1, 2, 3}
-nsteps=${6}        # Maximum number of simulation steps
-backup=${7}        # Backup old files?  0 = No.  1 = Yes.
-gmx_lmod=${8}      # File containing the modules to load Gromacs
-gmx_exe=${9}       # Name of the Gromacs executable
-gmx_mpi_exe=${10}  # MPI version of the Gromacs executable (0 = no MPI)
-grompp_flags=${11} # Additional flags to parse to grompp
+bash_dir=${1}     # Directory containing bash scripts used by this script
+system=${2}       # The name of the system to simulate
+settings=${3}     # The simulation settings to use
+structure=${4}    # Name of the file that contains the starting structure
+continue=${5}     # Continue a previous simulation? {0, 1, 2, 3}
+nsteps=${6}       # Maximum number of simulation steps
+backup=${7}       # Backup old files?  0 = No.  1 = Yes.
+gmx_lmod=${8}     # File containing the modules to load Gromacs
+gmx_exe=${9}      # Name of the Gromacs executable
+gmx_mpi_exe=${10} # MPI version of the Gromacs executable (0 = no MPI)
+# See https://github.com/koalaman/shellcheck/wiki/SC2086#exceptions
+# and https://github.com/koalaman/shellcheck/wiki/SC2206
+# shellcheck disable=SC2206
+grompp_flags=(${11}) # Additional flags to parse to grompp
 
 echo -e "\n"
 echo "Parsed arguments:"
@@ -42,7 +45,9 @@ echo "backup       = ${backup}"
 echo "gmx_lmod     = ${gmx_lmod}"
 echo "gmx_exe      = ${gmx_exe}"
 echo "gmx_mpi_exe  = ${gmx_mpi_exe}"
-echo "grompp_flags = ${grompp_flags}"
+# Leave as two separated strings.  See
+# https://github.com/koalaman/shellcheck/wiki/SC2145
+echo "grompp_flags =" "${grompp_flags[@]}"
 
 if [[ ! -d ${bash_dir} ]]; then
     echo
@@ -393,7 +398,7 @@ if [[ ${continue} -eq 0 ]] || [[ ${continue} -eq 2 ]]; then
             -n "${system}.ndx" \
             -p "${system}.top" \
             -o "${settings}_${system}.tpr" \
-            "${grompp_flags}" ||
+            "${grompp_flags[@]}" ||
             exit
     else
         "${gmx_exe}" grompp \
@@ -401,7 +406,7 @@ if [[ ${continue} -eq 0 ]] || [[ ${continue} -eq 2 ]]; then
             -c "${structure}" \
             -p "${system}.top" \
             -o "${settings}_${system}.tpr" \
-            "${grompp_flags}" ||
+            "${grompp_flags[@]}" ||
             exit
     fi
     echo -e "\n"
