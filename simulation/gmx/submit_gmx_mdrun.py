@@ -26,7 +26,7 @@ Options
 --structure
     Name of the file that contains the starting structure in a `format
     that is readable by Gromacs`_.  The starting structure is ignored if
-    you continue a previous simulation.  Default: ``'0'``.
+    you continue a previous simulation.  Default: ``0``.
 --continue
     {0, 1, 2, 3}
 
@@ -67,7 +67,7 @@ Options
     Name of the MPI version of the Gromacs executable.  If provided, the
     simulation will be run using this executable instead of 'gmx mdrun'.
     Must be provided if the (maximum) number of nodes set with \--nodes
-    is greater than one.  Default: ``'0'``.
+    is greater than one.  Default: ``0``.
 --grompp-flags
     Additional options to parse to the Gromacs preprocessor 'gmx
     grompp', provided as one long, enquoted string, e.g. '--maxwarn 1'.
@@ -93,7 +93,8 @@ other possible sbatch options can be parsed to \--sbatch (see below).
     <https://slurm.schedmd.com/sbatch.html#OPT_mail-type>`_).  Default:
     ``'FAIL'``.
 --mail-user
-    User to receive email notification.
+    User to receive email notification.  Default: ``None``, which means
+    the submitting user.
 --nodes
     Number of nodes to allocate (`more details
     <https://slurm.schedmd.com/sbatch.html#OPT_nodes>`_).  Default:
@@ -107,7 +108,8 @@ other possible sbatch options can be parsed to \--sbatch (see below).
 --ntasks-per-node
     Number of tasks per node (`more details
     <https://slurm.schedmd.com/sbatch.html#OPT_ntasks-per-node>`_).
-    Default: ``1``.
+    This specifies the number of (thread-)MPI ranks to use to run
+    Gromacs.  Default: ``2``.
 --partition
     Request a specific partition for the resource allocation (`more
     details <https://slurm.schedmd.com/sbatch.html#OPT_partition>`_).
@@ -392,7 +394,11 @@ if __name__ == "__main__":  # noqa: C901
         type=str,
         required=False,
         default=0,
-        help=("Name of the file that contains the starting structure."),
+        help=(
+            "Name of the file that contains the starting structure.  Is"
+            " ignored if you continue a previous simulation.  Default:"
+            " %(default)s"
+        ),
     )
     parser.add_argument(
         "--continue",
@@ -410,7 +416,7 @@ if __name__ == "__main__":  # noqa: C901
             "  3 = Continue a previous simulation and resubmit it to the Slurm"
             " Workload Manager as many times as specified with --nresubmits or"
             " until it has reached the number of simulation steps given in the"
-            " .mdp file (whatever happens earlier).  Default: %(default)s."
+            " .mdp file (whatever happens earlier).  Default: %(default)s"
         ),
     )
     parser.add_argument(
@@ -421,6 +427,7 @@ if __name__ == "__main__":  # noqa: C901
         default=10,
         help=(
             "Number of job resubmissions.  Ignored if --continue is 0 or 1."
+            "  Default: %(default)s"
         ),
     )
     parser.add_argument(
@@ -475,7 +482,7 @@ if __name__ == "__main__":  # noqa: C901
             "Additional options to parse to the Gromacs preprocessor 'gmx"
             " grompp', provided as one long, enquoted string, e.g."
             " '--maxwarn 1'.  Is ignored if --continue is 1 or 3.  Default:"
-            " %(default)s."
+            " '%(default)s'"
         ),
     )
     # Sbatch specific options in alphabetical order.
@@ -554,8 +561,11 @@ if __name__ == "__main__":  # noqa: C901
         dest=sbatch_prefix + "ntasks-per-node",
         type=int,
         required=False,
-        default=1,
-        help=("Number of tasks per node.  Default: %(default)s"),
+        default=2,
+        help=(
+            "Number of tasks per node.  This specifies the number of"
+            " (thread-)MPI ranks to use to run Gromacs.  Default: %(default)s"
+        ),
     )
     parser.add_argument(
         "--partition",
