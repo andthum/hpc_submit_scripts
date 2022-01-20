@@ -108,7 +108,8 @@ other possible sbatch options can be parsed to \--sbatch (see below).
 --ntasks-per-node
     Number of tasks per node (`more details
     <https://slurm.schedmd.com/sbatch.html#OPT_ntasks-per-node>`_).
-    Default: ``1``.
+    This specifies the number of (thread-)MPI ranks to use to run
+    Gromacs.  Default: ``2``.
 --partition
     Request a specific partition for the resource allocation (`more
     details <https://slurm.schedmd.com/sbatch.html#OPT_partition>`_).
@@ -560,8 +561,11 @@ if __name__ == "__main__":  # noqa: C901
         dest=sbatch_prefix + "ntasks-per-node",
         type=int,
         required=False,
-        default=1,
-        help=("Number of tasks per node.  Default: %(default)s"),
+        default=2,
+        help=(
+            "Number of tasks per node.  This specifies the number of"
+            " (thread-)MPI ranks to use to run Gromacs.  Default: %(default)s"
+        ),
     )
     parser.add_argument(
         "--partition",
