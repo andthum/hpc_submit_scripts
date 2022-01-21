@@ -178,8 +178,9 @@ Topic branch naming conventions:
     * Use hyphens to separate words.
     * Use group tokens at the beginning of your branch names:
 
-        - ``fix/<possible-sub-token>/<description>`` for a bug fixes.
+        - ``fix/<possible-sub-token>/<description>`` for bug fixes.
         - ``feat/<possible-sub-token>/<description>`` for new features.
+        - ``ref/<possible-sub-token>/<description>`` for refactoring.
         - ``doc/<possible-sub-token>/<description>`` for a
           documentaion-only branches.
 
@@ -296,13 +297,13 @@ up your commits by reordering_ and/or squashing_.
 
 .. 8. Rebase onto the target branch
    --------------------------------
-   
+
    While you were working on your topic branch, the upstream repository
    might have changed.  To avoid merge conflicts and to have an (almost)
    linear history, pull the latest changes from the upstream repository and
    rebase_ your topic branch onto the target branch (which is usually the
    ``main`` branch):
-   
+
        .. code-block:: bash
            git fetch upstream
            git checkout main
