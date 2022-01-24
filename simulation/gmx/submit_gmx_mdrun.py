@@ -168,7 +168,10 @@ explicitly parsed to \--sbatch.
 --dependency
     Defer the start of this job until the specified dependencies have
     been satisfied (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_dependency>`_).
+    <https://slurm.schedmd.com/sbatch.html#OPT_dependency>`_).  If
+    multiple jobs are submitted with --nresubmits, the given dependency
+    only applies to the first job and the other jobs depend on each
+    other.
 --exclude
     Explicitly exclude certain nodes from the resources granted to the
     job (`more details
@@ -719,9 +722,17 @@ if __name__ == "__main__":  # noqa: C901
         else:
             sbatch += " --no-requeue"
     else:
-        if "--job-name" not in args.SB_OPTIONS and "-J" not in args.SB_OPTIONS:
+        if (
+            "--job-name" not in args.SB_OPTIONS
+            and "-J " not in args.SB_OPTIONS
+            and "-J=" not in args.SB_OPTIONS
+        ):
             sbatch += job_name
-        if "--output" not in args.SB_OPTIONS and "-o" not in args.SB_OPTIONS:
+        if (
+            "--output" not in args.SB_OPTIONS
+            and "-o " not in args.SB_OPTIONS
+            and "-o=" not in args.SB_OPTIONS
+        ):
             sbatch += output
         if not args.NON_EXCLUSIVE and "--exclusive" not in args.SB_OPTIONS:
             sbatch += " --exclusive"
@@ -763,7 +774,7 @@ if __name__ == "__main__":  # noqa: C901
                     option = option.split("=")[0]
                 if option in sbatch:
                     raise ValueError(
-                        "The option '{}' parsed to --sbtach is already set by"
+                        "The option '{}' parsed to --sbatch is already set by"
                         " the submission script".format(option)
                     )
         sbatch += " " + args.SB_OPTIONS
@@ -812,15 +823,31 @@ if __name__ == "__main__":  # noqa: C901
     print("Submitting job(s) to Slurm...")
     submit = sbatch + " " + batch_script + " " + pos_args
     job_id = subproc.check_output(shlex.split(submit))
-    job_id = extract_ints_from_str(job_id)[0]
     if args.CONTINUE in (2, 3):  # Resubmit
+        job_id = extract_ints_from_str(job_id)[0]
         # After the first job submission the following jobs always
         # continue a previous simulation. => The `continue` option of
         # all following jobs must be set to '3'.
         pos_args_list[4] = "3"  # Set `continue` to '3'
         pos_args = " ".join(pos_args_list)
+        # Remove possible user specified dependency options
+        search_str = ("--dependency", "-d ", "-d=")
+        for str in search_str:
+            if str in sbatch:
+                # Note: `shlex.split` does not split at '='
+                list = shlex.split(sbatch)
+                ix = [i for i in range(len(list)) if list[i].startswith(str)]
+                if len(ix) != 1:
+                    raise ValueError(
+                        "'{}' was given {} times to --sbatch.  You should give"
+                        " each option only once".format(str, len(ix))
+                    )
+                ix = ix[0]
+                popped = list.pop(ix)  # Remove flag
+                if "=" not in popped:
+                    list.pop(ix)  # Remove corresponding value
         for i in range(args.NRESUBMITS):
-            sbatch_dep = sbatch + " --dependency=afterok:{}".format(job_id)
+            sbatch_dep = sbatch + " --dependency afterok:{}".format(job_id)
             submit = sbatch_dep + " " + batch_script + " " + pos_args
             job_id = subproc.check_output(shlex.split(submit))
             job_id = extract_ints_from_str(job_id)[0]
