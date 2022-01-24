@@ -32,13 +32,12 @@ guess_num_threads=${11} # Guess number of thread-MPI ranks and OMP threads.  0 =
 # See https://github.com/koalaman/shellcheck/wiki/SC2086#exceptions
 # and https://github.com/koalaman/shellcheck/wiki/SC2206
 # shellcheck disable=SC2206
-grompp_flags=(${11}) # Additional flags to parse to grompp
+mdrun_flags=(${12}) # Additional flags to parse to mdrun
+# shellcheck disable=SC2206
+grompp_flags=(${13}) # Additional flags to parse to grompp
 
 echo -e "\n"
 echo "Parsed arguments:"
-# Leave as two separated strings.  See
-# https://github.com/koalaman/shellcheck/wiki/SC2145
-echo "grompp_flags =" "${grompp_flags[@]}"
 echo "bash_dir          = ${bash_dir}"
 echo "system            = ${system}"
 echo "settings          = ${settings}"
@@ -50,6 +49,8 @@ echo "gmx_lmod          = ${gmx_lmod}"
 echo "gmx_exe           = ${gmx_exe}"
 echo "gmx_mpi_exe       = ${gmx_mpi_exe}"
 echo "guess_num_threads = ${guess_num_threads}"
+echo "mdrun_flags       = ${mdrun_flags[*]}"
+echo "grompp_flags      = ${grompp_flags[*]}"
 
 if [[ ! -d ${bash_dir} ]]; then
     echo
@@ -411,6 +412,7 @@ fi
 # Prepare Gromacs mdrun command:
 mdrun="-s ${settings}_${system}.tpr \
     -deffnm ${settings}_out_${system} \
+    ${mdrun_flags[*]}"
 if [[ ${gmx_mpi_exe} == 0 ]]; then
     mdrun="--ntasks 1 ${gmx_exe} mdrun ${mdrun}"
 else
@@ -431,24 +433,15 @@ fi
 if [[ ${continue} -eq 0 ]] || [[ ${continue} -eq 2 ]]; then
     # Start a new simulation
     echo -e "\n"
+    grompp="-f ${settings}_${system}.mdp \
+        -c ${structure} \
+        -p ${system}.top \
+        -o ${settings}_${system}.tpr \
+        ${grompp_flags[*]}"
     if [[ -f ${system}.ndx ]]; then
-        "${gmx_exe}" grompp \
-            -f "${settings}_${system}.mdp" \
-            -c "${structure}" \
-            -n "${system}.ndx" \
-            -p "${system}.top" \
-            -o "${settings}_${system}.tpr" \
-            "${grompp_flags[@]}" ||
-            exit
-    else
-        "${gmx_exe}" grompp \
-            -f "${settings}_${system}.mdp" \
-            -c "${structure}" \
-            -p "${system}.top" \
-            -o "${settings}_${system}.tpr" \
-            "${grompp_flags[@]}" ||
-            exit
+        grompp="${grompp} -n ${system}.ndx"
     fi
+    "${gmx_exe} ${grompp}" || exit
     echo -e "\n"
     mv -v "mdout.mdp" "${settings}_${system}_mdout.mdp"
 elif [[ ${continue} -eq 1 ]] || [[ ${continue} -eq 3 ]]; then
