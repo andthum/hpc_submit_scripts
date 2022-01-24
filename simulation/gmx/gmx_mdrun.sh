@@ -18,36 +18,39 @@ echo "Start time = ${start_time}"
 # Argument Parsing                                                     #
 ########################################################################
 
-bash_dir=${1}     # Directory containing bash scripts used by this script
-system=${2}       # The name of the system to simulate
-settings=${3}     # The simulation settings to use
-structure=${4}    # Name of the file that contains the starting structure
-continue=${5}     # Continue a previous simulation? {0, 1, 2, 3}
-nsteps=${6}       # Maximum number of simulation steps
-backup=${7}       # Backup old files?  0 = No.  1 = Yes.
-gmx_lmod=${8}     # File containing the modules to load Gromacs
-gmx_exe=${9}      # Name of the Gromacs executable
-gmx_mpi_exe=${10} # MPI version of the Gromacs executable (0 = no MPI)
+bash_dir=${1}           # Directory containing bash scripts used by this script
+system=${2}             # The name of the system to simulate
+settings=${3}           # The simulation settings to use
+structure=${4}          # Name of the file that contains the starting structure
+continue=${5}           # Continue a previous simulation? {0, 1, 2, 3}
+nsteps=${6}             # Maximum number of simulation steps
+backup=${7}             # Backup old files?  0 = No.  1 = Yes.
+gmx_lmod=${8}           # File containing the modules to load Gromacs
+gmx_exe=${9}            # Name of the Gromacs executable
+gmx_mpi_exe=${10}       # MPI version of the Gromacs executable (0 = no MPI)
+guess_num_threads=${11} # Guess number of thread-MPI ranks and OMP threads.  0 = No, 1 = Yes
 # See https://github.com/koalaman/shellcheck/wiki/SC2086#exceptions
 # and https://github.com/koalaman/shellcheck/wiki/SC2206
 # shellcheck disable=SC2206
-grompp_flags=(${11}) # Additional flags to parse to grompp
+mdrun_flags=(${12}) # Additional flags to parse to mdrun
+# shellcheck disable=SC2206
+grompp_flags=(${13}) # Additional flags to parse to grompp
 
 echo -e "\n"
 echo "Parsed arguments:"
-echo "bash_dir     = ${bash_dir}"
-echo "system       = ${system}"
-echo "settings     = ${settings}"
-echo "structure    = ${structure}"
-echo "continue     = ${continue}"
-echo "nsteps       = ${nsteps}"
-echo "backup       = ${backup}"
-echo "gmx_lmod     = ${gmx_lmod}"
-echo "gmx_exe      = ${gmx_exe}"
-echo "gmx_mpi_exe  = ${gmx_mpi_exe}"
-# Leave as two separated strings.  See
-# https://github.com/koalaman/shellcheck/wiki/SC2145
-echo "grompp_flags =" "${grompp_flags[@]}"
+echo "bash_dir          = ${bash_dir}"
+echo "system            = ${system}"
+echo "settings          = ${settings}"
+echo "structure         = ${structure}"
+echo "continue          = ${continue}"
+echo "nsteps            = ${nsteps}"
+echo "backup            = ${backup}"
+echo "gmx_lmod          = ${gmx_lmod}"
+echo "gmx_exe           = ${gmx_exe}"
+echo "gmx_mpi_exe       = ${gmx_mpi_exe}"
+echo "guess_num_threads = ${guess_num_threads}"
+echo "mdrun_flags       = ${mdrun_flags[*]}"
+echo "grompp_flags      = ${grompp_flags[*]}"
 
 if [[ ! -d ${bash_dir} ]]; then
     echo
@@ -68,6 +71,12 @@ if [[ ${backup} -ne 0 ]] && [[ ${backup} -ne 1 ]]; then
     echo "ERROR: 'backup' must be either 0 or 1 but you gave '${backup}'"
     exit 1
 fi
+if [[ ${guess_num_threads} -ne 0 ]] && [[ ${guess_num_threads} -ne 1 ]]; then
+    echo
+    echo "ERROR: 'guess_num_threads' must be either 0 or 1 but you gave"
+    echo "'${guess_num_threads}'"
+    exit 1
+fi
 
 ########################################################################
 # Runtime Information                                                  #
@@ -75,24 +84,36 @@ fi
 
 echo -e "\n"
 bash "${bash_dir}/echo_slurm_output_environment_variables.sh"
-if [[ -z ${SLURM_NTASKS_PER_NODE} ]]; then
-    echo
-    echo "ERROR: SLURM_NTASKS_PER_NODE is not assigned.  Make sure"
-    echo "--ntasks-per-node is set by sbtach"
-    exit 1
-fi
-if [[ -z ${SLURM_CPUS_PER_TASK} ]]; then
-    if [[ -z ${SLURM_CPUS_ON_NODE} ]]; then
+if [[ ${guess_num_threads} -eq 1 ]]; then
+    echo "CPUS_PER_TASK           = Guessed by Gromacs"
+elif [[ ${guess_num_threads} -eq 0 ]]; then
+    # If not guess, set the number of thread-MPI to
+    # SLURM_NTASKS_PER_NODE and the number of OpenMP threads per
+    # (thread-)MPI to CPUS_PER_TASK
+    if [[ -z ${SLURM_NTASKS_PER_NODE} ]]; then
         echo
-        echo "Unexpected ERROR: SLURM_CPUS_PER_TASK and SLURM_CPUS_ON_NODE are"
-        echo "not assigned"
+        echo "ERROR: SLURM_NTASKS_PER_NODE is not assigned.  Make sure"
+        echo "--ntasks-per-node is set by sbtach"
         exit 1
     fi
-    CPUS_PER_TASK=$((SLURM_CPUS_ON_NODE / SLURM_NTASKS_PER_NODE))
+    if [[ -z ${SLURM_CPUS_PER_TASK} ]]; then
+        if [[ -z ${SLURM_CPUS_ON_NODE} ]]; then
+            echo
+            echo "Unexpected ERROR: SLURM_CPUS_PER_TASK and SLURM_CPUS_ON_NODE"
+            echo "are not assigned"
+            exit 1
+        fi
+        CPUS_PER_TASK=$((SLURM_CPUS_ON_NODE / SLURM_NTASKS_PER_NODE))
+    else
+        CPUS_PER_TASK=${SLURM_CPUS_PER_TASK}
+    fi
+    echo "CPUS_PER_TASK           = ${CPUS_PER_TASK}"
 else
-    CPUS_PER_TASK=${SLURM_CPUS_PER_TASK}
+    echo
+    echo "ERROR: 'guess_num_threads' must be either 0 or 1 but you gave"
+    echo "'${guess_num_threads}'"
+    exit 1
 fi
-echo "CPUS_PER_TASK           = ${CPUS_PER_TASK}"
 
 ########################################################################
 # Get Access to the Gromacs Executable                                 #
@@ -388,83 +409,61 @@ fi
 # Start the Gromacs Simulation                                         #
 ########################################################################
 
+# Prepare Gromacs mdrun command:
+mdrun="-s ${settings}_${system}.tpr \
+    -deffnm ${settings}_out_${system} \
+    ${mdrun_flags[*]}"
+if [[ ${gmx_mpi_exe} == 0 ]]; then
+    mdrun="--ntasks 1 ${gmx_exe} mdrun ${mdrun}"
+else
+    mdrun="${gmx_mpi_exe} ${mdrun}"
+fi
+if [[ ${guess_num_threads} -eq 0 ]]; then
+    if [[ ${gmx_mpi_exe} == 0 ]]; then
+        mdrun="${mdrun} -ntmpi ${SLURM_NTASKS_PER_NODE}"
+    fi
+    mdrun="${mdrun} -ntomp ${CPUS_PER_TASK}"
+elif [[ ${guess_num_threads} -ne 1 ]]; then
+    echo
+    echo "ERROR: 'guess_num_threads' must be either 0 or 1 but you gave"
+    echo "'${guess_num_threads}'"
+    exit 1
+fi
+
 if [[ ${continue} -eq 0 ]] || [[ ${continue} -eq 2 ]]; then
     # Start a new simulation
     echo -e "\n"
+    grompp="-f ${settings}_${system}.mdp \
+        -c ${structure} \
+        -p ${system}.top \
+        -o ${settings}_${system}.tpr \
+        ${grompp_flags[*]}"
     if [[ -f ${system}.ndx ]]; then
-        "${gmx_exe}" grompp \
-            -f "${settings}_${system}.mdp" \
-            -c "${structure}" \
-            -n "${system}.ndx" \
-            -p "${system}.top" \
-            -o "${settings}_${system}.tpr" \
-            "${grompp_flags[@]}" ||
-            exit
-    else
-        "${gmx_exe}" grompp \
-            -f "${settings}_${system}.mdp" \
-            -c "${structure}" \
-            -p "${system}.top" \
-            -o "${settings}_${system}.tpr" \
-            "${grompp_flags[@]}" ||
-            exit
+        grompp="${grompp} -n ${system}.ndx"
     fi
+    "${gmx_exe} ${grompp}" || exit
     echo -e "\n"
     mv -v "mdout.mdp" "${settings}_${system}_mdout.mdp"
-    echo -e "\n"
-    if [[ ${gmx_mpi_exe} == 0 ]]; then
-        srun \
-            --ntasks 1 \
-            "${gmx_exe}" mdrun \
-            -ntmpi "${SLURM_NTASKS_PER_NODE}" \
-            -ntomp "${CPUS_PER_TASK}" \
-            -cpt 60 \
-            -s "${settings}_${system}.tpr" \
-            -deffnm "${settings}_out_${system}"
-    else
-        srun \
-            "${gmx_mpi_exe}" \
-            -ntomp "${CPUS_PER_TASK}" \
-            -cpt 60 \
-            -s "${settings}_${system}.tpr" \
-            -deffnm "${settings}_out_${system}"
-    fi
-    gmx_energy
-    if [[ ${continue} -eq 0 ]]; then
-        finish
-    elif [[ ${continue} -eq 2 ]]; then
-        check_resubmission_and_quit
-    fi
 elif [[ ${continue} -eq 1 ]] || [[ ${continue} -eq 3 ]]; then
     # Continue a previous simulation
-    echo -e "\n"
-    if [[ ${gmx_mpi_exe} == 0 ]]; then
-        srun \
-            --ntasks 1 \
-            "${gmx_exe}" mdrun \
-            -ntmpi "${SLURM_NTASKS_PER_NODE}" \
-            -ntomp "${CPUS_PER_TASK}" \
-            -cpt 60 \
-            -s "${settings}_${system}.tpr" \
-            -deffnm "${settings}_out_${system}" \
-            -cpi "${settings}_out_${system}.cpt" \
-            -append
-    else
-        srun \
-            "${gmx_mpi_exe}" \
-            -ntomp "${CPUS_PER_TASK}" \
-            -cpt 60 \
-            -s "${settings}_${system}.tpr" \
-            -deffnm "${settings}_out_${system}" \
-            -cpi "${settings}_out_${system}.cpt" \
-            -append
-    fi
-    gmx_energy
-    if [[ ${continue} -eq 1 ]]; then
-        finish
-    elif [[ ${continue} -eq 3 ]]; then
-        check_resubmission_and_quit
-    fi
+    mdrun="${mdrun} \
+        -cpi ${settings}_out_${system}.cpt \
+        -append"
+else
+    echo
+    echo "ERROR: 'continue' must be either 0, 1, 2 or 3 but you gave"
+    echo "'${continue}'"
+    exit 1
+fi
+echo -e "\n"
+srun "${mdrun}"
+gmx_energy
+if [[ ${continue} -eq 0 ]] || [[ ${continue} -eq 1 ]]; then
+    # Single slurm job
+    finish
+elif [[ ${continue} -eq 2 ]] || [[ ${continue} -eq 3 ]]; then
+    # Multiple dependend slurm jobs
+    check_resubmission_and_quit
 else
     echo
     echo "ERROR: 'continue' must be either 0, 1, 2 or 3 but you gave"
