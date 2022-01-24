@@ -646,7 +646,7 @@ if __name__ == "__main__":  # noqa: C901
             "--nresubmits ({}) must not be negative".format(args.NRESUBMITS)
         )
     NODES = vars(args)[sbatch_prefix + "nodes"]
-    if len(NODES.split("-") not in (1, 2)):
+    if len(NODES.split("-")) not in (1, 2):
         raise ValueError("Invalid format of --nodes ({})".format(NODES))
     MIN_NODES = int(NODES.split("-")[0])
     MAX_NODES = int(NODES.split("-")[-1])
