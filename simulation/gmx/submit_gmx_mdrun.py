@@ -78,10 +78,14 @@ Options
     MPI ranks is always set to ${SLURM_NTASKS_PER_NODE} and guessing
     only affects the number of OpenMP threads.  If \--no-guess-threads
     is given, \--ntasks-per-node must be provided via \--sbatch.
+--mdrun-flags
+    Additional options to parse to the Gromacs 'mdrun' engine, provided
+    as one long, enquoted string, e.g. '-npme 12'.  Default:
+    ``'-cpt 60'``.
 --grompp-flags
-    Additional options to parse to the Gromacs preprocessor 'gmx
-    grompp', provided as one long, enquoted string, e.g. '--maxwarn 1'.
-    Is ignored if \--continue is 1 or 3.  Default: ``''``.
+    Additional options to parse to the Gromacs preprocessor 'grompp',
+    provided as one long, enquoted string, e.g. '-maxwarn 1'.  Is
+    ignored if \--continue is 1 or 3.  Default: ``''``.
 
 Sbatch_ specific options.  The following options are implented directly
 in this submit script, to be able to set specific default values.  All
@@ -226,15 +230,15 @@ When starting a new simulation, the following commands will be launched:
     ${gmx_exe} grompp \
         -f ${settings}_${system}.mdp \
         -c ${structure} \
-        -n ${system}.ndx \  # Optional, only used if present.
         -p ${system}.top \
-        -o ${settings}_${system}.tpr \  # Output file
-        ${grompp_flags}
+        -o ${settings}_${system}.tpr \
+        ${grompp_flags[@]} \
+        -n ${system}.ndx  # Only if present
 
     ${gmx_exe} mdrun \
-        -cpt 60 \
         -s ${settings}_${system}.tpr \
-        -deffnm ${settings}_out_${system}
+        -deffnm ${settings}_out_${system} \
+        ${mdrun_flags[@]} \
         -ntmpi ${SLURM_NTASKS_PER_NODE} \  # Only if not guessed
         -ntomp ${CPUS_PER_TASK}  # Only if not guessed
 
@@ -254,9 +258,9 @@ launched:
 .. code-block:: bash
 
     ${gmx_exe} mdrun \
-        -cpt 60 \
         -s ${settings}_${system}.tpr \
         -deffnm ${settings}_out_${system} \
+        ${mdrun_flags[@]} \
         -ntmpi ${SLURM_NTASKS_PER_NODE} \  # Only if not guessed
         -ntomp ${CPUS_PER_TASK} \  # Only if not guessed
         -cpi ${settings}_out_${system}.cpt \
@@ -264,7 +268,8 @@ launched:
 
 Therefore, the following files must exist in your working directory:
 
-    * :file:`SETTINGS_SYSTEM.mdp`
+    * :file:`SETTINGS_SYSTEM.mdp` (to check when the desired number of
+      simulation steps is reached)
     * :file:`SETTINGS_SYSTEM.tpr`
     * :file:`SETTINGS_out_SYSTEM.cpt`
 
@@ -505,6 +510,16 @@ if __name__ == "__main__":  # noqa: C901
             " via --sbatch."
         ),
     )
+    parser.add_argument(
+        "--mdrun-flags",
+        dest="GMX_MDRUN_FLAGS",
+        type=str,
+        required=False,
+        default="-cpt 60",
+        help=(
+            "Additional options to parse to Gromacs 'mdrun' engine, provided"
+            " as one long, enquoted string, e.g. '-npme 12'.  Default:"
+            " '%(default)s'"
         ),
     )
     parser.add_argument(
@@ -514,10 +529,9 @@ if __name__ == "__main__":  # noqa: C901
         required=False,
         default="",
         help=(
-            "Additional options to parse to the Gromacs preprocessor 'gmx"
-            " grompp', provided as one long, enquoted string, e.g."
-            " '--maxwarn 1'.  Is ignored if --continue is 1 or 3.  Default:"
-            " '%(default)s'"
+            "Additional options to parse to the Gromacs preprocessor 'grompp',"
+            " provided as one long, enquoted string, e.g. '-maxwarn 1'.  Is"
+            " ignored if --continue is 1 or 3.  Default: '%(default)s'"
         ),
     )
     # Sbatch specific options in alphabetical order.
@@ -674,7 +688,9 @@ if __name__ == "__main__":  # noqa: C901
         warnings.warn(
             "Detected .ndx file(s) in the working directory, but no .ndx file"
             " called '{0}.ndx'.  Only an .ndx file called '{0}.ndx' will be"
-            " parsed to the Gromacs preprocessor grompp".format(args.SYSTEM)
+            " parsed to the Gromacs preprocessor grompp"
+            " automatically".format(args.SYSTEM),
+            UserWarning,
         )
 
     print("Constructing the submit command...")
@@ -788,6 +804,7 @@ if __name__ == "__main__":  # noqa: C901
         args.GMX_EXE,
         str(args.GMX_MPI_EXE),
         str(int(not args.NO_GUESS_THREADS)),
+        "'{}'".format(args.GMX_MDRUN_FLAGS),
         "'{}'".format(args.GMX_GROMPP_FLAGS),
     ]
     pos_args = " ".join(pos_args_list)
