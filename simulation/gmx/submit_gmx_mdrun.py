@@ -67,7 +67,17 @@ Options
     Name of the MPI version of the Gromacs executable.  If provided, the
     simulation will be run using this executable instead of 'gmx mdrun'.
     Must be provided if the (maximum) number of nodes set with \--nodes
-    is greater than one.  Default: ``0``.
+    is greater than one.  If given, \--ntasks-per-node must be provided
+    via \--sbatch.  Default: ``0``.
+--no-guess-threads
+    Do not let Gromacs guess the number of thread-MPI ranks and OpenMP
+    threads, but set the number of thread-MPI ranks to
+    ${SLURM_NTASKS_PER_NODE} and the number of OpenMP threads to
+    ${CPUS_PER_TASK}, which is equivalent to ${SLURM_CPUS_PER_TASK} (see
+    Notes below).  Note, if \--gmx-mpi-exe is provided, the number of
+    MPI ranks is always set to ${SLURM_NTASKS_PER_NODE} and guessing
+    only affects the number of OpenMP threads.  If \--no-guess-threads
+    is given, \--ntasks-per-node must be provided via \--sbatch.
 --grompp-flags
     Additional options to parse to the Gromacs preprocessor 'gmx
     grompp', provided as one long, enquoted string, e.g. '--maxwarn 1'.
@@ -105,11 +115,6 @@ other possible sbatch options can be parsed to \--sbatch (see below).
     option (`more details
     <https://slurm.schedmd.com/sbatch.html#OPT_exclusive>`_), which is
     otherwise parsed to sbatch on default by this submission script.
---ntasks-per-node
-    Number of tasks per node (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_ntasks-per-node>`_).
-    This specifies the number of (thread-)MPI ranks to use to run
-    Gromacs.  Default: ``2``.
 --partition
     Request a specific partition for the resource allocation (`more
     details <https://slurm.schedmd.com/sbatch.html#OPT_partition>`_).
@@ -153,7 +158,9 @@ explicitly parsed to \--sbatch.
 --cpus-per-task
     Number of CPUs per task (`more details
     <https://slurm.schedmd.com/sbatch.html#OPT_cpus-per-task>`_).  This
-    option is ignored if \--non-exclusive is **not** set.
+    option is ignored if \--non-exclusive is **not** set.  The option
+    specifies the number of OpenMP threads to use to run Gromacs,
+    if \--no-guess-threads is given.
 --dependency
     Defer the start of this job until the specified dependencies have
     been satisfied (`more details
@@ -173,6 +180,13 @@ explicitly parsed to \--sbatch.
 --hold
     Submit the job in a held state (`more details
     <https://slurm.schedmd.com/sbatch.html#OPT_hold>`).
+--ntasks-per-node
+    Number of tasks per node (`more details
+    <https://slurm.schedmd.com/sbatch.html#OPT_ntasks-per-node>`_).
+    This specifies the number of thread-MPI ranks to use to run Gromacs,
+    if \--no-guess-threads is given.  If \--gmx-exe-mpi is given, this
+    specifies the number of MPI ranks.  Must be provided via \--sbatch
+    if \--no-guess-threads and/or \--gmx-exe-mpi is given.
 --mem
     Memory required per node. (`more details
     <https://slurm.schedmd.com/sbatch.html#OPT_mem>`_).
@@ -218,11 +232,11 @@ When starting a new simulation, the following commands will be launched:
         ${grompp_flags}
 
     ${gmx_exe} mdrun \
-        -ntmpi ${SLURM_NTASKS_PER_NODE} \
-        -ntomp ${CPUS_PER_TASK} \
         -cpt 60 \
         -s ${settings}_${system}.tpr \
         -deffnm ${settings}_out_${system}
+        -ntmpi ${SLURM_NTASKS_PER_NODE} \  # Only if not guessed
+        -ntomp ${CPUS_PER_TASK}  # Only if not guessed
 
 Therefore, the following files must exist in your working directory:
 
@@ -230,17 +244,21 @@ Therefore, the following files must exist in your working directory:
     * :file:`STRUCTURE`
     * :file:`SYSTEM.top`
 
+The bash variable ${CPUS_PER_TASK} is set to ${SLURM_CPUS_PER_TASK} or
+if ${SLURM_CPUS_PER_TASK} is not specified, it is set to
+:bash:`$((SLURM_CPUS_ON_NODE / SLURM_NTASKS_PER_NODE))`.
+
 When continuing a previous simulation, the following commands will be
 launched:
 
 .. code-block:: bash
 
     ${gmx_exe} mdrun \
-        -ntmpi ${SLURM_NTASKS_PER_NODE} \
-        -ntomp ${CPUS_PER_TASK} \
         -cpt 60 \
         -s ${settings}_${system}.tpr \
         -deffnm ${settings}_out_${system} \
+        -ntmpi ${SLURM_NTASKS_PER_NODE} \  # Only if not guessed
+        -ntomp ${CPUS_PER_TASK} \  # Only if not guessed
         -cpi ${settings}_out_${system}.cpt \
         -append
 
@@ -469,7 +487,24 @@ if __name__ == "__main__":  # noqa: C901
             "Name of the MPI version of the Gromacs executable.  If provided,"
             " the simulation will be run using this executable instead of"
             " 'gmx mdrun'.  Must be provided if the (maximum) number of nodes"
-            " set with --nodes is greater than one.  Default: %(default)s"
+            " set with --nodes is greater than one.  If given,"
+            " --ntasks-per-node must be provided via --sbatch.  Default:"
+            " %(default)s"
+        ),
+    )
+    parser.add_argument(
+        "--no-guess-threads",
+        dest="NO_GUESS_THREADS",
+        required=False,
+        default=False,
+        action="store_true",
+        help=(
+            "Do not let Gromacs guess the number of thread-MPI ranks and"
+            " OpenMP threads, but set them to --ntasks-per-node and"
+            " --cpus-per-task.  If given, --ntasks-per-node must be provided"
+            " via --sbatch."
+        ),
+    )
         ),
     )
     parser.add_argument(
@@ -557,17 +592,6 @@ if __name__ == "__main__":  # noqa: C901
         ),
     )
     parser.add_argument(
-        "--ntasks-per-node",
-        dest=sbatch_prefix + "ntasks-per-node",
-        type=int,
-        required=False,
-        default=2,
-        help=(
-            "Number of tasks per node.  This specifies the number of"
-            " (thread-)MPI ranks to use to run Gromacs.  Default: %(default)s"
-        ),
-    )
-    parser.add_argument(
         "--partition",
         dest=sbatch_prefix + "partition",
         type=str,
@@ -605,20 +629,16 @@ if __name__ == "__main__":  # noqa: C901
             "--nresubmits ({}) must not be negative".format(args.NRESUBMITS)
         )
     NODES = vars(args)[sbatch_prefix + "nodes"]
+    if len(NODES.split("-") not in (1, 2)):
+        raise ValueError("Invalid format of --nodes ({})".format(NODES))
     MIN_NODES = int(NODES.split("-")[0])
     MAX_NODES = int(NODES.split("-")[-1])
-    if MIN_NODES < 0 or MAX_NODES < 0:
+    if MIN_NODES == "" or MAX_NODES == "" or MIN_NODES < 0 or MAX_NODES < 0:
         raise ValueError("--nodes ({}) must not be negative".format(NODES))
     if MAX_NODES > 1 and (args.GMX_MPI_EXE is None or args.GMX_MPI_EXE == 0):
         raise ValueError(
             "--gmx-mpi-exe must be provided if the (maximum) number of nodes"
             " ({}) is greater than one".format(NODES)
-        )
-    NTASKS_PER_NODE = vars(args)[sbatch_prefix + "ntasks-per-node"]
-    if NTASKS_PER_NODE < 0:
-        raise ValueError(
-            "--ntasks-per-node ({}) must not be"
-            " negative".format(NTASKS_PER_NODE)
         )
     # The existence of the Gromacs (MPI) executable cannot be checked
     # within this script, because the Gromacs (MPI) executable might
@@ -708,6 +728,14 @@ if __name__ == "__main__":  # noqa: C901
                 "Conflicting options: You did no set --requeue but parsed"
                 " '--requeue' to --sbatch"
             )
+        if (
+            args.NO_GUESS_THREADS
+            or (args.GMX_MPI_EXE is None or args.GMX_MPI_EXE == 0)
+        ) and "--ntasks-per-node" not in args.SB_OPTIONS:
+            raise ValueError(
+                "--ntasks-per-node must be provided via --sbatch if"
+                " --no-guess-threads and/or --gmx-exe-mpi is given"
+            )
         if "--signal" in args.SB_OPTIONS:
             raise ValueError(
                 "'--signal' is not allowed to be parsed to --sbatch, because"
@@ -748,10 +776,6 @@ if __name__ == "__main__":  # noqa: C901
     nsteps = gmx_get_nsteps_from_mdp(
         args.SETTINGS + "_" + args.SYSTEM + ".mdp"
     )
-    if args.NO_BACKUP:
-        backup = "0"
-    else:
-        backup = "1"
     pos_args_list = [
         bash_dir,
         args.SYSTEM,
@@ -759,10 +783,11 @@ if __name__ == "__main__":  # noqa: C901
         str(args.STRUCTURE),
         str(args.CONTINUE),
         str(nsteps),
-        backup,
+        str(int(not args.NO_BACKUP)),
         gmx_lmod,
         args.GMX_EXE,
         str(args.GMX_MPI_EXE),
+        str(int(not args.NO_GUESS_THREADS)),
         "'{}'".format(args.GMX_GROMPP_FLAGS),
     ]
     pos_args = " ".join(pos_args_list)
