@@ -410,14 +410,15 @@ fi
 ########################################################################
 
 # Prepare Gromacs mdrun command:
-mdrun="-s ${settings}_${system}.tpr \
+if [[ ${gmx_mpi_exe} == 0 ]]; then
+    mdrun="srun --ntasks 1 ${gmx_exe} mdrun"
+else
+    mdrun="srun ${gmx_mpi_exe}"
+fi
+mdrun="${mdrun} \
+    -s ${settings}_${system}.tpr \
     -deffnm ${settings}_out_${system} \
     ${mdrun_flags[*]}"
-if [[ ${gmx_mpi_exe} == 0 ]]; then
-    mdrun="--ntasks 1 ${gmx_exe} mdrun ${mdrun}"
-else
-    mdrun="${gmx_mpi_exe} ${mdrun}"
-fi
 if [[ ${guess_num_threads} -eq 0 ]]; then
     if [[ ${gmx_mpi_exe} == 0 ]]; then
         mdrun="${mdrun} -ntmpi ${SLURM_NTASKS_PER_NODE}"
@@ -433,7 +434,8 @@ fi
 if [[ ${continue} -eq 0 ]] || [[ ${continue} -eq 2 ]]; then
     # Start a new simulation
     echo -e "\n"
-    grompp="-f ${settings}_${system}.mdp \
+    grompp="${gmx_exe} grompp \
+        -f ${settings}_${system}.mdp \
         -c ${structure} \
         -p ${system}.top \
         -o ${settings}_${system}.tpr \
@@ -441,7 +443,7 @@ if [[ ${continue} -eq 0 ]] || [[ ${continue} -eq 2 ]]; then
     if [[ -f ${system}.ndx ]]; then
         grompp="${grompp} -n ${system}.ndx"
     fi
-    "${gmx_exe} ${grompp}" || exit
+    ${grompp} || exit
     echo -e "\n"
     mv -v "mdout.mdp" "${settings}_${system}_mdout.mdp"
 elif [[ ${continue} -eq 1 ]] || [[ ${continue} -eq 3 ]]; then
@@ -456,7 +458,7 @@ else
     exit 1
 fi
 echo -e "\n"
-srun "${mdrun}"
+${mdrun}
 gmx_energy
 if [[ ${continue} -eq 0 ]] || [[ ${continue} -eq 1 ]]; then
     # Single slurm job
