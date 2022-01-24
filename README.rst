@@ -50,6 +50,18 @@ that submit Slurm job scripts to the Slurm Workload Manager start with
 docstring inside the script.
 
 
+Prerequisites
+=============
+
+    * Bash shell.
+    * Python_ 3 for the Python submit scripts.
+    * Slurm_ for the Slurm job scripts.  If you run the scripts on
+      another HPC cluster than Palma2 or Bagheera, you need to modify
+      the parts of the job scripts where the cluster name is checked.
+      Search for :bash:`${SLURM_CLUSTER_NAME}` to find these parts.
+    * Lmod_ (optional).
+
+
 Installation
 ============
 
@@ -72,6 +84,10 @@ To get the latest changes, simply do
     cd path/to/hpc_submit_scripts
     git pull
 
+You may want to change the default settings of the Python submit
+scripts.  For example, you may want to set the default for the
+--mail-user option to your mail adress.
+
 
 Usage
 =====
@@ -93,7 +109,8 @@ Support
 =======
 
 If you have any questions, feel free to use the `Question&Answer`_ forum
-on GitHub_.
+on GitHub_.  If you encounter a bug or want to request a new feature,
+please `open a new issue`_.
 
 
 Contributing
@@ -118,6 +135,7 @@ the scripts or adopt them to your needs.
 .. _Python: https://www.python.org/
 .. _Question&Answer: https://github.com/andthum/hpc_submit_scripts/discussions/categories/q-a
 .. _GitHub: https://github.com/
+.. _open a new issue: https://github.com/andthum/hpc_submit_scripts/issues
 .. _MIT License: https://mit-license.org/
 
 .. |Test_Status| image:: https://github.com/andthum/hpc_submit_scripts/actions/workflows/tests.yml/badge.svg
