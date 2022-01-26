@@ -86,9 +86,10 @@ always be obeyed is that **anything in the** ``main`` **branch must be
 stable**.  This means before you make any changes to the code (e.g.
 implement a new feature, fix a bug, add a docstring/comment, etc.),
 create a new branch off of ``main``.  Your branch name should be
-descriptive, so that others can see what is being worked on (see Step 2,
-below).  Only after your code was tested, has no known bugs and works
-stable, it can be merged back into the ``main`` branch.
+descriptive, so that others can see what is being worked on (see
+`Step 2<2. Create a new topic branch>`_, below).  Only after your code
+was tested, has no known bugs and works stable, it can be merged back
+into the ``main`` branch.
 
 The following demonstrates an example workflow that can be used as
 reference.
@@ -105,7 +106,7 @@ See also:
 If you want to contribute to this project, you should first create your
 own copy of the project (a.k.a. fork_).  This step must be done only
 once (as long as you don't delete your fork).  If you already have your
-own fork of this project, go ahead to Step 1.
+own fork of this project, go ahead to `Step 1<1. Get up to date>`_.
 
 Go to the `project repository`_ on GitHub and press the Fork button in
 the top-right corner (note that you need a GitHub account for
@@ -124,7 +125,7 @@ upstream) repository:
     git remote add upstream https://github.com/andthum/hpc_submit_scripts.git
 
 In this way you can fetch the latest changes directly from the upstream
-repository (see Step 2).
+repository (see `Step 1<1. Get up to date>`_).
 
 
 1. Get up to date
@@ -160,32 +161,34 @@ Create a new `topic branch`_ (usually out off the ``main`` branch).
 Topic branch naming conventions:
 
     * Use short and descriptive, lowercase names.
-    * Do *not* name your topic branch ``main``, ``master``,
-      ``develop``, ``devel``, ``dev``, ``stable``, ``release``, ``rel``,
-      ``fix``, ``bug``, ``feature``, ``feat`` or ``doc``, because these
-      are commonly used names for special branches or branch groups.
+    * Do *not* name your topic branch simply ``main``, ``master``,
+      ``develop``, ``devel``, ``dev``, ``stable``, ``stab``, ``wip``,
+      ``release``, ``rel``, ``fix``, ``hotfix``, ``bug``, ``feature``,
+      ``feat``, ``refactor``, ``ref``, ``documentation``, ``docs``,
+      ``doc``, because these are commonly used names for special
+      branches or branch groups.
     * Use slashes to sparate parts of your branch name.  However, be
       aware of the following limitation:  If a branch ``spam`` exists,
       no branch named ``spam/eggs`` can be created.  Likewise, if a
-      branch ``spam/eggs`` exists, no branch names ``spam`` can be
-      created (but ``spam/anything`` is possible).  The reason is that
+      branch ``spam/eggs`` exists, no branch named ``spam`` can be
+      created (but ``spam/spam`` is possible).  The reason is that
       branches are implemented as paths.  You cannot create a directory
       ``spam`` if a file ``spam`` already exsits and the other way
       round.  This means, once you started branch naming without a
       sub-token, you cannot add a sub-token later.  This is the reason
-      why you should never name your branches simply ``fix``, ``feat``
-      or ``doc``.
+      why you should never name your branches simply ``fix``, ``feat``,
+      ``ref`` or ``doc``.
     * Use hyphens to separate words.
     * Use group tokens at the beginning of your branch names:
 
         - ``fix/<possible-sub-token>/<description>`` for bug fixes.
         - ``feat/<possible-sub-token>/<description>`` for new features.
         - ``ref/<possible-sub-token>/<description>`` for refactoring.
-        - ``doc/<possible-sub-token>/<description>`` for a
+        - ``doc/<possible-sub-token>/<description>`` for
           documentaion-only branches.
 
     * Use sub-tokens where applicable and meaningful.
-    * If you adress a specif issue or feature request, reference this
+    * If you adress a specific issue or feature request, reference this
       in your branch name, e.g. ``feat/issue/n15``, but
     * Do *not* use bare numbers as one part of your branch name, e.g. do
       *not* name your branch ``feat/issue/15``.
@@ -252,8 +255,8 @@ tests).
 Commit conventions:
 
     * Each commit should be a single logical change.  Don't make several
-      logical changes in one commit.  Go back to Step 3 as often as
-      needed.
+      logical changes in one commit.  Go back to
+      `Step 3<3. Work on your topic branch>`_ as often as needed.
     * On the other hand, don't split a single logical change into
       several commits.
     * Commit early and often.  Small, self-contained commits are easier
@@ -292,40 +295,42 @@ Commit message conventions:
 ----------------------------
 
 If your topic branch does not fulfill the commit conventions above, tidy
-up your commits by reordering_ and/or squashing_.
+up your commits by reordering_, squashing_ and/or splitting_.
 
 
-.. 8. Rebase onto the target branch
-   --------------------------------
+8. Rebase onto the target branch
+--------------------------------
 
-   While you were working on your topic branch, the upstream repository
-   might have changed.  To avoid merge conflicts and to have an (almost)
-   linear history, pull the latest changes from the upstream repository and
-   rebase_ your topic branch onto the target branch (which is usually the
-   ``main`` branch):
+While you were working on your topic branch, the upstream repository
+might have changed.  To avoid merge conflicts and to have an (almost)
+linear history, pull the latest changes from the upstream repository and
+rebase_ your topic branch onto the target branch (which is usually the
+``main`` branch):
 
-       .. code-block:: bash
-           git fetch upstream
-           git checkout main
-           git merge upstream/main
-           git checkout topic/branch
-           git rebase main
+.. code-block:: bash
 
-   This will probably lead to problems when starting a new contribution
-   from step one, because this brings your fork's ``main`` branch out of
-   sync with the upstream ``main`` branch.
+   # Get latest changes
+   git fetch upstream
+   git checkout main
+   git merge upstream/main
+   # Rebase the topic branch onto the target branch
+   git checkout topic/branch
+   git rebase main
 
 
-8. Push your commits to your fork on GitHub
+9. Push your commits to your fork on GitHub
 -------------------------------------------
+
+Immediatly after rebasing, push your changes to your fork's remote
+repository:
 
 .. code-block:: bash
 
     git push origin topic/branch
 
 
-9. Create a pull request
-------------------------
+10. Create a pull request
+-------------------------
 
 In order to get your changes merged in the upstream repository, you have
 to `open a pull request from your fork`_.
@@ -339,8 +344,9 @@ changes you have done and why you have done them.
 
 Either your pull request is merged directly into the upstream
 repository, your pull request is rejected or you are asked to make some
-changes.  In the latter case, please go back to Step 3 and incorporate
-the requested changes.
+changes.  In the latter case, please go back to
+`Step 3<3. Work on your topic branch>`_ and incorporate the requested
+changes.
 
 
 Publish a new release
@@ -411,5 +417,7 @@ specifiers can be appended.
 .. _note about Git commit messages: https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 .. _reordering: https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History#_reordering_commits
 .. _squashing: https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History#_squashing
+.. _splitting: https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History#_splitting_a_commit
+.. _rebase: https://git-scm.com/book/en/v2/Git-Branching-Rebasing
 .. _open a pull request from your fork: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork
 .. _semantic versioning: http://semver.org/
