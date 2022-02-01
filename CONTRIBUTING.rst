@@ -87,9 +87,9 @@ stable**.  This means before you make any changes to the code (e.g.
 implement a new feature, fix a bug, add a docstring/comment, etc.),
 create a new branch off of ``main``.  Your branch name should be
 descriptive, so that others can see what is being worked on (see
-`Step 2<2. Create a new topic branch>`_, below).  Only after your code
-was tested, has no known bugs and works stable, it can be merged back
-into the ``main`` branch.
+"`2. Create a new topic branch`_", below).  Only after your code was
+tested, has no known bugs and works stable, it can be merged back into
+the ``main`` branch.
 
 The following demonstrates an example workflow that can be used as
 reference.
@@ -106,7 +106,7 @@ See also:
 If you want to contribute to this project, you should first create your
 own copy of the project (a.k.a. fork_).  This step must be done only
 once (as long as you don't delete your fork).  If you already have your
-own fork of this project, go ahead to `Step 1<1. Get up to date>`_.
+own fork of this project, go ahead to "`1. Get up to date`_".
 
 Go to the `project repository`_ on GitHub and press the Fork button in
 the top-right corner (note that you need a GitHub account for
@@ -125,7 +125,7 @@ upstream) repository:
     git remote add upstream https://github.com/andthum/hpc_submit_scripts.git
 
 In this way you can fetch the latest changes directly from the upstream
-repository (see `Step 1<1. Get up to date>`_).
+repository (see "`1. Get up to date`_").
 
 
 1. Get up to date
@@ -256,7 +256,7 @@ Commit conventions:
 
     * Each commit should be a single logical change.  Don't make several
       logical changes in one commit.  Go back to
-      `Step 3<3. Work on your topic branch>`_ as often as needed.
+      "`3. Work on your topic branch`_" as often as needed.
     * On the other hand, don't split a single logical change into
       several commits.
     * Commit early and often.  Small, self-contained commits are easier
@@ -345,8 +345,7 @@ changes you have done and why you have done them.
 Either your pull request is merged directly into the upstream
 repository, your pull request is rejected or you are asked to make some
 changes.  In the latter case, please go back to
-`Step 3<3. Work on your topic branch>`_ and incorporate the requested
-changes.
+"`3. Work on your topic branch`_" and incorporate the requested changes.
 
 
 Publish a new release
