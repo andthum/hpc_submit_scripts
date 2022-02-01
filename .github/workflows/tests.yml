@@ -74,8 +74,8 @@ jobs:
           ./.cache/black/**
         key: ${{ runner.os }}-${{ matrix.python-version }}-${{ github.job }}
         restore-keys: |
-          ${{ runner.os }}-${{ matrix.python-version }}-
-          ${{ runner.os }}-
+          ${{ runner.os }}-${{ matrix.python-version }}
+          ${{ runner.os }}
     - name: Install/Upgrade setuptools and wheel
       run: python -m pip install --user --upgrade setuptools wheel
     - name: Install/Upgrade black
