@@ -721,6 +721,13 @@ if __name__ == "__main__":  # noqa: C901
             sbatch += " --requeue"
         else:
             sbatch += " --no-requeue"
+        if args.NO_GUESS_THREADS or (
+            args.GMX_MPI_EXE is not None or args.GMX_MPI_EXE != 0
+        ):
+            raise ValueError(
+                "--ntasks-per-node must be provided via --sbatch if"
+                " --no-guess-threads and/or --gmx-exe-mpi is given"
+            )
     else:
         if (
             "--job-name" not in args.SB_OPTIONS
