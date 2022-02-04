@@ -722,7 +722,7 @@ if __name__ == "__main__":  # noqa: C901
         else:
             sbatch += " --no-requeue"
         if args.NO_GUESS_THREADS or (
-            args.GMX_MPI_EXE is not None or args.GMX_MPI_EXE != 0
+            args.GMX_MPI_EXE is not None and args.GMX_MPI_EXE != 0
         ):
             raise ValueError(
                 "--ntasks-per-node must be provided via --sbatch if"
@@ -764,7 +764,7 @@ if __name__ == "__main__":  # noqa: C901
             )
         if (
             args.NO_GUESS_THREADS
-            or (args.GMX_MPI_EXE is not None or args.GMX_MPI_EXE != 0)
+            or (args.GMX_MPI_EXE is not None and args.GMX_MPI_EXE != 0)
         ) and "--ntasks-per-node" not in args.SB_OPTIONS:
             raise ValueError(
                 "--ntasks-per-node must be provided via --sbatch if"
