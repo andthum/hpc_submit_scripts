@@ -185,7 +185,7 @@ Topic branch naming conventions:
         - ``feat/<possible-sub-token>/<description>`` for new features.
         - ``ref/<possible-sub-token>/<description>`` for refactoring.
         - ``doc/<possible-sub-token>/<description>`` for
-          documentaion-only branches.
+          documentation-only branches.
 
     * Use sub-tokens where applicable and meaningful.
     * If you adress a specific issue or feature request, reference this
