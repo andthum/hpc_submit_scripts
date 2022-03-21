@@ -306,24 +306,18 @@ check_resubmission_and_quit() {
 ########################################################################
 
 backup_dir="${settings}_${system}_backup"
-backup_dir_prev="${settings}_${system}_backup_prev"
-log_file="rsync.log"
+backup_dir_prev="${backup_dir}_prev"
+rsync_log_file="rsync.log"
 if [[ ${backup} -eq 1 ]]; then
     echo -e "\n"
     echo "Creating backup of files from a previous simulation..."
     if [[ -f ${settings}_${system}_mdout.mdp ]] ||
         [[ -f ${settings}_${system}.tpr ]] ||
-        [[ -f ${settings}_out_${system}.cpt ]] ||
-        [[ -f ${settings}_out_${system}.edr ]] ||
-        [[ -f ${settings}_out_${system}_energy.xvg ]] ||
-        [[ -f ${settings}_out_${system}.gro ]] ||
-        [[ -f ${settings}_out_${system}.log ]] ||
-        [[ -f ${settings}_out_${system}_prev.cpt ]] ||
-        [[ -f ${settings}_out_${system}_slurm.out ]] ||
-        [[ -f ${settings}_out_${system}.trr ]]; then
+        compgen -G "${settings}_out_${system}*" >/dev/null; then
         echo "Found files from a previous simulation"
         echo "Going to backup them to ${backup_dir}"
         if [[ -d ${backup_dir} ]]; then
+            echo
             echo "NOTE: Directory already exists: '${backup_dir}'"
             echo "Going to backup it to '${backup_dir_prev}'"
             if [[ -d ${backup_dir_prev} ]]; then
@@ -338,25 +332,33 @@ if [[ ${backup} -eq 1 ]]; then
             gmx_check_corruption "${backup_dir}"
             echo -e "\n"
             echo "rsync \\"
-            echo "    -aPv \\"
+            echo "    --archive \\"
+            echo "    --partial \\"
             echo "    --append-verify \\"
             echo "    --delete \\"
+            echo "    --verbose \\"
+            echo "    --progress \\"
             echo "    --human-readable \\"
             echo "    --stats \\"
-            echo "    --log-file=${log_file} \\"
+            echo "    --log-file=${rsync_log_file} \\"
+            echo "    --exclude=${rsync_log_file} \\"
             echo "    ./${backup_dir}/ \\"
             echo "    ./${backup_dir_prev}/"
             rsync \
-                -aPv \
+                --archive \
+                --partial \
                 --append-verify \
                 --delete \
+                --verbose \
+                --progress \
                 --human-readable \
                 --stats \
-                --log-file="${log_file}" \
+                --log-file="${rsync_log_file}" \
+                --exclude="${rsync_log_file}" \
                 "./${backup_dir}/" \
                 "./${backup_dir_prev}/" ||
                 exit
-            mv -v "${log_file}" "${backup_dir_prev}"
+            mv -v "${rsync_log_file}" "${backup_dir_prev}"
             echo -e "\n"
             echo "Backup of the backup directory done.  Now I can backup files"
             echo "from the previous simulation to the backup directory"
@@ -369,33 +371,45 @@ if [[ ${backup} -eq 1 ]]; then
         gmx_check_corruption "./"
         echo -e "\n"
         echo "rsync \\"
-        echo "    -aPv \\"
+        echo "    --archive \\"
+        echo "    --partial \\"
         echo "    --append-verify \\"
         echo "    --delete \\"
-        echo "    --exclude=${backup_dir}* \\"
-        echo "    --exclude=${backup_dir_prev}* \\"
-        echo "    --include=${settings}* \\"
-        echo "    --exclude=* \\"
+        echo "    --verbose \\"
+        echo "    --progress \\"
         echo "    --human-readable \\"
         echo "    --stats \\"
-        echo "    --log-file=${log_file} \\"
+        echo "    --log-file=${rsync_log_file} \\"
+        echo "    --exclude=${rsync_log_file} \\"
+        echo "    --exclude=${backup_dir}* \\"
+        echo "    --exclude=${backup_dir_prev}* \\"
+        echo "    --include=${settings}_${system}_mdout.mdp \\"
+        echo "    --include=${settings}_${system}.tpr \\"
+        echo "    --include=${settings}_out_${system}* \\"
+        echo "    --exclude=* \\"
         echo "    ./ \\"
         echo "    ./${backup_dir}/"
         rsync \
-            -aPv \
+            --archive \
+            --partial \
             --append-verify \
             --delete \
-            --exclude="${backup_dir}*" \
-            --exclude="${backup_dir_prev}*" \
-            --include="${settings}*" \
-            --exclude="*" \
+            --verbose \
+            --progress \
             --human-readable \
             --stats \
-            --log-file="${log_file}" \
+            --log-file="${rsync_log_file}" \
+            --exclude="${rsync_log_file}" \
+            --exclude="${backup_dir}*" \
+            --exclude="${backup_dir_prev}*" \
+            --include="${settings}_${system}_mdout.mdp" \
+            --include="${settings}_${system}.tpr" \
+            --include="${settings}_out_${system}*" \
+            --exclude="*" \
             "./" \
             "./${backup_dir}/" ||
             exit
-        mv -v "${log_file}" "${backup_dir}"
+        mv -v "${rsync_log_file}" "${backup_dir}"
     else
         echo "NOTE: No files to backup"
     fi
@@ -458,7 +472,7 @@ else
     exit 1
 fi
 echo -e "\n"
-${mdrun}
+${mdrun} # Don't exit on failure (INT signal also causes non-zero exit)
 gmx_energy
 if [[ ${continue} -eq 0 ]] || [[ ${continue} -eq 1 ]]; then
     # Single slurm job
