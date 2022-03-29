@@ -64,7 +64,7 @@ if [[ ! -f ${infile} ]]; then
     exit 1
 fi
 
-read_lines=150
+read_lines=200
 counter=1
 found_Statistics=false
 for string in $(tail -n "${read_lines}" "${infile}" || exit); do
