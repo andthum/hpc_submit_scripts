@@ -1,0 +1,104 @@
+# flake8 configuration file.
+# See https://flake8.pycqa.org/en/latest/user/configuration.html
+#
+# Sort all entries alphabetically!
+
+
+[flake8]
+# Print the total number of errors.
+count = true
+docstring-convention = numpy
+# Enable PyFlakes syntax checking of doctests in docstrings.
+doctests = true
+extend-exclude =
+    .build/,
+    build/,
+    .cache/,
+    cache/,
+    *.cover,
+    cover/,
+    .coverage,
+    .coverage.*,
+    develop-eggs/,
+    dist/,
+    *.egg,
+    *.egg-info/,
+    .eggs/,
+    eggs/,
+    .env/,
+    .env.bak/,
+    env/,
+    env.bak/,
+    .ENV/,
+    .ENV.bak/,
+    ENV/,
+    ENV.bak/,
+    .git,
+    .github,
+    .gitlab,
+    .hypothesis/,
+    .installed.cfg,
+    lib/,
+    lib64/,
+    .mypy_cache/,
+    .nox,
+    __pycache__,
+    __pypackages__,
+    .pytest_cache/,
+    .Python,
+    .pytype/,
+    sdist/,
+    .tox,
+    .venv/,
+    .venv.bak/,
+    venv/,
+    venv.bak/,
+    .VENV/,
+    .VENV.bak/,
+    VENV/,
+    VENV.bak/,
+    wheels/,
+extend-ignore =
+    ### Allow for docstring summaries that are longer than one line ###
+    # D205: 1 blank line required between summary line and description
+    # D400: First line should end with a period
+    D205,
+    D400,
+    ### Compatibility with black ###
+    # E203: whitespace before ':'
+    # W503: line break before binary operator
+    E203,
+    W503
+extend-select =
+    ### Compatibility with black ###
+    # W504: line break after binary operator
+    W504
+# List of glob patterns to include for checks.
+filename = *.py
+# Files that are checked by PyFlakes for doctest syntax.
+include-in-doctest = *.py, *.rst
+# Number of spaces used for indentation.
+indent-size = 4
+# Maximum allowed McCabe complexity
+max-complexity = 20
+# Maximum allowed line length of a comment or docstring.
+max-doc-length = 72
+# Maximum allowed line length for code.
+max-line-length = 79
+# Require specific plugins to be installed before running.
+require-plugins =
+    flake8-bandit,
+    flake8-bugbear,
+    flake8-builtins,
+    flake8-comprehensions,
+    flake8-docstrings,
+    flake8-isort,
+    flake8-logging-format,
+    flake8-pytest-style,
+    flake8-rst,
+    flake8-rst-docstrings,
+    pep8-naming,
+# Print the source code generating the error/warning in question.
+show-source = true
+# Count the number of occurrences of each error/warning.
+statistics = true
