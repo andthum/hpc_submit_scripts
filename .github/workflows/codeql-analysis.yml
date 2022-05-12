@@ -10,7 +10,14 @@ on:
     # The branches below must be a subset of the branches above
     branches: [main, develop]
     paths-ignore:
+      - ./.github/*template**
+      - ./.github/*TEMPLATE**
+      - ./.readthedocs.yaml
       - ./LICENSE.txt
+      - ./*.rst
+      - "**/README"
+      - "**/README.*"
+      - "**/*.md"
       - "**/*.eps"
       - "**/*.EPS"
       - "**/*.jpg"
@@ -35,9 +42,9 @@ jobs:
       security-events: write
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v2
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
+      uses: github/codeql-action/init@v1
       with:
         languages: python
         # Override the default behavior so that the action doesn't
@@ -45,4 +52,4 @@ jobs:
         # https://docs.github.com/en/code-security/secure-coding/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#analyzing-python-dependencies
         setup-python-dependencies: false
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      uses: github/codeql-action/analyze@v1
