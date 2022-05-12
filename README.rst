@@ -6,10 +6,12 @@
 HPC Submit Scripts
 ##################
 
-|Test_Status| |MIT_License| |Made_with_Bash| |Made_with_Python|
-|Code_style_black|
+|Test_Status| |pre-commit| |MIT_License| |Made_with_Bash|
+|Made_with_Python| |Code_style_black|
 
-.. contents:: Contents
+|logo|
+
+.. contents:: Site Contents
     :depth: 2
 
 
@@ -138,9 +140,16 @@ the scripts or adopt them to your needs.
 .. _open a new issue: https://github.com/andthum/hpc_submit_scripts/issues
 .. _MIT License: https://mit-license.org/
 
+.. |logo| image:: ./img/logo.png
+    :height: 400 px
+    :alt: Logo
+
 .. |Test_Status| image:: https://github.com/andthum/hpc_submit_scripts/actions/workflows/tests.yml/badge.svg
     :alt: Test Status
     :target: https://github.com/andthum/hpc_submit_scripts/actions/workflows/tests.yml
+.. |pre-commit| image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
+    :alt: pre-commit
+    :target: https://github.com/pre-commit/pre-commit
 .. |MIT_License| image:: https://img.shields.io/badge/License-MIT-blue.svg
     :alt: MIT License
     :target: https://mit-license.org/
