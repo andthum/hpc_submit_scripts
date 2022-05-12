@@ -8,7 +8,7 @@ Scripts to Run Simulations
 
 Slurm job scripts to run MD simulations.
 
-The Slurm job scripts can conveniently be submitted via Python_ scripts
+The Slurm job scripts can conveniently be submitted via Python scripts
 that reside in the same subdirectory as the job scripts.  Python scripts
 that submit Slurm job scripts to the Slurm Workload Manager start with
 :bash:`submit_*.py`.  For help how to use these scripts type
@@ -16,8 +16,8 @@ that submit Slurm job scripts to the Slurm Workload Manager start with
 docstring inside the script.
 
 
-Contents
-========
+Directory Tree / Contents
+=========================
 
     * :bash:`gmx`:  Scripts to run simulations with Gromacs_.
 
