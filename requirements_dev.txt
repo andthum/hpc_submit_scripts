@@ -1,6 +1,8 @@
 # Required Python packages for developing this project.
 #
 # Sort all entries alphabetically!
+#
+# Keep flake8 plugins in sync with `.pre-commit-config.yaml`!
 
 bandit >=1.0, <2.0
 black >=22.0, <23.0
