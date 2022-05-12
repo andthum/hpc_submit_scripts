@@ -22,5 +22,5 @@ enable=quote-safe-variables
 #   Fix:     var=hello; echo ${var}
 enable=require-variable-braces
 
-# SC2230: which is non-standard. Use builtin command -v instead.
+# SC2230: `which` is non-standard. Use builtin `command -v` instead.
 disable=SC2230
