@@ -1,0 +1,24 @@
+# Configuration file for Python projects.
+# See https://python-poetry.org/docs/pyproject/ and
+# https://packaging.python.org/en/latest/tutorials/packaging-projects/#configuring-metadata
+#
+# Sort all entries alphabetically!
+
+[tool.black]
+required-version = 22
+line-length = 79
+target-version = ["py39"]
+
+[tool.isort]
+# profile should go on top so that it does not overwrite other settings.
+profile = "black"
+line_length = 79
+# Comments to put above import sections.
+import_heading_future = "Future imports"
+import_heading_stdlib = "Standard libraries"
+import_heading_thirdparty = "Third-party libraries"
+import_heading_firstparty = "First-party libraries"
+import_heading_localfolder = "Local imports"
+py_version = 39
+# Ignore files listed in .gitignore.
+skip_gitignore = true
