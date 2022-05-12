@@ -13,7 +13,7 @@ use it.
 Users of the Palma2 HPC cluster of the University of Münster should also
 refer to the `Palma2 Wiki`_.
 
-.. contents:: Contents
+.. contents:: Site Contents
     :depth: 2
 
 
