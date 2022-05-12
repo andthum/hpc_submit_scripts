@@ -16,13 +16,13 @@ how they are called depends on how you cluster administrator has set up
 the Lmod module system.
 
 
-Contents
-========
+Directory Tree / Contents
+=========================
 
 This directory contains predefined bash scripts that can be used to load
 specific modules to get access to specific software.  Note that the
-scripts must be sourced to make the modules available in the parent
-shell.
+scripts must be sourced with :bash:`source path/to/the/script.sh` to
+make the modules available in the parent shell.
 
     * :bash:`palma`:  Bash scripts that load modules on the Palma2 HPC
       cluster of the University of Münster, ordered into subdirectories
