@@ -6,8 +6,8 @@
 HPC Submit Scripts
 ##################
 
-|Test_Status| |pre-commit| |MIT_License| |Made_with_Bash|
-|Made_with_Python| |Code_style_black|
+|CodeQL_Status| |pre-commit.ci_status| |pre-commit| |MIT_License|
+|Made_with_Bash| |Made_with_Python| |Code_style_black|
 
 |logo|
 
@@ -144,9 +144,12 @@ the scripts or adopt them to your needs.
     :height: 400 px
     :alt: Logo
 
-.. |Test_Status| image:: https://github.com/andthum/hpc_submit_scripts/actions/workflows/tests.yml/badge.svg
-    :alt: Test Status
-    :target: https://github.com/andthum/hpc_submit_scripts/actions/workflows/tests.yml
+.. |CodeQL_Status| image:: https://github.com/andthum/hpc_submit_scripts/actions/workflows/codeql-analysis.yml/badge.svg
+    :alt: CodeQL Status
+    :target: https://github.com/andthum/hpc_submit_scripts/actions/workflows/codeql-analysis.yml
+.. |pre-commit.ci_status| image:: https://results.pre-commit.ci/badge/github/andthum/hpc_submit_scripts/main.svg
+    :alt: pre-commit.ci status
+    :target: https://results.pre-commit.ci/latest/github/andthum/hpc_submit_scripts/main
 .. |pre-commit| image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
     :alt: pre-commit
     :target: https://github.com/pre-commit/pre-commit
