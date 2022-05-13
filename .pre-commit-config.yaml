@@ -52,11 +52,14 @@ repos:
       - id: "end-of-file-fixer"
       # Replace or checks mixed line ending.
       - id: "mixed-line-ending"
-        args: [--fix=no]
+        args:
+          # Don't auto fix wrong line endings.
+          - "--fix=no"
       # Trim trailing whitespace.
       - id: "trailing-whitespace"
-        # Preserve Markdown hard linebreaks
-        args: [--markdown-linebreak-ext=md]
+        args:
+          # Preserve Markdown hard linebreaks.
+          - "--markdown-linebreak-ext=md"
       ### Markup languages ###
       # Check toml files for parseable syntax.
       - id: "check-toml"
@@ -126,24 +129,38 @@ repos:
     hooks:
       # Sort import statements with isort
       - id: "isort"
-        args: ["--check", "--diff", "--color"]
-        # `--color` requires the `colorame` Python package
-        additional_dependencies: ["colorama"]
+        args:
+          # Only check files without modifying them.
+          - "--check"
+          # Print a diff of all the changes isort would make.
+          - "--diff"
+          # Use color in terminal output.
+          - "--color"
+        additional_dependencies:
+          # Required for isort's `--color` option.
+          - "colorama"
 
   - repo: "https://github.com/psf/black"
     rev: "22.3.0"
     hooks:
       # Format Python code with black.
       - id: "black"
-        args: ["--check", "--diff", "--color"]
+        args:
+          # Only check files without modifying them.
+          - "--check"
+          # Print a diff of all the changes black would make.
+          - "--diff"
+          # Use color in terminal output.
+          - "--color"
 
   - repo: "https://github.com/PyCQA/flake8"
     rev: "4.0.1"
     hooks:
-      # Lint Python code with flake8.
+      # Lint Python code with Flake8.
       - id: "flake8"
-        # Keep in sync with `requirements_dev.txt` and `.flake8`!
         additional_dependencies:
+          # Required Flake8 plugins.
+          # Keep in sync with `requirements_dev.txt` and `.flake8`!
           - "flake8-bandit >=3.0,<4.0"
           - "flake8-bugbear >=22.0,<23.0"
           - "flake8-builtins >=1.0, <2.0"
@@ -161,8 +178,9 @@ repos:
     hooks:
       # Check code security with bandit.
       - id: "bandit"
-        # Find and process files in subdirectories.
-        args: ["--recursiv"]
+        args:
+          # Find and process files in subdirectories.
+          - "--recursiv"
 
 ########################################################################
 # Shell / Bash Hooks                                                   #
@@ -173,7 +191,19 @@ repos:
     hooks:
       # Format shell scripts with shfmt.
       - id: "shfmt"
-        args: ["-ln bash", "-i 4", "-ci", "-sr", "-d", "-l"]
+        args:
+          # Language variant to parse (bash/posix/mksh/bats).
+          - "-ln bash"
+          # Indentation level.
+          - "-i 4"
+          # Indent switch cases.
+          - "-ci"
+          # Add a space after redirect operations (`>`).
+          - "-sr"
+          # Error with a diff when the formatting differs.
+          - "-d"
+          # List files whose formatting differs.
+          - "-l"
 
   - repo: "https://github.com/shellcheck-py/shellcheck-py"
     rev: "v0.8.0.4"
@@ -192,5 +222,5 @@ repos:
   - repo: "https://github.com/markdownlint/markdownlint"
     rev: "v0.11.0"
     hooks:
-      # Lint Markdown files with markdownlint
+      # Lint Markdown files with markdownlint.
       - id: "markdownlint"
