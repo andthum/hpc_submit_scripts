@@ -16,10 +16,11 @@ minimum_pre_commit_version: "2.0"
 default_language_version:
   python: "python3.9"
 
-# https://pre-commit.ci/
+# Run pre-commit as CI workflow.
+# See https://pre-commit.ci/
 ci:
   # Whether to autofix pull requests
-  autofix_prs: "false"
+  autofix_prs: false
 
 ########################################################################
 # General Hooks                                                        #
@@ -30,69 +31,57 @@ repos:
     rev: "v4.1.0"
     hooks:
       ### Security ###
-      # Detects the presence of private keys.
+      # Detect the presence of private keys.
       - id: "detect-private-key"
       ### Files ###
-      # Prevents giant files from being committed.
+      # Prevent giant files from being committed.
       - id: "check-added-large-files"
-      # Checks for files that would conflict in case-insensitive
+      # Check for files that would conflict in case-insensitive
       # filesystems.
       - id: "check-case-conflict"
-      # Checks for symlinks which do not point to anything.
+      # Check for symlinks which do not point to anything.
       - id: "check-symlinks"
-      # Detects symlinks which are changed to regular files.
+      # Detect symlinks which are changed to regular files.
       - id: "destroyed-symlinks"
       ### Text ###
-      # Ensures that (non-binary) executables have a shebang.
+      # Ensure that (non-binary) executables have a shebang.
       - id: "check-executables-have-shebangs"
-      # Checks for files that contain merge conflict strings.
+      # Check for files that contain merge conflict strings.
       - id: "check-merge-conflict"
-      # Ensures that a file is either empty, or ends with one newline.
+      # Ensure that a file is either empty, or ends with one newline.
       - id: "end-of-file-fixer"
-      # Replaces or checks mixed line ending.
+      # Replace or checks mixed line ending.
       - id: "mixed-line-ending"
         args: [--fix=no]
-      # Trims trailing whitespace.
+      # Trim trailing whitespace.
       - id: "trailing-whitespace"
         # Preserve Markdown hard linebreaks
         args: [--markdown-linebreak-ext=md]
       ### Markup languages ###
-      # Checks toml files for parseable syntax.
+      # Check toml files for parseable syntax.
       - id: "check-toml"
-      # Checks xml files for parseable syntax.
+      # Check xml files for parseable syntax.
       - id: "check-xml"
-      # Checks yaml files for parseable syntax.
+      # Check yaml files for parseable syntax.
       - id: "check-yaml"
       ### json ###
-      # Checks json files for parseable syntax.
+      # Check json files for parseable syntax.
       - id: "check-json"
-      # Sets a standard for formatting json files.
+      # Set a standard for formatting json files.
       - id: "pretty-format-json"
       ### Python ###
-      # Checks whether the files parse as valid Python.
+      # Check whether the files parse as valid Python.
       - id: "check-ast"
-      # Checks if docstrings come before the code.
+      # Check if docstrings come before the code.
       - id: "check-docstring-first"
-      # Checks for debug statements.
+      # Check for debug statements.
       - id: "debug-statements"
-      # Sorts entries in requirements.txt.
+      # Sort entries in requirements.txt.
       - id: "requirements-txt-fixer"
 
-  - repo: "https://github.com/jumanjihouse/pre-commit-hooks"
-    rev: "2.1.6"
-    hooks:
-    ### Markdown ###
-    # Lint Markdown files with markdownlint-cli.
-    # NOTE: Needs the ruby development package for installation of
-    # the hook.
-    - id: "markdownlint"
-    ### Shell / Bash ###
-    # Format shell scripts with shfmt.
-    - id: "shfmt"
-      args: [-ln bash, -i 4, -ci, -sr, -d, -l]
-    # Lint shell scripts with shellcheck.
-    - id: "shellcheck"
-      args: [--format=quiet]
+########################################################################
+# Validate GitHub / GitLab CI workflows                                #
+########################################################################
 
   - repo: "https://github.com/python-jsonschema/check-jsonschema"
     rev: "0.14.2"
@@ -105,8 +94,8 @@ repos:
       - id: "check-github-workflows"
       # Validate GitLab CI config against the schema provided by
       # SchemaStore.
-      # Detects false positives for the code_quality job.
-      # - id: "check-gitlab-ci"
+      # NOTE: Detects false positives for the code_quality job.
+      - id: "check-gitlab-ci"
       # Validate ReadTheDocs config against the schema provided by
       # ReadTheDocs.
       - id: "check-readthedocs"
@@ -132,26 +121,28 @@ repos:
       # Check if inline code touches normal text.
       - id: "rst-inline-touching-normal"
 
-  - repo: "https://github.com/pycqa/isort"
+  - repo: "https://github.com/PyCQA/isort"
     rev: "5.10.1"
     hooks:
       # Sort import statements with isort
       - id: "isort"
-        args: [--check, --diff, --color]
+        args: ["--check", "--diff", "--color"]
+        # `--color` requires the `colorame` Python package
+        additional_dependencies: ["colorama"]
 
   - repo: "https://github.com/psf/black"
     rev: "22.3.0"
     hooks:
       # Format Python code with black.
       - id: "black"
-        args: [--check, --diff, --color]
+        args: ["--check", "--diff", "--color"]
 
   - repo: "https://github.com/PyCQA/flake8"
     rev: "4.0.1"
     hooks:
       # Lint Python code with flake8.
       - id: "flake8"
-        # Keep in sync with `requirements_dev.txt`!
+        # Keep in sync with `requirements_dev.txt` and `.flake8`!
         additional_dependencies:
           - "flake8-bandit >=3.0,<4.0"
           - "flake8-bugbear >=22.0,<23.0"
@@ -170,4 +161,36 @@ repos:
     hooks:
       # Check code security with bandit.
       - id: "bandit"
-        args: [--recursiv]
+        # Find and process files in subdirectories.
+        args: ["--recursiv"]
+
+########################################################################
+# Shell / Bash Hooks                                                   #
+########################################################################
+
+  - repo: "https://github.com/cisagov/pre-commit-shfmt"
+    rev: "v0.0.2"
+    hooks:
+      # Format shell scripts with shfmt.
+      - id: "shfmt"
+        args: ["-ln bash", "-i 4", "-ci", "-sr", "-d", "-l"]
+
+  - repo: "https://github.com/shellcheck-py/shellcheck-py"
+    rev: "v0.8.0.4"
+    hooks:
+      # Lint shell scripts with shellcheck.
+      # NOTE: The official shellcheck hook from
+      # https://github.com/koalaman/shellcheck-precommit requires Docker
+      # to be installed.  Therefore, we use the shellcheck-py Python
+      # package instead.
+      - id: "shellcheck"
+
+########################################################################
+# Markdown Hooks                                                       #
+########################################################################
+
+  - repo: "https://github.com/markdownlint/markdownlint"
+    rev: "v0.11.0"
+    hooks:
+      # Lint Markdown files with markdownlint
+      - id: "markdownlint"

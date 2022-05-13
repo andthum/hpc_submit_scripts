@@ -2,6 +2,9 @@
 # See https://flake8.pycqa.org/en/latest/user/configuration.html
 #
 # Sort all entries alphabetically!
+#
+# Keep flake8 plugins in sync with `requirements_dev.txt` and
+# `.pre-commit-confic.yaml`!
 
 
 [flake8]
