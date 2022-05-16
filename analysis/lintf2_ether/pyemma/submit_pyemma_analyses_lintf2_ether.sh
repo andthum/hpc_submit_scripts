@@ -95,7 +95,7 @@ get_num_bins () {
     # echo
     # echo "Going to determine the number of bins for the given bin width"
     # echo "of ${bin_width}"
-    
+
     box_length_z=$(gmx_get_box_lengths.sh -f ${settings}_out_${system}.gro -z || exit)
     box_length_z=$(echo "scale=4; ${box_length_z} * 10" | bc || exit )  # nm -> Angstrom
     num_bins=$(printf "%.0f" "$(echo "scale=4; ${box_length_z}/${bin_width}" | bc || exit)" || exit)
@@ -154,24 +154,24 @@ while getopts s:e:ha:r:b:f:d:D:w:l:t:u option; do
         # Required arguments
         s  ) sflag=true; system=${OPTARG};;
         e  ) eflag=true; settings=${OPTARG};;
-        
+
         # Optional arguments
         h  ) information; usage; exit 0;;
-        
+
         a  ) aflag=true; analysis_type=${OPTARG};;
         r  ) rflag=true; residue=${OPTARG};;
-        
+
         b  ) bflag=true; begin=${OPTARG};;
         f  ) fflag=true; end=${OPTARG};;
         d  ) dflag=true; every=${OPTARG};;
-        
+
         D  ) Dflag=true; direction=${OPTARG};;
         w  ) wflag=true; bin_width=${OPTARG};;
-        
+
         l  ) lflag=true; lagtime=${OPTARG};;
         t  ) tflag=true; timestep="${OPTARG} ps";;
         u  ) uflag=true;;
-        
+
         # Error management
         \? ) echo "Error: Unknown option: -${OPTARG}" >&2; usage; exit 1;;
         :  ) echo "Error: Missing option argument for -${OPTARG}" >&2; usage; exit 1;;
