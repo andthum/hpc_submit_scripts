@@ -193,29 +193,29 @@ while getopts s:e:ha:b:f:d:n:r:c:i:I:z:Z:W:lk option; do
         # Required arguments
         s  ) sflag=true; system=${OPTARG};;
         e  ) eflag=true; settings=${OPTARG};;
-        
+
         # Optional arguments
         h  ) information; usage; exit 0;;
-        
+
         a  ) aflag=true; analysis_type=${OPTARG};;
-        
+
         b  ) bflag=true; begin=${OPTARG};;
         f  ) fflag=true; end=${OPTARG};;
         d  ) dflag=true; every=${OPTARG};;
         n  ) nflag=true; nblocks=${OPTARG};;
         r  ) rflag=true; restart=${OPTARG};;
-        
+
         c  ) cflag=true; cutoff=${OPTARG};;
 #         w  ) wflag=true; bin_width=${OPTARG};;
         i  ) iflag=true; li_ix=${OPTARG};;
         I  ) Iflag=true; intermittency=${OPTARG};;
-        
+
         z  ) zflag=true; zmin=${OPTARG};;
         Z  ) Zflag=true; zmax=${OPTARG};;
         W  ) Wflag=true; slab_width=${OPTARG};;
         l  ) lflag=true;;
         k  ) kflag=true;;
-        
+
         # Error management
         \? ) echo "Error: Unknown option: -${OPTARG}" >&2; usage; exit 1;;
         :  ) echo "Error: Missing option argument for -${OPTARG}" >&2; usage; exit 1;;

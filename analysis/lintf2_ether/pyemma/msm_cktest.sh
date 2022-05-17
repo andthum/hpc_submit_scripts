@@ -58,7 +58,7 @@ get_num_bins () {
     echo
     echo "Going to determine the number of bins for the given bin width"
     echo "of ${bin_width}"
-    
+
     box_length_z=$(gmx_get_box_lengths.sh -f ${settings}_out_${system}.gro -z || exit)
     box_length_z=$(echo "scale=4; ${box_length_z} * 10" | bc || exit )  # nm -> Angstrom
     num_bins=$(printf "%.0f" "$(echo "scale=4; ${box_length_z}/${bin_width}" | bc || exit)" || exit)

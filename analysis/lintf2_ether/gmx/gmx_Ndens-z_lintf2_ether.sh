@@ -58,7 +58,7 @@ get_num_bins () {
     echo
     echo "Going to determine the number of bins for the given bin width"
     echo "of ${bin_width}"
-    
+
     box_length_z=$(gmx_get_box_lengths.sh -f ${settings}_out_${system}.gro -z || exit)
     num_bins=$(printf "%.0f" "$(echo "scale=5; ${box_length_z}/${bin_width}" | bc || exit)" || exit)
     if [ -z ${num_bins} ]; then
@@ -134,7 +134,7 @@ if [ -z ${num_bins} ]; then
         echo "${settings}_out_${system}.gro"
         echo "The file does not exist!"
         echo "Going to set num_bins to 2000"
-        echo "num_bins = ${num_bins}" 
+        echo "num_bins = ${num_bins}"
     fi
 fi
 

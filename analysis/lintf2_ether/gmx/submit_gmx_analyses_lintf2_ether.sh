@@ -174,7 +174,7 @@ get_num_bins () {
     # echo
     # echo "Going to determine the number of bins for the given bin width"
     # echo "of ${bin_width}"
-    
+
     box_length_z=$(gmx_get_box_lengths.sh -f ${settings}_out_${system}.gro -z || exit)
     num_bins=$(printf "%.0f" "$(echo "scale=5; ${box_length_z}/${bin_width}" | bc || exit)" || exit)
     if [ -z ${num_bins} ]; then
@@ -226,29 +226,29 @@ while getopts s:e:ha:b:f:d:m:M:r:w:z:Z:W:lk option; do
         # Required arguments
         s  ) sflag=true; system=${OPTARG};;
         e  ) eflag=true; settings=${OPTARG};;
-        
+
         # Optional arguments
         h  ) information; usage; exit 0;;
-        
+
         a  ) aflag=true; analysis_type=${OPTARG};;
         l  ) lflag=true;;
-        
+
         b  ) bflag=true; begin=${OPTARG};;
         f  ) fflag=true; end=${OPTARG};;
         d  ) dflag=true; dt=${OPTARG};;
-        
+
         m  ) mflag=true; beginMSDfit=${OPTARG};;
         M  ) Mflag=true; endMSDfit=${OPTARG};;
         r  ) rflag=true; trestart=${OPTARG};;
-        
+
         w  ) wflag=true; bin_width=${OPTARG};;
-        
+
         z  ) zflag=true; zmin=${OPTARG};;
         Z  ) Zflag=true; zmax=${OPTARG};;
         W  ) Wflag=true; slab_width=${OPTARG};;
         l  ) lflag=true;;
         k  ) kflag=true;;
-        
+
         # Error management
         \? ) echo "Error: Unknown option: -${OPTARG}" >&2; usage; exit 1;;
         :  ) echo "Error: Missing option argument for -${OPTARG}" >&2; usage; exit 1;;
