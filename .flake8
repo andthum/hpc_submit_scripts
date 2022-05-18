@@ -71,7 +71,13 @@ extend-ignore =
     # E203: whitespace before ':'
     # W503: line break before binary operator
     E203,
-    W503
+    W503,
+    ### Bandit ###
+    # S404: Consider possible security implications associated with the
+    #       subprocess module
+    # S603: subprocess call - check for execution of untrusted input
+    S404,
+    S603,
 extend-select =
     ### Compatibility with black ###
     # W504: line break after binary operator
@@ -101,6 +107,112 @@ require-plugins =
     flake8-rst,
     flake8-rst-docstrings,
     pep8-naming,
+# Allowed reStructuredText directives.
+# See https://github.com/peterjc/flake8-rst-docstrings/pull/16
+rst-directives =
+    autosummary,
+    moduleauthor,
+    # Spinx-specific directives from
+    # https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html
+    centered,
+    code-block,
+    codeauthor,
+    deprecated,
+    glossary,
+    highlight,
+    hlist,
+    index,
+    literalinclude,
+    math,
+    note,
+    only,
+    productionlist,
+    rubric,
+    sectionauthor,
+    seealso,
+    tabularcolumns,
+    toctree,
+    versionadded,
+    versionchanged,
+    warning,
+    # Spinx-specific domains from
+    # https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html
+    attribute,
+    class,
+    classmethod,
+    currentmodule,
+    data,
+    decorator,
+    decoratormethod,
+    default-domain,
+    exception,
+    function,
+    method,
+    module,
+    property,
+    staticmethod,
+# Allowed reStructuredText roles.
+# See https://github.com/peterjc/flake8-rst-docstrings/pull/16
+rst-roles =
+    ref,
+    # Self-defined roles:
+    bash,
+    # reStructuredText Interpreted Text Roles from
+    # https://docutils.sourceforge.io/docs/ref/rst/roles.html
+    code,
+    emphasis,
+    literal,
+    math,
+    pep-reference,
+    raw,
+    rfc-reference,
+    strong,
+    subscript,
+    superscript,
+    title-reference,
+    # Spinx-specific roles from
+    # https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html
+    abbr,
+    any,
+    code,
+    command,
+    dfn,
+    doc,
+    download,
+    envvar,
+    eq,
+    file,
+    guilabel,
+    kbd,
+    keyword,
+    mailheader,
+    makevar,
+    manpage,
+    math,
+    menuselection,
+    mimetype,
+    newsgroup,
+    numref,
+    option,
+    pep,
+    program,
+    ref,
+    regexp,
+    rfc,
+    samp,
+    term,
+    token,
+    # Spinx-specific domains from
+    # https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html
+    attr,
+    class,
+    const,
+    data,
+    exc,
+    func,
+    meth,
+    mod,
+    obj,
 # Print the source code generating the error/warning in question.
 show-source = true
 # Count the number of occurrences of each error/warning.
