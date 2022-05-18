@@ -4,6 +4,11 @@
 #
 # Sort all entries alphabetically!
 
+[tool.bandit]
+# B404: Consider possible security implications associated with the subprocess module
+# B603: subprocess call - check for execution of untrusted input
+skips = [ "B404", "B603" ]
+
 [tool.black]
 required-version = 22
 line-length = 79
