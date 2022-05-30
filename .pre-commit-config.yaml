@@ -87,7 +87,7 @@ repos:
 ########################################################################
 
   - repo: "https://github.com/python-jsonschema/check-jsonschema"
-    rev: "0.15.0"
+    rev: "0.15.1"
     hooks:
       # Validate GitHub Actions against the schema provided by
       # SchemaStore.
@@ -144,7 +144,7 @@ repos:
     # The `refs/tags/<tag>:refs/tags/<tag>` is needed for black's
     # `required-version` option to work.  See
     # https://github.com/psf/black/issues/2493#issuecomment-1081987650
-    rev: "refs/tags/22.3.0:refs/tags/22.3.0"
+    rev: "22.3.0"
     hooks:
       # Format Python code with black.
       - id: "black"
