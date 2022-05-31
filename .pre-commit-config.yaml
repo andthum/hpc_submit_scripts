@@ -19,8 +19,10 @@ default_language_version:
 # Run pre-commit as CI workflow.
 # See https://pre-commit.ci/
 ci:
-  # Whether to autofix pull requests
+  # Whether to autofix pull requests.
   autofix_prs: false
+  # Interval for autoupdate.
+  autoupdate_schedule: "quarterly"
 
 ########################################################################
 # General Hooks                                                        #
@@ -144,7 +146,7 @@ repos:
     # The `refs/tags/<tag>:refs/tags/<tag>` is needed for black's
     # `required-version` option to work.  See
     # https://github.com/psf/black/issues/2493#issuecomment-1081987650
-    rev: "22.3.0"
+    rev: "refs/tags/22.3.0:refs/tags/22.3.0"
     hooks:
       # Format Python code with black.
       - id: "black"
