@@ -96,7 +96,7 @@ other possible sbatch options can be parsed to \--sbatch (see below).
 
     Whether to terminate the job when it has an invalid dependency and
     thus can never run (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_kill-on-invalid-dep>`_).
+    <https://slurm.schedmd.com/sbatch.html#OPT_kill-on-invalid-dep>`__).
     Default: ``'yes'``.
 --mail-type
     {"NONE", "BEGIN", "END", "FAIL", "REQUEUE", "ALL", "INVALID_DEPEND",
@@ -104,31 +104,31 @@ other possible sbatch options can be parsed to \--sbatch (see below).
     "TIME_LIMIT_50", "ARRAY_TASKS"}
 
     Notify user by email when certain event types occur (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_mail-type>`_).  Default:
+    <https://slurm.schedmd.com/sbatch.html#OPT_mail-type>`__).  Default:
     ``'FAIL'``.
 --mail-user
     User to receive email notification.  Default: ``None``, which means
     the submitting user.
 --nodes
     Number of nodes to allocate (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_nodes>`_).  Default:
+    <https://slurm.schedmd.com/sbatch.html#OPT_nodes>`__).  Default:
     ``'1'``.
 --non-exclusive
     Do **not** allocate nodes exclusively, i.e. share nodes with other
     running jobs.  This option turns **off** sbatch's \--exclusive
     option (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_exclusive>`_), which is
+    <https://slurm.schedmd.com/sbatch.html#OPT_exclusive>`__), which is
     otherwise parsed to sbatch on default by this submission script.
 --partition
     Request a specific partition for the resource allocation (`more
-    details <https://slurm.schedmd.com/sbatch.html#OPT_partition>`_).
+    details <https://slurm.schedmd.com/sbatch.html#OPT_partition>`__).
     You can use :bash:`sinfo --summarize` to get a list of all
     partitions available on your computing cluster.  Default:``None``,
     which means the default partition as designated by the cluster
     administrator.
 --requeue
     Specifies that the batch job should be eligible for requeuing (`more
-    details <https://slurm.schedmd.com/sbatch.html#OPT_requeue>`_).  If
+    details <https://slurm.schedmd.com/sbatch.html#OPT_requeue>`__).  If
     not set, --no-requeue is parsed to sbatch on default by this
     submission script.
 --sbatch
@@ -139,77 +139,79 @@ other possible sbatch options can be parsed to \--sbatch (see below).
     internally to allow for cleanup steps.  Default: ``None``.
 
 List of possibly useful options to parse to sbatch via \--sbatch.  Refer
-to the `documetation of sbatch <https://slurm.schedmd.com/sbatch.html>`_
-for a full list of all options.  Note that the sbatch options
-\--job-name and \--output are set to ``'SETTINGS + "_" + SYSTEM'`` and
+to the `documetation of sbatch
+<https://slurm.schedmd.com/sbatch.html>`__ for a full list of all
+options.  Note that the sbatch options \--job-name and \--output are set
+to ``'SETTINGS + "_" + SYSTEM'`` and
 ``'SETTINGS + "_out_" + SYSTEM + "_slurm-%j.out'`` if they are not
 explicitly parsed to \--sbatch.
 
 --account
     Charge resources used by this job to the specified account (`more
-    details <ttps://slurm.schedmd.com/sbatch.html#OPT_account>`_).
+    details <ttps://slurm.schedmd.com/sbatch.html#OPT_account>`__).
 --begin
     Defer the allocation of the job until the specified time (`more
-    details <https://slurm.schedmd.com/sbatch.html#OPT_begin>`_).
+    details <https://slurm.schedmd.com/sbatch.html#OPT_begin>`__).
 --chdir
     Set the working directory of the batch script before it is executed
-    (`more details <https://slurm.schedmd.com/sbatch.html#OPT_chdir>`_).
+    (`more details
+    <https://slurm.schedmd.com/sbatch.html#OPT_chdir>`__).
 --constraint
     Specify which features are required by this job (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_constraint>`_).  You can
+    <https://slurm.schedmd.com/sbatch.html#OPT_constraint>`__).  You can
     use :bash:`sinfo --format "%12P | %.15f"` to see which features are
     available on which partition.
 --cpus-per-task
     Number of CPUs per task (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_cpus-per-task>`_).  This
+    <https://slurm.schedmd.com/sbatch.html#OPT_cpus-per-task>`__).  This
     option is ignored if \--non-exclusive is **not** set.  The option
     specifies the number of OpenMP threads to use to run Gromacs,
     if \--no-guess-threads is given.
 --dependency
     Defer the start of this job until the specified dependencies have
     been satisfied (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_dependency>`_).  If
+    <https://slurm.schedmd.com/sbatch.html#OPT_dependency>`__).  If
     multiple jobs are submitted with --nresubmits, the given dependency
     only applies to the first job and the other jobs depend on each
     other.
 --exclude
     Explicitly exclude certain nodes from the resources granted to the
     job (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_exclude>`_).
+    <https://slurm.schedmd.com/sbatch.html#OPT_exclude>`__).
 --extra-node-info
     Restrict node selection to nodes with at least the specified number
     of sockets, cores per socket and/or threads per core (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_extra-node-info>`_).
+    <https://slurm.schedmd.com/sbatch.html#OPT_extra-node-info>`__).
 --gres
     Generic consumable resources (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_gres>`_).  This option is
-    ignored if \--non-exclusive is **not** set.
+    <https://slurm.schedmd.com/sbatch.html#OPT_gres>`__).  This option
+    is ignored if \--non-exclusive is **not** set.
 --hold
     Submit the job in a held state (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_hold>`).
+    <https://slurm.schedmd.com/sbatch.html#OPT_hold>`__).
 --ntasks-per-node
     Number of tasks per node (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_ntasks-per-node>`_).
+    <https://slurm.schedmd.com/sbatch.html#OPT_ntasks-per-node>`__).
     This specifies the number of thread-MPI ranks to use to run Gromacs,
     if \--no-guess-threads is given.  If \--gmx-exe-mpi is given, this
     specifies the number of MPI ranks.  Must be provided via \--sbatch
     if \--no-guess-threads and/or \--gmx-exe-mpi is given.
 --mem
     Memory required per node. (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_mem>`_).
+    <https://slurm.schedmd.com/sbatch.html#OPT_mem>`__).
 --mincpus
     Minimum number of CPUs per node (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_mincpus>`_).
+    <https://slurm.schedmd.com/sbatch.html#OPT_mincpus>`__).
 --nodelist
     Request a specific list of nodes (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_nodelist>`_).
+    <https://slurm.schedmd.com/sbatch.html#OPT_nodelist>`__).
 --test-only
     Return an estimate of when a job would be scheduled to run.  No job
     is actually submitted (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_test-only>`_).
+    <https://slurm.schedmd.com/sbatch.html#OPT_test-only>`__).
 --time
     Set a total run time limit (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_time>`_).  You can use
+    <https://slurm.schedmd.com/sbatch.html#OPT_time>`__).  You can use
     :bash:`sinfo --summarize` to get the maximum allowed run time limits
     for each partition on your computing cluster.
 --time-min
@@ -217,7 +219,7 @@ explicitly parsed to \--sbatch.
     \--time limit lowered to a value no lower than \--time-min if doing
     so permits the job to begin execution earlier than otherwise
     possible (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_time-min>`_).
+    <https://slurm.schedmd.com/sbatch.html#OPT_time-min>`__).
 
 Notes
 -----
@@ -302,6 +304,7 @@ You can view your Slurm jobs with :bash:`squeue --user <your_username>`.
 __author__ = "Andreas Thum"
 
 
+# Standard libraries
 import argparse
 import glob
 import os
@@ -314,7 +317,8 @@ import warnings
 def gmx_get_nsteps_from_mdp(infile):
     """
     Extract the maximum number of simulation steps of an Gromacs MD
-    simulation from the `.mpd file`_.
+    simulation from the `.mpd file
+    <https://manual.gromacs.org/documentation/current/user-guide/mdp-options.html>`__.
 
     Parameters
     ----------
@@ -331,8 +335,6 @@ def gmx_get_nsteps_from_mdp(infile):
     ValueError
         If the input file does not contain a line that starts with
         'nsteps' or if 'nsteps' is not followed by an equal (=) sign.
-
-    .. _.mdp file: https://manual.gromacs.org/documentation/current/user-guide/mdp-options.html
     """  # noqa: W505,E501
     with open(infile, "r") as file:
         found_nsteps = False
@@ -364,13 +366,13 @@ def gmx_get_nsteps_from_mdp(infile):
     return int(nsteps)
 
 
-def extract_ints_from_str(str):
+def extract_ints_from_str(s):
     """
     Extract all integers from a string.
 
     Parameters
     ----------
-    str : str
+    s : str
         The input string.
 
     Returns
@@ -382,13 +384,76 @@ def extract_ints_from_str(str):
     --------
     >>> extract_ints_from_str("I have 2 apples and 4 pears")
     [2, 4]
-    >>> extract_ints_from_str("I have 0.5 apples and 4 pears")
+    >>> extract_ints_from_str("I have 2.5 apples and 4 pears")
     [4]
     >>> extract_ints_from_str("I have no apples and no pears")
     []
     """
-    ints = [int(i) for i in str.split() if i.isdigit()]
+    ints = [int(i) for i in s.split() if i.isdigit()]
     return ints
+
+
+def rm_option(cmd, option):
+    """
+    Remove an option from a command string.
+
+    Parameters
+    ----------
+    cmd : str
+        The command from which to remove the given option(s).
+    option : str or list or tuple
+        The option(s) to remove.
+
+    Returns
+    -------
+    cmd_new : str
+        The command without the given option(s).
+
+    Examples
+    --------
+    >>> cmd = "--job-name=Test -o out.log --dependency afterok:12 -c 4"
+    >>> options = ("--dependency", "-d")
+    >>> rm_option(cmd, options)
+    --job-name=Test -o out.log -c 4
+    >>> cmd = "--job-name=Test -o out.log --dependency=afterok:12 -c 4"
+    >>> rm_option(cmd, options)
+    --job-name=Test -o out.log -c 4
+    >>> cmd = "--job-name=Test -o out.log -d afterok:12 -c 4"
+    >>> rm_option(cmd, options)
+    --job-name=Test -o out.log -c 4
+    >>> cmd = "--job-name=Test -o out.log -d=afterok:12 -c 4"
+    >>> rm_option(cmd, options)
+    --job-name=Test -o out.log -c 4
+    >>> cmd = "-o out.log --dependency afterok:12 -d afterok:14 -c 4"
+    >>> rm_option(cmd, options)
+    -o out.log -c 4
+    >>> rm_option(cmd, "--dependency")
+    -o out.log -d afterok:14 -c 4
+    >>> rm_option(cmd, "--dep")
+    -o out.log -d afterok:14 -c 4
+    >>> rm_option(cmd, "-d")
+    -o out.log --dependency afterok:12 -c 4
+    >>> cmd = "-o out.log -d afterok:12 -n 2 -d afterok:14 -c 4"
+    >>> rm_option(cmd, "-d")
+    -o out.log -n 2 -c 4
+    """
+    if isinstance(option, (list, tuple)):
+        for opt in option:
+            cmd = rm_option(cmd, opt)
+    elif option in cmd:
+        cmd_list = shlex.split(cmd)
+        opt_ix = [
+            i for i, o in enumerate(cmd_list) if o.startswith(option.strip())
+        ]
+        for ix in opt_ix:
+            # Remove the option.
+            popped = cmd_list.pop(ix)
+            # NOTE: `shlex.split` does not split at '=' but at spaces.
+            if "=" not in popped:
+                # Remove the corresponding option value.
+                cmd_list.pop(ix)
+        cmd = " ".join(cmd_list)
+    return cmd
 
 
 if __name__ == "__main__":  # noqa: C901
@@ -706,7 +771,7 @@ if __name__ == "__main__":  # noqa: C901
                 # `val` is a list if the `nargs` option of argparse's
                 # `ArgumentParser.add_argument` method was changed.
                 for item in val:
-                    sbatch += " " + str(val)
+                    sbatch += " " + str(item)
             else:
                 sbatch += " " + str(val)
     job_name = " --job-name " + args.SETTINGS + "_" + args.SYSTEM
@@ -837,23 +902,11 @@ if __name__ == "__main__":  # noqa: C901
         # all following jobs must be set to '3'.
         pos_args_list[4] = "3"  # Set `continue` to '3'
         pos_args = " ".join(pos_args_list)
-        # Remove possible user specified dependency options
-        search_str = ("--dependency", "-d ", "-d=")
-        for str in search_str:
-            if str in sbatch:
-                # Note: `shlex.split` does not split at '='
-                list = shlex.split(sbatch)
-                ix = [i for i in range(len(list)) if list[i].startswith(str)]
-                if len(ix) != 1:
-                    raise ValueError(
-                        "'{}' was given {} times to --sbatch.  You should give"
-                        " each option only once".format(str, len(ix))
-                    )
-                ix = ix[0]
-                popped = list.pop(ix)  # Remove flag
-                if "=" not in popped:
-                    list.pop(ix)  # Remove corresponding value
-        for i in range(args.NRESUBMITS):
+        # After the first job submission the following jobs only depend
+        # on the respective previous job => Remove possible dependencies
+        # that the user specified for the first job.
+        sbatch = rm_option(sbatch, ("--dependency", "-d"))
+        for _ in range(args.NRESUBMITS):
             sbatch_dep = sbatch + " --dependency afterok:{}".format(job_id)
             submit = sbatch_dep + " " + batch_script + " " + pos_args
             job_id = subproc.check_output(shlex.split(submit))

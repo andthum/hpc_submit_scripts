@@ -163,6 +163,9 @@ repos:
     hooks:
       # Lint Python code with Flake8.
       - id: "flake8"
+        args:
+          # Decrease the verbosity of the output.
+          - "--quiet"
         additional_dependencies:
           # Required Flake8 plugins.
           # Keep in sync with `requirements_dev.txt` and `.flake8`!
@@ -184,8 +187,17 @@ repos:
       # Check code security with bandit.
       - id: "bandit"
         args:
+          # Config file to use.
+          - "--configfile"
+          - "pyproject.toml"
+          # Number of code lines to output for each issue.
+          - "--number"
+          - "1"
           # Find and process files in subdirectories.
-          - "--recursiv"
+          - "--recursive"
+        additional_dependencies:
+          # Required to read config from pyproject.toml
+          - "toml"
 
 ########################################################################
 # Shell / Bash Hooks                                                   #

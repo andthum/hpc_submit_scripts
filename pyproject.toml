@@ -4,6 +4,11 @@
 #
 # Sort all entries alphabetically!
 
+[tool.bandit]
+# B404: Consider possible security implications associated with the subprocess module
+# B603: subprocess call - check for execution of untrusted input
+skips = [ "B404", "B603" ]
+
 [tool.black]
 required-version = 22
 line-length = 79
@@ -12,13 +17,18 @@ target-version = ["py39"]
 [tool.isort]
 # profile should go on top so that it does not overwrite other settings.
 profile = "black"
-line_length = 79
 # Comments to put above import sections.
 import_heading_future = "Future imports"
 import_heading_stdlib = "Standard libraries"
 import_heading_thirdparty = "Third-party libraries"
 import_heading_firstparty = "First-party libraries"
 import_heading_localfolder = "Local imports"
+line_length = 79
+# Number of blank lines around import statements.
+lines_before_imports = 2
+lines_after_imports = 2
+lines_between_sections = 1
+lines_between_types = 0
 py_version = 39
 # Ignore files listed in .gitignore.
 skip_gitignore = true
