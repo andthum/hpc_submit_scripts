@@ -85,8 +85,14 @@ repos:
       - id: "requirements-txt-fixer"
 
 ########################################################################
-# Validate GitHub / GitLab CI workflows                                #
+# Validate CI Configuration Files                                      #
 ########################################################################
+
+  - repo: "https://github.com/pre-commit-ci/pre-commit-ci-config"
+    rev: "v1.5.1"
+    hooks:
+      # Validate pre-commit.ci configuration.
+      - id: "check-pre-commit-ci-config"
 
   - repo: "https://github.com/python-jsonschema/check-jsonschema"
     rev: "0.15.1"
@@ -143,8 +149,13 @@ repos:
           - "colorama"
 
   - repo: "https://github.com/psf/black"
-    # The `refs/tags/<tag>:refs/tags/<tag>` is needed for black's
-    # `required-version` option to work.  See
+    # Don't remove `refs/tags/<tag>:refs/tags/<tag>` in front of the
+    # hook's version number.  Without the prefix the black pre-commit
+    # hook will fail with exit code 1: "The required version XX does not
+    # match the running version YY!"  This happens, because in
+    # `pyproject.toml` we explicitly set the required version of black
+    # to XX but somehow the pre-commit hook has version YY when
+    # specifying the hook version without the prefix.  See
     # https://github.com/psf/black/issues/2493#issuecomment-1081987650
     rev: "refs/tags/22.3.0:refs/tags/22.3.0"
     hooks:
@@ -203,22 +214,24 @@ repos:
 # Shell / Bash Hooks                                                   #
 ########################################################################
 
-  - repo: "https://github.com/cisagov/pre-commit-shfmt"
-    rev: "v0.0.2"
+  - repo: "https://github.com/maxwinterstein/shfmt-py"
+    rev: "v3.4.3.1"
     hooks:
       # Format shell scripts with shfmt.
+      # NOTE: The official shfmt hook from
+      # https://github.com/scop/pre-commit-shfmt requires Go or Docker
+      # to be installed.  Therefore, we use the shfmt-py Python package
+      # instead.
       - id: "shfmt"
         args:
           # Language variant to parse (bash/posix/mksh/bats).
-          - "-ln bash"
+          - "-ln=bash"
           # Indentation level.
-          - "-i 4"
+          - "-i=4"
           # Indent switch cases.
           - "-ci"
           # Add a space after redirect operations (`>`).
           - "-sr"
-          # Error with a diff when the formatting differs.
-          - "-d"
           # List files whose formatting differs.
           - "-l"
 
@@ -231,6 +244,13 @@ repos:
       # to be installed.  Therefore, we use the shellcheck-py Python
       # package instead.
       - id: "shellcheck"
+        args:
+          # Specify shell dialect (sh/bash/dash/ksh)
+          - "--shell=bash"
+          # Minimum severity to consider (error/warning/info/style)
+          - "--severity=style"
+          # Use color in terminal output.
+          - "--color=always"
 
 ########################################################################
 # Markdown Hooks                                                       #
