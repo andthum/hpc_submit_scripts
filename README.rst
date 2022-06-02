@@ -39,6 +39,8 @@ Project Tree / Contents
     * :bash:`img`:  Image files for use in the documentation.
     * :bash:`lmod`:  Bash scripts that can be sourced to load Lmod_
       modules into the current shell.
+    * :bash:`python`:  Python modules containig functions and classes
+      that are used by the Python submit scripts.
     * :bash:`simulation`:  Slurm job scripts to run MD simulations.
 
 Refer to the README's of the different subdirectories for further
