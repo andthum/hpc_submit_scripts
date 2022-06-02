@@ -39,6 +39,8 @@ Project Tree / Contents
     * :bash:`img`:  Image files for use in the documentation.
     * :bash:`lmod`:  Bash scripts that can be sourced to load Lmod_
       modules into the current shell.
+    * :bash:`python`:  Python modules containig functions and classes
+      that are used by the Python submit scripts.
     * :bash:`simulation`:  Slurm job scripts to run MD simulations.
 
 Refer to the README's of the different subdirectories for further
@@ -48,8 +50,8 @@ The Slurm job scripts can conveniently be submitted via Python_ scripts
 that reside in the same subdirectory as the job scripts.  Python scripts
 that submit Slurm job scripts to the Slurm Workload Manager start with
 :bash:`submit_*.py`.  For help how to use these scripts type
-:bash:`python3 path/to/the/script.py -h` in a terminal or read the
-docstring inside the script.
+:bash:`python3 path/to/the/script.py -h` in a terminal or refer to the
+documentation of the script.
 
 
 Prerequisites
@@ -86,9 +88,9 @@ To get the latest changes, simply do
     cd path/to/hpc_submit_scripts
     git pull
 
-You may want to change the default settings of the Python submit
-scripts.  For example, you may want to set the default for the
---mail-user option to your mail adress.
+You may want to change the default settings using a |config_file|.  For
+example, you may want to set the default for the --mail-user option of
+sbatch to your mail adress.
 
 
 Usage
