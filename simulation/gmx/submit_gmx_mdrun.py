@@ -314,33 +314,6 @@ import sys
 import warnings
 
 
-def extract_ints_from_str(s):
-    """
-    Extract all integers from a string.
-
-    Parameters
-    ----------
-    s : str
-        The input string.
-
-    Returns
-    -------
-    ints : list
-        List of integers in `str`.
-
-    Examples
-    --------
-    >>> extract_ints_from_str("I have 2 apples and 4 pears")
-    [2, 4]
-    >>> extract_ints_from_str("I have 2.5 apples and 4 pears")
-    [4]
-    >>> extract_ints_from_str("I have no apples and no pears")
-    []
-    """
-    ints = [int(i) for i in s.split() if i.isdigit()]
-    return ints
-
-
 def rm_option(cmd, option):
     """
     Remove an option from a command string.
@@ -412,6 +385,7 @@ if not os.path.isdir(python_dir):
 sys.path.insert(1, python_dir)
 # Third-party libraries
 import gmx  # noqa: E402
+import strng  # noqa: E402
 
 
 if __name__ == "__main__":  # noqa: C901
@@ -854,7 +828,7 @@ if __name__ == "__main__":  # noqa: C901
     submit = sbatch + " " + batch_script + " " + pos_args
     job_id = subproc.check_output(shlex.split(submit))
     if args.CONTINUE in (2, 3):  # Resubmit
-        job_id = extract_ints_from_str(job_id)[0]
+        job_id = strng.extract_ints_from_str(job_id)[0]
         # After the first job submission the following jobs always
         # continue a previous simulation. => The `continue` option of
         # all following jobs must be set to '3'.
@@ -868,6 +842,6 @@ if __name__ == "__main__":  # noqa: C901
             sbatch_dep = sbatch + " --dependency afterok:{}".format(job_id)
             submit = sbatch_dep + " " + batch_script + " " + pos_args
             job_id = subproc.check_output(shlex.split(submit))
-            job_id = extract_ints_from_str(job_id)[0]
+            job_id = strng.extract_ints_from_str(job_id)[0]
 
     print("{} done".format(os.path.basename(sys.argv[0])))
