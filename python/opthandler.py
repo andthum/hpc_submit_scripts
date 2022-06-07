@@ -264,6 +264,7 @@ def conv_configparser_opts(config, converter, sections=None):
     BAR baz
     """
     config_converted = copy.deepcopy(config)
+    config_converted.optionxform = str
     if sections is None:
         sections = config.sections()
     elif isinstance(sections, str):
