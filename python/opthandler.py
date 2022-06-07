@@ -52,6 +52,10 @@ def configparser2dict(
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import configparser2dict
+
     >>> import configparser
     >>> config = configparser.ConfigParser()
     >>> config['Monty'] = {'spam': 'no!', 'eggs': '2'}
@@ -171,22 +175,23 @@ def conv_argparse_opts(args, converter):
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import conv_argparse_opts
+
     >>> import argparse
     >>> parser = argparse.ArgumentParser()
-    >>> parser.add_argument_group('--spam', type=int)
-    >>> parser.add_argument_group('--EGGS', type=int)
-    >>> parser.add_argument_group('--foo-bar', type=str)
+    >>> action = parser.add_argument('--spam', type=int)
+    >>> action = parser.add_argument('--EGGS', type=int)
+    >>> action = parser.add_argument('--FOO-bar', type=str)
     >>> args = parser.parse_args(
     ...     ['--spam', '0', '--EGGS', '2', '--FOO-bar', 'baz']
     ... )
-    >>> args
-    Namespace(EGGS=2, FOO-bar='baz', spam=0)
-    >>> conv_argparse_opts(args, str.lower)
-    Namespace(eggs=2, foo-bar='baz', spam=0)
-    >>> conv_argparse_opts(args, str.upper)
-    Namespace(EGGS=2, FOO-BAR='baz', SPAM=0)
-    >>> conv_argparse_opts(args, lambda s: str.replace(s, "-", "_"))
-    Namespace(EGGS=2, FOO_bar='baz', spam=0)
+    >>> sorted(vars(args).items())
+    [('EGGS', 2), ('FOO_bar', 'baz'), ('spam', 0)]
+    >>> args = conv_argparse_opts(args, str.lower)
+    >>> sorted(vars(args).items())
+    [('eggs', 2), ('foo_bar', 'baz'), ('spam', 0)]
     """
     # `args` cannot be changed in-place, otherwise you get
     # "RuntimeError: dictionary keys changed during iteration"
@@ -228,6 +233,10 @@ def conv_configparser_opts(config, converter, sections=None):
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import conv_configparser_opts
+
     >>> import configparser
     >>> config = configparser.ConfigParser()
     >>> config["Monty"] = {'spam': 'no!', 'eggs': '2'}
@@ -296,6 +305,10 @@ def conv_configparser_vals(config, converter, sections=None):
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import conv_configparser_vals
+
     >>> import configparser
     >>> config = configparser.ConfigParser()
     >>> config["Monty"] = {'spam': 'no!', 'eggs': '2'}
@@ -379,6 +392,10 @@ def convert_str(
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import convert_str
+
     Conversion to NoneType ``None``:
 
     >>> convert_str('None')  # Returns None
@@ -755,6 +772,10 @@ def optdict2list(
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import optdict2list
+
     >>> optdict2list({'a': 0, 'Bc': 'xY'})
     ['-a', '0', '--Bc', 'xY']
     >>> optdict2list({' a': 0, ' Bc ': 'xY '})
@@ -775,12 +796,13 @@ def optdict2list(
     ...     skiped_opts=(None, False),
     ... )
     ['-a', '0', '--Bc', 'None', '--xy', 'False']
+    >>> # 0 is False, 1 is True
     >>> optdict2list(
     ...     {'a': 0, 'Bc': None, 'xy': False},
     ...     skiped_opts=(None, False),
     ...     convert_to_str=False,
     ... )
-    ['-a', 0]
+    []
     >>> optdict2list(
     ...     {'a': 0, 'Bc': None, 'xy': False},
     ...     skiped_opts=('None', 'False'),
@@ -858,6 +880,10 @@ def optdict2str(optdict, skiped_opts=None, dumped_vals=None):
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import optdict2str
+
     >>> optdict2str({'a': 0, 'Bc': 'xY'})
     '-a 0 --Bc xY'
     >>> optdict2str({' a': 0, ' Bc ': 'xY '})
@@ -923,6 +949,10 @@ def optlist2dict(optlist, convert=False, **kwargs):
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import optlist2dict
+
     >>> optlist2dict(['-a', '0', '-b', '1'])
     {'a': '0', 'b': '1'}
     >>> optlist2dict([' -a', ' 0 ', ' -b ', '1 '])
@@ -1046,31 +1076,35 @@ def rm_option(cmd, option):
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import rm_option
+
     >>> cmd = '--job-name=Test -o out.log --dependency afterok:12 -c 4'
     >>> options = ('--dependency', '-d')
     >>> rm_option(cmd, options)
-    --job-name=Test -o out.log -c 4
+    '--job-name=Test -o out.log -c 4'
     >>> cmd = '--job-name=Test -o out.log --dependency=afterok:12 -c 4'
     >>> rm_option(cmd, options)
-    --job-name=Test -o out.log -c 4
+    '--job-name=Test -o out.log -c 4'
     >>> cmd = '--job-name=Test -o out.log -d afterok:12 -c 4'
     >>> rm_option(cmd, options)
-    --job-name=Test -o out.log -c 4
+    '--job-name=Test -o out.log -c 4'
     >>> cmd = '--job-name=Test -o out.log -d=afterok:12 -c 4'
     >>> rm_option(cmd, options)
-    --job-name=Test -o out.log -c 4
+    '--job-name=Test -o out.log -c 4'
     >>> cmd = '-o out.log --dependency afterok:12 -d afterok:14 -c 4'
     >>> rm_option(cmd, options)
-    -o out.log -c 4
+    '-o out.log -c 4'
     >>> rm_option(cmd, '--dependency')
-    -o out.log -d afterok:14 -c 4
+    '-o out.log -d afterok:14 -c 4'
     >>> rm_option(cmd, '--dep')
-    -o out.log -d afterok:14 -c 4
+    '-o out.log -d afterok:14 -c 4'
     >>> rm_option(cmd, '-d')
-    -o out.log --dependency afterok:12 -c 4
+    '-o out.log --dependency afterok:12 -c 4'
     >>> cmd = '-o out.log -d afterok:12 -n 2 -d afterok:14 -c 4'
     >>> rm_option(cmd, '-d')
-    -o out.log -n 2 -c 4
+    '-o out.log -n 2 -c 4'
     """
     if isinstance(option, (list, tuple)):
         for opt in option:
@@ -1131,6 +1165,10 @@ def str2none(s, case_sensitive=False, empty_none=False):
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import str2none
+
     >>> str2none(None)  # Returns None
     >>> str2none('None')  # Returns None
     >>> str2none('none')  # Returns None
