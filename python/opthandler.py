@@ -43,7 +43,7 @@ def configparser2dict(
 
     Returns
     -------
-    options : dict of dicts
+    options : dict of dict
         A dictionary containing the entries of the input
         :class:`~configparser.ConfigParser` as a dictionary of
         dictionaries.  Every section name becomes a key that holds as
@@ -52,6 +52,10 @@ def configparser2dict(
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import configparser2dict
+
     >>> import configparser
     >>> config = configparser.ConfigParser()
     >>> config['Monty'] = {'spam': 'no!', 'eggs': '2'}
@@ -82,7 +86,7 @@ def configparser_check_options(
     known_options,
     sections=None,
     skip_missing_sec=False,
-    case_sensitive=False,
+    case_sensitive=True,
     hyphens_are_underscores=False,
 ):
     """
@@ -171,22 +175,23 @@ def conv_argparse_opts(args, converter):
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import conv_argparse_opts
+
     >>> import argparse
     >>> parser = argparse.ArgumentParser()
-    >>> parser.add_argument_group('--spam', type=int)
-    >>> parser.add_argument_group('--EGGS', type=int)
-    >>> parser.add_argument_group('--foo-bar', type=str)
+    >>> action = parser.add_argument('--spam', type=int)
+    >>> action = parser.add_argument('--EGGS', type=int)
+    >>> action = parser.add_argument('--FOO-bar', type=str)
     >>> args = parser.parse_args(
     ...     ['--spam', '0', '--EGGS', '2', '--FOO-bar', 'baz']
     ... )
-    >>> args
-    Namespace(EGGS=2, FOO-bar='baz', spam=0)
-    >>> conv_argparse_opts(args, str.lower)
-    Namespace(eggs=2, foo-bar='baz', spam=0)
-    >>> conv_argparse_opts(args, str.upper)
-    Namespace(EGGS=2, FOO-BAR='baz', SPAM=0)
-    >>> conv_argparse_opts(args, lambda s: str.replace(s, "-", "_"))
-    Namespace(EGGS=2, FOO_bar='baz', spam=0)
+    >>> sorted(vars(args).items())
+    [('EGGS', 2), ('FOO_bar', 'baz'), ('spam', 0)]
+    >>> args = conv_argparse_opts(args, str.lower)
+    >>> sorted(vars(args).items())
+    [('eggs', 2), ('foo_bar', 'baz'), ('spam', 0)]
     """
     # `args` cannot be changed in-place, otherwise you get
     # "RuntimeError: dictionary keys changed during iteration"
@@ -228,6 +233,10 @@ def conv_configparser_opts(config, converter, sections=None):
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import conv_configparser_opts
+
     >>> import configparser
     >>> config = configparser.ConfigParser()
     >>> config["Monty"] = {'spam': 'no!', 'eggs': '2'}
@@ -255,6 +264,7 @@ def conv_configparser_opts(config, converter, sections=None):
     BAR baz
     """
     config_converted = copy.deepcopy(config)
+    config_converted.optionxform = str
     if sections is None:
         sections = config.sections()
     elif isinstance(sections, str):
@@ -296,6 +306,10 @@ def conv_configparser_vals(config, converter, sections=None):
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import conv_configparser_vals
+
     >>> import configparser
     >>> config = configparser.ConfigParser()
     >>> config["Monty"] = {'spam': 'no!', 'eggs': '2'}
@@ -379,6 +393,10 @@ def convert_str(
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import convert_str
+
     Conversion to NoneType ``None``:
 
     >>> convert_str('None')  # Returns None
@@ -524,7 +542,7 @@ def get_opts(
     **kwargs,
 ):
     """
-    Gather all options from command line and config file.
+    Gather all options from command line and |config_file|.
 
     Gather all options given via the command-line interface and via a
     config file, merge them and return them in one dictionary.
@@ -543,7 +561,7 @@ def get_opts(
         i.e. not-given arguments must not be suppressed with
         :attr:`argparse.SUPPRESS`.
     conf_file : str, optional
-        The name of the config file.
+        The name of the |config_file|.
     secs_known : list or tuple or str or None, optional
         Sections of the config file that contain options that can also
         be specified via the command-line interface ("known" to
@@ -582,12 +600,12 @@ def get_opts(
 
     Returns
     -------
-    options : dict of dicts
+    options : dict of dict
         A dictionary of two dictionaries.  The first key (given by the
         first known section in `sections`) contains as value a
         sub-dictionary of all known options and their respective values.
         The second key (given by `sec_unknown`) contains as value a
-        dictionary of all unknown options their respective values.
+        dictionary of all unknown options and their respective values.
 
     See Also
     --------
@@ -600,7 +618,6 @@ def get_opts(
         Options that can also be parsed via the command-line interface
         (i.e. options that are known to the input
         :class:`~argparse.ArgumentParser`).
-
     Unknown options
         Options that are not contained in the
         :class:`~argparse.Namespace` of the input
@@ -755,6 +772,10 @@ def optdict2list(
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import optdict2list
+
     >>> optdict2list({'a': 0, 'Bc': 'xY'})
     ['-a', '0', '--Bc', 'xY']
     >>> optdict2list({' a': 0, ' Bc ': 'xY '})
@@ -775,12 +796,13 @@ def optdict2list(
     ...     skiped_opts=(None, False),
     ... )
     ['-a', '0', '--Bc', 'None', '--xy', 'False']
+    >>> # 0 is False, 1 is True
     >>> optdict2list(
     ...     {'a': 0, 'Bc': None, 'xy': False},
     ...     skiped_opts=(None, False),
     ...     convert_to_str=False,
     ... )
-    ['-a', 0]
+    []
     >>> optdict2list(
     ...     {'a': 0, 'Bc': None, 'xy': False},
     ...     skiped_opts=('None', 'False'),
@@ -800,7 +822,7 @@ def optdict2list(
         )
     optlist = []
     for opt, val in optdict.items():
-        opt = str(opt)
+        opt = str(opt).strip()
         if convert_from_str:
             val = convert_str(val, **kwargs)
         elif convert_to_str:
@@ -810,9 +832,9 @@ def optdict2list(
         if dumped_vals is not None and val in dumped_vals:
             val = ""
         if len(opt) == 1:
-            optlist.append("-" + opt.strip())
+            optlist.append("-" + opt)
         elif len(opt) > 1:
-            optlist.append("--" + opt.strip())
+            optlist.append("--" + opt)
         # else: len(opt) == 0 => `val` is position argument.
         if isinstance(val, str) and len(val) == 0:
             continue
@@ -858,6 +880,10 @@ def optdict2str(optdict, skiped_opts=None, dumped_vals=None):
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import optdict2str
+
     >>> optdict2str({'a': 0, 'Bc': 'xY'})
     '-a 0 --Bc xY'
     >>> optdict2str({' a': 0, ' Bc ': 'xY '})
@@ -923,6 +949,10 @@ def optlist2dict(optlist, convert=False, **kwargs):
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import optlist2dict
+
     >>> optlist2dict(['-a', '0', '-b', '1'])
     {'a': '0', 'b': '1'}
     >>> optlist2dict([' -a', ' 0 ', ' -b ', '1 '])
@@ -969,19 +999,24 @@ def optlist2dict(optlist, convert=False, **kwargs):
 
 def read_config(conf_file="hpcssrc.ini"):
     """
-    Search and read options from a config file.
+    Search and read options from a |config_file|.
 
     Parameters
     ----------
     conf_file : str, optional
-        The name of the config file.
+        The name of the |config_file|.  The config file must be written
+        in `INI language`_ as supported by the built-in
+        :mod:`configparser` Python module.
+
+        .. _INI language:
+            https://docs.python.org/3/library/configparser.html#supported-ini-file-structure
 
     Returns
     -------
     config : configparser.ConfigParser
         A :class:`~configparser.ConfigParser` instance containing the
         configuration read from the first found config file.  If no
-        config file was found an empty
+        config file was found, an empty
         :class:`~configparser.ConfigParser` is returned.
 
     Notes
@@ -994,20 +1029,26 @@ def read_config(conf_file="hpcssrc.ini"):
            directory.
         2. At :file:`${HOME}/.hpcss/hpcssrc.ini` (where :file:`${HOME}`
            is the user's home directory).
-        3. In the root directory of the hpc_submit_scripts project.
+        3. In the root directory of the hpc_submit_scripts repository.
 
     As soon as a config file is found, this config file is read and
     other locations are not scanned anymore.  If no config file is found
     at all, this function returns an empty
     :class:`~configparser.ConfigParser`.
 
-    Note: :class:`configparser.ConfigParser` instances always store
-    options and their values as strings.
-    """
+    Note that :class:`~configparser.ConfigParser` instances always store
+    options and their values as strings.  However, unlike the default
+    :class:`~configparser.ConfigParser`, the returned
+    :class:`~configparser.ConfigParser` reads option names
+    case-sensitively.  Moreover, section names are case-insensitive and
+    leading and trailing spaces are removed.
+    """  # noqa: W505,E501
     config = configparser.ConfigParser(converters={"none": str2none})
     # Remove leading and trailing spaces from section headers and ignore
     # the case of sections.
     config.SECTCRE = re.compile(r"\[ *(?P<header>[^]]+?) *\]", re.IGNORECASE)
+    # Make option names case-sensitive.
+    config.optionxform = str
     home = os.path.expanduser("~")
     file_root = os.path.abspath(os.path.dirname(__file__))
     project_root = os.path.join(file_root, "../")
@@ -1046,31 +1087,35 @@ def rm_option(cmd, option):
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import rm_option
+
     >>> cmd = '--job-name=Test -o out.log --dependency afterok:12 -c 4'
     >>> options = ('--dependency', '-d')
     >>> rm_option(cmd, options)
-    --job-name=Test -o out.log -c 4
+    '--job-name=Test -o out.log -c 4'
     >>> cmd = '--job-name=Test -o out.log --dependency=afterok:12 -c 4'
     >>> rm_option(cmd, options)
-    --job-name=Test -o out.log -c 4
+    '--job-name=Test -o out.log -c 4'
     >>> cmd = '--job-name=Test -o out.log -d afterok:12 -c 4'
     >>> rm_option(cmd, options)
-    --job-name=Test -o out.log -c 4
+    '--job-name=Test -o out.log -c 4'
     >>> cmd = '--job-name=Test -o out.log -d=afterok:12 -c 4'
     >>> rm_option(cmd, options)
-    --job-name=Test -o out.log -c 4
+    '--job-name=Test -o out.log -c 4'
     >>> cmd = '-o out.log --dependency afterok:12 -d afterok:14 -c 4'
     >>> rm_option(cmd, options)
-    -o out.log -c 4
+    '-o out.log -c 4'
     >>> rm_option(cmd, '--dependency')
-    -o out.log -d afterok:14 -c 4
+    '-o out.log -d afterok:14 -c 4'
     >>> rm_option(cmd, '--dep')
-    -o out.log -d afterok:14 -c 4
+    '-o out.log -d afterok:14 -c 4'
     >>> rm_option(cmd, '-d')
-    -o out.log --dependency afterok:12 -c 4
+    '-o out.log --dependency afterok:12 -c 4'
     >>> cmd = '-o out.log -d afterok:12 -n 2 -d afterok:14 -c 4'
     >>> rm_option(cmd, '-d')
-    -o out.log -n 2 -c 4
+    '-o out.log -n 2 -c 4'
     """
     if isinstance(option, (list, tuple)):
         for opt in option:
@@ -1080,7 +1125,8 @@ def rm_option(cmd, option):
         opt_ix = [
             ix for ix, o in enumerate(cmd_list) if o.startswith(option.strip())
         ]
-        for ix in opt_ix:
+        # Remove in reverse order so that indices in `opt_ix` stay valid
+        for ix in opt_ix[::-1]:
             # Remove the option.
             popped = cmd_list.pop(ix)
             # NOTE: `shlex.split` does not split at "=" but at spaces.
@@ -1131,6 +1177,10 @@ def str2none(s, case_sensitive=False, empty_none=False):
 
     Examples
     --------
+    .. testsetup::
+
+        from opthandler import str2none
+
     >>> str2none(None)  # Returns None
     >>> str2none('None')  # Returns None
     >>> str2none('none')  # Returns None

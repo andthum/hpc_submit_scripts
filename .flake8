@@ -1,9 +1,9 @@
-# flake8 configuration file.
+# Flake8 configuration file.
 # See https://flake8.pycqa.org/en/latest/user/configuration.html
 #
 # Sort all entries alphabetically!
 #
-# Keep flake8 plugins in sync with `requirements_dev.txt` and
+# Keep Flake8 plugins in sync with `requirements-dev.txt` and
 # `.pre-commit-confic.yaml`!
 
 
@@ -151,6 +151,13 @@ rst-directives =
     module,
     property,
     staticmethod,
+    # sphinx.ext.doctest directives from
+    # https://www.sphinx-doc.org/en/master/usage/extensions/doctest.html
+    doctest,
+    testcleanup,
+    testcode,
+    testoutput,
+    testsetup,
 # Allowed reStructuredText roles.
 # See https://github.com/peterjc/flake8-rst-docstrings/pull/16
 rst-roles =
@@ -213,6 +220,46 @@ rst-roles =
     meth,
     mod,
     obj,
+# Allowed reStructuredText roles.
+# See https://github.com/peterjc/flake8-rst-docstrings/pull/62
+rst-substitutions =
+    # Self-defined substitutions:
+    config_file,
+    dev_guide,
+    MIT_License,
+    Git,
+    Git_Book,
+    GitHub,
+    Issue,
+    Q&A,
+    RG_of_Professor_Heuer,
+    Bagheera,
+    Palma2,
+    Slurm,
+    sbatch,
+    Lmod,
+    rsync,
+    Gromacs,
+    Python,
+    PyPI,
+    pip,
+    virtual_Python_environment,
+    venv,
+    Virtualenv,
+    Black,
+    isort,
+    Flake8,
+    pytest,
+    RTD,
+    Sphinx,
+    RST,
+    RST_option_list,
+    NumPy_docstring_convention,
+    shfmt,
+    shfmt-py,
+    shellcheck,
+    shellcheck-py,
+    markdownlint,
 # Print the source code generating the error/warning in question.
 show-source = true
 # Count the number of occurrences of each error/warning.

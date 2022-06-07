@@ -21,6 +21,10 @@ def extract_ints_from_str(s):
 
     Examples
     --------
+    .. testsetup::
+
+        from strng import extract_ints_from_str
+
     >>> extract_ints_from_str('I have 2 apples and 4 pears')
     [2, 4]
     >>> extract_ints_from_str('I have 2.5 apples and 4 pears')

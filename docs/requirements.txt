@@ -1,0 +1,5 @@
+# Requirements to build hpcss' documentation.
+
+sphinx >=3.0, <6.0
+sphinx-rtd-theme <2.0
+tomlkit < 1.0
