@@ -1,0 +1,88 @@
+# Test Code
+#
+# See:
+# https://docs.github.com/en/actions/guides/building-and-testing-python
+
+name: Tests
+
+on:
+  push:
+    branches: [main, develop]
+    tags: ["v[0-9].[0-9].[0-9]*"]
+  pull_request:
+    # Run this workflow on every PR, except for PRs that only changes
+    # files from the following ignore list.
+    paths-ignore:
+      - ./LICENSE.txt
+      - "**/*.eps"
+      - "**/*.EPS"
+      - "**/*.jpg"
+      - "**/*.JPG"
+      - "**/*.jpeg"
+      - "**/*.JPEG"
+      - "**/*.pdf"
+      - "**/*.PDF"
+      - "**/*.png"
+      - "**/*.PNG"
+      - "**/*.svg"
+      - "**/*.SVG"
+      - "**/*.tif"
+      - "**/*.TIF"
+      - "**/*.tiff"
+      - "**/*.TIFF"
+  release:
+    types: [published, created, edited, prereleased, released]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        # Tests must be run on all target platforms and Python versions
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.8", "3.9", "3.10"]
+      # Do not cancel in-progress jobs if any matrix job fails
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Export ${HOME}/.local/bin to ${PATH}
+      # Executable Python binaries are ususally stored there
+      run: echo "${HOME}/.local/bin" >> ${GITHUB_PATH}
+    - name: Get pip cache dir
+      # pip's cache path depends on the operating system, see
+      # https://github.com/actions/cache/blob/main/examples.md#python---pip
+      # This requires pip >=20.1
+      id: pip-cache
+      run: |
+        python -m pip install --user --upgrade pip
+        echo "::set-output name=dir::$(pip cache dir)"
+    - name: Create/Restore cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          ${{ steps.pip-cache.outputs.dir }}/**
+          ./docs/build/**
+          ~/docs/build/**
+          ./.pytest_cache/**
+          ~/.pytest_cache/**
+        key: ${{ runner.os }}-${{ matrix.python-version }}-${{ github.job }}
+        restore-keys: |
+          ${{ runner.os }}-${{ matrix.python-version }}
+          ${{ runner.os }}
+    - name: Install/Upgrade setuptools and wheel
+      run: python -m pip install --user --upgrade setuptools wheel
+    - name: Install/Upgrade requirements to build the documentation
+      run: python -m pip install --user --upgrade -r docs/requirements.txt
+    - name: Test build of the documentation
+      run: make -C ./docs/ html
+    - name: doctest
+      # Because the default dtypes of NumPy arrays are different on
+      # Windows, doctest will detect false failures.  See e.g.
+      # https://stackoverflow.com/questions/36278590/numpy-array-dtype-is-coming-as-int32-by-default-in-a-windows-10-64-bit-machine
+      if: ${{ runner.os != 'Windows' }}
+      run: make -C ./docs/ doctest
