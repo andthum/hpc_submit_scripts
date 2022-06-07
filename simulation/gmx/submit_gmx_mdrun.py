@@ -5,12 +5,12 @@
 
 
 r"""
-Start or continue a molecular dynamics (MD) simulation with Gromacs_ on
-a computing cluster that uses the `Slurm Workload Manager`_.
+Start or continue a molecular dynamics (MD) simulation with |Gromacs| on
+a computing cluster that uses the |Slurm| Workload Manager.
 
-This script is designed to be used on the Palma2 HPC cluster of the
-University of Münster or on the Bagheera HPC cluster of the research
-group of Prof. Heuer.
+This script is designed to be used on the |Palma2| HPC cluster of the
+University of Münster or on the |Bagheera| HPC cluster of the
+|RG_of_Professor_Heuer|.
 
 Options
 -------
@@ -24,9 +24,9 @@ Options
     Parrinello-Rahman barostat and an Nose-Hoover thermostat.  You can
     give any string here.  See notes below.
 --structure
-    Name of the file that contains the starting structure in a `format
-    that is readable by Gromacs`_.  The starting structure is ignored if
-    you continue a previous simulation.  Default: ``None``.
+    Name of the file that contains the starting structure in a
+    `format that is readable by Gromacs`_.  The starting structure is
+    ignored if you continue a previous simulation.  Default: ``None``.
 --continue
     {0, 1, 2, 3}
 
@@ -52,15 +52,15 @@ Options
     if \--continue is set to ``0`` or ``1``.  Default: ``10``.
 --no-backup
     By default, old simulation files will be backed up into a
-    subdirectory before continuing a previous simulation using rsync_.
+    subdirectory before continuing a previous simulation using |rsync|.
     This might take up to a few hours depending on the size of the
     files.  With \--no-backup you can skip this backup, but be aware
     that your trajectory (and other simulation files) might get
     corrupted if the continuation of the simulation fails badly.
 --gmx-lmod
-    If running on a cluster which uses the Lmod_ module system, specifiy
-    here which file to source (relative to the :file:`lmod` subdirectory
-    of this project) to load Gromacs.  Default:
+    If running on a cluster which uses the |Lmod| module system,
+    specifiy here which file to source (relative to the :file:`lmod`
+    subdirectory of this project) to load Gromacs.  Default:
     ``'palma/2019a/gmx2018-8_foss.sh'``.
 --gmx-exe
     Name of the Gromacs executable.  Default: ``'gmx'``.
@@ -69,17 +69,17 @@ Options
     simulation will be run using this executable instead of 'gmx mdrun'.
     Must be provided if the (maximum) number of nodes set with \--nodes
     is greater than one.  If given, \--ntasks-per-node must be provided
-    to sbatch.  Default: ``None``.
+    to |sbatch|.  Default: ``None``.
 --no-guess-threads
     Don't let Gromacs guess the number of thread-MPI ranks and OpenMP
     threads, but set the number of thread-MPI ranks to
     :bash:`${SLURM_NTASKS_PER_NODE}` and the number of OpenMP threads to
     :bash:`${CPUS_PER_TASK}`, which is equivalent to
-    :bash:`${SLURM_CPUS_PER_TASK} (see Notes below).  Note, if
+    :bash:`${SLURM_CPUS_PER_TASK}` (see Notes below).  Note, if
     \--gmx-mpi-exe is provided, the number of MPI ranks is always set to
     :bash:`${SLURM_NTASKS_PER_NODE}` and guessing only affects the
     number of OpenMP threads.  If \--no-guess-threads is given,
-    \--ntasks-per-node must be provided to sbatch.
+    \--ntasks-per-node must be provided to |sbatch|.
 --mdrun-flags
     Additional options to parse to the Gromacs 'mdrun' engine, provided
     as one long, enquoted string, e.g. '-npme 12'.  Default:
@@ -90,96 +90,18 @@ Options
     ignored if \--continue is 1 or 3.  Default: ``''``.
 
 You can provide arbitrary other options to this script.  All these other
-options are parsed directly to the :bash:`sbatch` Slurm command without
+options are parsed directly to the |sbatch| Slurm command without
 further introspection or validation.  This means, you can parse any
 option to sbatch but you are responsible for providing correct options.
 
-List of possibly useful options to parse to sbatch.  Refer to the
-`documetation of sbatch <https://slurm.schedmd.com/sbatch.html>`__ for a
-full list of all options.  All these options can also be provied in the
-|config_file| in the sections "sbatch" and/or "sbatch.simulation".
+sbatch options with additional meaning in the context of this submit
+script:
 
---account
-    Charge resources used by this job to the specified account (`more
-    details <ttps://slurm.schedmd.com/sbatch.html#OPT_account>`__).
---begin
-    Defer the allocation of the job until the specified time (`more
-    details <https://slurm.schedmd.com/sbatch.html#OPT_begin>`__).
---chdir
-    Set the working directory of the batch script before it is executed
-    (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_chdir>`__).
---constraint
-    Specify which features are required by this job (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_constraint>`__).  You can
-    use :bash:`sinfo --format "%12P | %.15f"` to see which features are
-    available on which partition.
 --cpus-per-task
     Number of CPUs per task (`more details
     <https://slurm.schedmd.com/sbatch.html#OPT_cpus-per-task>`__).  This
     specifies the number of OpenMP threads to use to run Gromacs if
     \--no-guess-threads is given.
---dependency
-    Defer the start of this job until the specified dependencies have
-    been satisfied (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_dependency>`__).  If
-    multiple jobs are submitted with --nresubmits, the given dependency
-    only applies to the first job and the other jobs depend on each
-    other.
---exclude
-    Explicitly exclude certain nodes from the resources granted to the
-    job (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_exclude>`__).
---exclusive
-    Don't share nodes with other jobs (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_exclusive>`__).
---extra-node-info
-    Restrict node selection to nodes with at least the specified number
-    of sockets, cores per socket and/or threads per core (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_extra-node-info>`__).
---gres
-    Generic consumable resources (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_gres>`__).
---hold
-    Submit the job in a held state (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_hold>`__).
---job-name
-    Specify a name for the job allocation (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_job-name>`__).
---kill-on-invalid-dep
-    {"yes", "no"}
-
-    Whether to terminate the job when it has an invalid dependency and
-    thus can never run (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_kill-on-invalid-dep>`__).
-    Default: ``'yes'``.
---mail-type
-    {"NONE", "BEGIN", "END", "FAIL", "REQUEUE", "ALL", "INVALID_DEPEND",
-    "STAGE_OUT", "TIME_LIMIT", "TIME_LIMIT_90", "TIME_LIMIT_80",
-    "TIME_LIMIT_50", "ARRAY_TASKS"}
-
-    Notify user by email when certain event types occur (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_mail-type>`__).  Default:
-    ``'FAIL'``.
---mail-user
-    User to receive email notification (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_mail-user>`__).
---mem
-    Memory required per node. (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_mem>`__).
---mincpus
-    Minimum number of CPUs per node (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_mincpus>`__).
---no-requeue
-    Specifies that the batch job should never be requeued under any
-    circumstances (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_no-requeue>`__).
---nodes
-    Number of nodes to allocate (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_nodes>`__).
---nodelist
-    Request a specific list of nodes (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_nodelist>`__).
 --ntasks-per-node
     Number of tasks per node (`more details
     <https://slurm.schedmd.com/sbatch.html#OPT_ntasks-per-node>`__).
@@ -187,62 +109,20 @@ full list of all options.  All these options can also be provied in the
     if \--no-guess-threads is given.  If \--gmx-exe-mpi is given, this
     specifies the number of MPI ranks.  Must be provided if
     \--no-guess-threads and/or \--gmx-exe-mpi is given.
---output
-    Instruct Slurm to connect the batch script's standard output
-    directly to the specified file name (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_output>`__).
---partition
-    Request a specific partition for the resource allocation (`more
-    details <https://slurm.schedmd.com/sbatch.html#OPT_partition>`__).
-    You can use :bash:`sinfo --summarize` to get a list of all
-    partitions available on your computing cluster.
---test-only
-    Return an estimate of when a job would be scheduled to run.  No job
-    is actually submitted (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_test-only>`__).
---time
-    Set a total run time limit (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_time>`__).  You can use
-    :bash:`sinfo --summarize` to get the maximum allowed run time limits
-    for each partition on your computing cluster.
---time-min
-    Set a minimum time limit.  If specified, the job may have its
-    \--time limit lowered to a value no lower than \--time-min if doing
-    so permits the job to begin execution earlier than otherwise
-    possible (`more details
-    <https://slurm.schedmd.com/sbatch.html#OPT_time-min>`__).
-
-Some sbatch options are set to (new) default values if they are not
-explicitly given by the user:
-
---exclusive
-    true (to disable, set to false in the |config_file|)
---job-name
-    :bash:`${settings}_${system}`
---kill-on-invalid-dep
-    yes
---mail-type
-    FAIL
---no-requeue
-    true (to disable, set to false in the |config_file|)
---nodes
-    1
---output
-    :bash:`${settings}_out_${system}_slurm-%j.out`
-
-Note that you cannot parse \--signal to sbatch, because this option is
-used internally to allow for cleanup steps after the simulation has
-finished.
+--signal
+    You cannot parse \--signal to sbatch, because this option is used
+    internally to allow for cleanup steps after the simulation has
+    finished.
 
 Config File
 -----------
 This script reads options from the following sections of a
 |config_file|:
 
-    * submit
-    * submit.simulation
-    * sbatch
-    * sbatch.simulation
+    * [submit]
+    * [submit.simulation]
+    * [sbatch]
+    * [sbatch.simulation]
 
 Notes
 -----
@@ -281,7 +161,7 @@ The bash variable :bash:`${CPUS_PER_TASK}` is set to
 not specified, it is set to
 :bash:`$((SLURM_CPUS_ON_NODE / SLURM_NTASKS_PER_NODE))`.
 
-When continuing a previous simulation, the following commands will be
+When continuing a previous simulation, the following command will be
 launched:
 
 .. code-block:: bash
@@ -306,20 +186,13 @@ Therefore, the following files must exist in your working directory:
 previous simulation, because the maximum number of simulation steps is
 read from this file.
 
-If the these files cannot be found, this submission script will
-terminate with an error message before submitting the job to the Slurm
-Workload Manager.
-
-You can view your Slurm jobs with :bash:`squeue --user <your_username>`.
+If the these files cannot be found, the submission script will terminate
+with an error message before submitting the job to the Slurm Workload
+Manager.
 
 
-.. _Gromacs: https://www.gromacs.org/
-.. _Slurm Workload Manager: https://slurm.schedmd.com/
 .. _format that is readable by Gromacs:
     https://manual.gromacs.org/documentation/current/reference-manual/file-formats.html#structure-files
-.. _rsync: https://rsync.samba.org/
-.. _Lmod: https://lmod.readthedocs.io/en/latest/index.html
-.. _Sbatch: https://slurm.schedmd.com/sbatch.html
 """  # noqa: W505,E501
 
 
