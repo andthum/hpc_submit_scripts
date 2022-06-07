@@ -4,15 +4,13 @@
 
 """
 Python functions related to molecular dynamics (MD) simulations
-performed with Gromacs_.
-
-.. _Gromacs: https://www.gromacs.org/
+performed with |Gromacs|.
 """
 
 
 def get_nsteps_from_mdp(infile):
     """
-    Extract the maximum number of simulation steps of an Gromacs MD
+    Extract the maximum number of simulation steps of an |Gromacs| MD
     simulation from the `.mpd file
     <https://manual.gromacs.org/documentation/current/user-guide/mdp-options.html>`__.
 
