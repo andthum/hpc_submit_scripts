@@ -1,13 +1,72 @@
-# Configuration file for Python projects.
-# See https://python-poetry.org/docs/pyproject/ and
-# https://packaging.python.org/en/latest/tutorials/packaging-projects/#configuring-metadata
-#
-# Sort all entries alphabetically!
+# Configuration file for Python projects.  See
+# https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
+# https://peps.python.org/pep-0621/#example
+
+[project]
+# Project metadata.  See
+# https://packaging.python.org/en/latest/specifications/declaring-project-metadata/
+name = "hpcss"
+version = "0.0.0.dev0"
+description = "Slurm scripts to run and analyze MD simulations on HPC clusters"
+readme = "README.rst"
+requires-python = ">=3.8, <3.10"
+license = {file = "LICENSE.txt"}
+authors = [
+    {name = "Andreas Thum", email = "coding.anthum@e.mail.de"},
+]
+maintainers = [
+    {name = "Andreas Thum", email = "coding.anthum@e.mail.de"},
+]
+keywords = [
+    "Scripts Collection",
+    "Python Scripts",
+    "Batch Scripts",
+    "Slurm",
+    "Slurm Workload Manager",
+    "Slurm Job Scripts",
+    "High Performance Computing",
+    "HPC Cluster",
+    "Science",
+    "Scientific Computing",
+    "Computational Science",
+    "Molecular Simulation",
+    "Molecular Modeling",
+    "Molecular Mechanics",
+    "Molecular Dynamics",
+    "Molecular Dynamics Simulation",
+    "Trajectory Analysis",
+    "Gromacs",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Utilities",
+]
+
+[project.urls]
+homepage = "https://github.com/andthum/hpc_submit_scripts"
+documentation = "https://hpcss.readthedocs.io/en/latest/"
+repository = "https://github.com/andthum/hpc_submit_scripts"
+issues = "https://github.com/andthum/hpc_submit_scripts/issues"
+discussions = "https://github.com/andthum/hpc_submit_scripts/discussions"
 
 [tool.bandit]
 # B404: Consider possible security implications associated with the subprocess module
 # B603: subprocess call - check for execution of untrusted input
-skips = [ "B404", "B603" ]
+skips = ["B404", "B603"]
 
 [tool.black]
 required-version = 22
