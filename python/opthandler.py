@@ -1126,7 +1126,8 @@ def rm_option(cmd, option):
         opt_ix = [
             ix for ix, o in enumerate(cmd_list) if o.startswith(option.strip())
         ]
-        for ix in opt_ix:
+        # Remove in reverse order so that indices in `opt_ix` stay valid
+        for ix in opt_ix[::-1]:
             # Remove the option.
             popped = cmd_list.pop(ix)
             # NOTE: `shlex.split` does not split at "=" but at spaces.
