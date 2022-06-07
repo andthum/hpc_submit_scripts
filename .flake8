@@ -1,9 +1,9 @@
-# flake8 configuration file.
+# Flake8 configuration file.
 # See https://flake8.pycqa.org/en/latest/user/configuration.html
 #
 # Sort all entries alphabetically!
 #
-# Keep flake8 plugins in sync with `requirements_dev.txt` and
+# Keep Flake8 plugins in sync with `requirements-dev.txt` and
 # `.pre-commit-confic.yaml`!
 
 
