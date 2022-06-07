@@ -823,7 +823,7 @@ def optdict2list(
         )
     optlist = []
     for opt, val in optdict.items():
-        opt = str(opt)
+        opt = str(opt).strip()
         if convert_from_str:
             val = convert_str(val, **kwargs)
         elif convert_to_str:
@@ -833,9 +833,9 @@ def optdict2list(
         if dumped_vals is not None and val in dumped_vals:
             val = ""
         if len(opt) == 1:
-            optlist.append("-" + opt.strip())
+            optlist.append("-" + opt)
         elif len(opt) > 1:
-            optlist.append("--" + opt.strip())
+            optlist.append("--" + opt)
         # else: len(opt) == 0 => `val` is position argument.
         if isinstance(val, str) and len(val) == 0:
             continue
