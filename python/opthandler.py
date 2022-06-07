@@ -999,19 +999,24 @@ def optlist2dict(optlist, convert=False, **kwargs):
 
 def read_config(conf_file="hpcssrc.ini"):
     """
-    Search and read options from a config file.
+    Search and read options from a |config_file|.
 
     Parameters
     ----------
     conf_file : str, optional
-        The name of the config file.
+        The name of the |config_file|.  The config file must be written
+        in `INI language`_ as supported by the built-in
+        :mod:`configparser` Python module.
+
+        .. _INI language:
+            https://docs.python.org/3/library/configparser.html#supported-ini-file-structure
 
     Returns
     -------
     config : configparser.ConfigParser
         A :class:`~configparser.ConfigParser` instance containing the
         configuration read from the first found config file.  If no
-        config file was found an empty
+        config file was found, an empty
         :class:`~configparser.ConfigParser` is returned.
 
     Notes
@@ -1024,20 +1029,26 @@ def read_config(conf_file="hpcssrc.ini"):
            directory.
         2. At :file:`${HOME}/.hpcss/hpcssrc.ini` (where :file:`${HOME}`
            is the user's home directory).
-        3. In the root directory of the hpc_submit_scripts project.
+        3. In the root directory of the hpc_submit_scripts repository.
 
     As soon as a config file is found, this config file is read and
     other locations are not scanned anymore.  If no config file is found
     at all, this function returns an empty
     :class:`~configparser.ConfigParser`.
 
-    Note: :class:`configparser.ConfigParser` instances always store
-    options and their values as strings.
-    """
+    Note that :class:`~configparser.ConfigParser` instances always store
+    options and their values as strings.  However, unlike the default
+    :class:`~configparser.ConfigParser`, the returned
+    :class:`~configparser.ConfigParser` reads option names
+    case-sensitively.  Moreover, section names are case-insensitive and
+    leading and trailing spaces are removed.
+    """  # noqa: W505,E501
     config = configparser.ConfigParser(converters={"none": str2none})
     # Remove leading and trailing spaces from section headers and ignore
     # the case of sections.
     config.SECTCRE = re.compile(r"\[ *(?P<header>[^]]+?) *\]", re.IGNORECASE)
+    # Make option names case-sensitive.
+    config.optionxform = str
     home = os.path.expanduser("~")
     file_root = os.path.abspath(os.path.dirname(__file__))
     project_root = os.path.join(file_root, "../")
