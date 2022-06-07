@@ -86,7 +86,7 @@ def configparser_check_options(
     known_options,
     sections=None,
     skip_missing_sec=False,
-    case_sensitive=False,
+    case_sensitive=True,
     hyphens_are_underscores=False,
 ):
     """
