@@ -2,7 +2,7 @@
 #
 # Sort all entries alphabetically!
 #
-# Keep flake8 plugins in sync with `.pre-commit-config.yaml` and
+# Keep Flake8 plugins in sync with `.pre-commit-config.yaml` and
 # `.flake8`!
 
 bandit >=1.0, <2.0
