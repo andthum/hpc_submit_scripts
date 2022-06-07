@@ -43,7 +43,7 @@ def configparser2dict(
 
     Returns
     -------
-    options : dict of dicts
+    options : dict of dict
         A dictionary containing the entries of the input
         :class:`~configparser.ConfigParser` as a dictionary of
         dictionaries.  Every section name becomes a key that holds as
@@ -542,7 +542,7 @@ def get_opts(
     **kwargs,
 ):
     """
-    Gather all options from command line and config file.
+    Gather all options from command line and |config_file|.
 
     Gather all options given via the command-line interface and via a
     config file, merge them and return them in one dictionary.
@@ -561,7 +561,7 @@ def get_opts(
         i.e. not-given arguments must not be suppressed with
         :attr:`argparse.SUPPRESS`.
     conf_file : str, optional
-        The name of the config file.
+        The name of the |config_file|.
     secs_known : list or tuple or str or None, optional
         Sections of the config file that contain options that can also
         be specified via the command-line interface ("known" to
@@ -600,12 +600,12 @@ def get_opts(
 
     Returns
     -------
-    options : dict of dicts
+    options : dict of dict
         A dictionary of two dictionaries.  The first key (given by the
         first known section in `sections`) contains as value a
         sub-dictionary of all known options and their respective values.
         The second key (given by `sec_unknown`) contains as value a
-        dictionary of all unknown options their respective values.
+        dictionary of all unknown options and their respective values.
 
     See Also
     --------
@@ -618,7 +618,6 @@ def get_opts(
         Options that can also be parsed via the command-line interface
         (i.e. options that are known to the input
         :class:`~argparse.ArgumentParser`).
-
     Unknown options
         Options that are not contained in the
         :class:`~argparse.Namespace` of the input
