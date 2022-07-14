@@ -81,6 +81,7 @@ def configparser2dict(
     for sec in sections:
         if not config.has_section(sec) and create_missing_secs:
             options[sec] = {}
+            continue
         if convert:
             options[sec] = {
                 k: convert_str(v, **kwargs) for k, v in config.items(sec)
