@@ -14,6 +14,15 @@ import copy
 import os
 import re
 import shlex
+import sys
+
+
+if sys.version_info.major < 3 or sys.version_info.minor < 8:
+    # shlex.join was introduced in version 3.8
+    raise SystemError(
+        "The minimum required Python version is 3.8 but you have"
+        " {}".format(sys.version)
+    )
 
 
 def configparser2dict(
