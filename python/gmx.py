@@ -8,21 +8,20 @@ performed with |Gromacs|.
 """
 
 
-def get_nsteps_from_mdp(infile):
+def get_nsteps_from_mdp(fname):
     """
     Extract the maximum number of simulation steps of an |Gromacs| MD
-    simulation from the `.mpd file
-    <https://manual.gromacs.org/documentation/current/user-guide/mdp-options.html>`__.
+    simulation from the |mdp_file|.
 
     Parameters
     ----------
-    infile : str
-        Name of the .mdp file.
+    fname : str
+        Name of the |mdp_file|.
 
     Returns
     -------
     nsteps : int
-        Maximum number of simulation steps specified in the .mdp file.
+        Maximum number of simulation steps specified in the |mdp_file|.
 
     Raises
     ------
@@ -32,7 +31,7 @@ def get_nsteps_from_mdp(infile):
         If the input file does not contain a line that starts with
         "nsteps" or if "nsteps" is not followed by an equal (=) sign.
     """  # noqa: W505,E501
-    with open(infile, "r") as file:
+    with open(fname, "r") as file:
         found_nsteps = False
         for i, line in enumerate(file):
             line = line.strip()
@@ -50,12 +49,12 @@ def get_nsteps_from_mdp(infile):
     if not found_nsteps:
         raise ValueError(
             "Could not fine a line in file '{}' that starts with"
-            " 'nsteps'".format(infile)
+            " 'nsteps'".format(fname)
         )
     if "=" not in line_nsteps:
         raise ValueError(
             "Line {} in file '{}' starts with 'nsteps' but does not contain an"
-            " equal (=) sign".format(line_num, infile)
+            " equal (=) sign".format(line_num, fname)
         )
     nsteps = line_nsteps.split("=")[1]
     nsteps = nsteps.split(";")[0]  # Remove potential comments
