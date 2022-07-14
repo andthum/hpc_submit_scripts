@@ -129,10 +129,6 @@ repos:
       - id: "python-check-blanket-type-ignore"
       # Prevent common mock mistakes
       - id: "python-check-mock-methods"
-      # Check for closing backticks.
-      - id: "rst-backticks"
-      # Check if RST directives end with a colon.
-      - id: "rst-directive-colons"
       # Check if inline code touches normal text.
       - id: "rst-inline-touching-normal"
 
