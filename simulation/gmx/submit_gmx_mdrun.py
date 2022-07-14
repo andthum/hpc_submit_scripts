@@ -14,6 +14,8 @@ University of Münster or on the |Bagheera| HPC cluster of the
 
 Options
 -------
+Required Arguments
+^^^^^^^^^^^^^^^^^^
 --system
     The name of the system to simulate, e.g. ``'LiTFSI_PEO_20-1'`` for
     an LiTFSI/PEO electrolyte with an ether-oxygen-to-lithium ratio of
@@ -27,6 +29,9 @@ Options
     Name of the file that contains the starting structure in a
     `format that is readable by Gromacs`_.  The starting structure is
     ignored if you continue a previous simulation.  Default: ``None``.
+
+Resubmission
+^^^^^^^^^^^^
 --continue
     {0, 1, 2, 3}
 
@@ -37,11 +42,11 @@ Options
         * 2 = Start a new simulation and resubmit it to the Slurm
           Workload Manager as many times as specified with \--nresubmits
           or until it has reached the number of simulation steps given
-          in the .mdp file (whatever happens earlier).
+          in the |mdp_file| (whatever happens earlier).
         * 3 = Continue a previous simulation and resubmit it to the
           Slurm Workload Manager as many times as specified with
           \--nresubmits or until it has reached the number of simulation
-          steps given in the .mdp file (whatever happens earlier).
+          steps given in the |mdp_file| (whatever happens earlier).
 
     Default: ``0``.
 --nresubmits
@@ -57,6 +62,9 @@ Options
     files.  With \--no-backup you can skip this backup, but be aware
     that your trajectory (and other simulation files) might get
     corrupted if the continuation of the simulation fails badly.
+
+Gromacs-Specifig Options
+^^^^^^^^^^^^^^^^^^^^^^^^
 --gmx-lmod
     If running on a cluster which uses the |Lmod| module system,
     specifiy here which file to source (relative to the :file:`lmod`
@@ -89,6 +97,8 @@ Options
     provided as one long, enquoted string, e.g. '-maxwarn 1'.  Is
     ignored if \--continue is 1 or 3.  Default: ``''``.
 
+Sbatch Options
+^^^^^^^^^^^^^^
 You can provide arbitrary other options to this script.  All these other
 options are parsed directly to the |sbatch| Slurm command without
 further introspection or validation.  This means, you can parse any
@@ -121,8 +131,10 @@ This script reads options from the following sections of a
 
     * [submit]
     * [submit.simulation]
+    * [submit.simulation.gmx]
     * [sbatch]
     * [sbatch.simulation]
+    * [sbatch.simulation.gmx]
 
 Notes
 -----
@@ -212,18 +224,33 @@ import sys
 import warnings
 
 
-file_root = os.path.abspath(os.path.dirname(__file__))
-python_dir = os.path.join(file_root, "../../python")
-if not os.path.isdir(python_dir):
+FILE_ROOT = os.path.abspath(os.path.dirname(__file__))
+PYTHON_DIR = os.path.abspath(os.path.join(FILE_ROOT, "../../python"))
+if not os.path.isdir(PYTHON_DIR):
     raise FileNotFoundError(
         "No such directory: '{}'.  This might happen if you change the"
-        " directory structure of this project".format(python_dir)
+        " directory structure of this project".format(PYTHON_DIR)
     )
-sys.path.insert(1, python_dir)
+sys.path.insert(1, PYTHON_DIR)
 # Third-party libraries
 import gmx  # noqa: E402
 import opthandler  # noqa: E402
 import strng  # noqa: E402
+
+
+ARG_PREC = 3  # Precision of floats parsed to batch scripts.
+BASH_DIR = os.path.abspath(os.path.join(FILE_ROOT, "../../bash"))
+if not os.path.isdir(BASH_DIR):
+    raise FileNotFoundError(
+        "No such directory: '{}'.  This might happen if you change the"
+        " directory structure of this project".format(BASH_DIR)
+    )
+BATCH_SCRIPT = os.path.abspath(os.path.join(FILE_ROOT, "gmx_mdrun.sh"))
+if not os.path.isfile(BATCH_SCRIPT):
+    raise FileNotFoundError(
+        "No such file: '{}'.  This might happen if you change the"
+        " directory structure of this project".format(BATCH_SCRIPT)
+    )
 
 
 if __name__ == "__main__":  # noqa: C901
@@ -235,19 +262,20 @@ if __name__ == "__main__":  # noqa: C901
             " this script."
         )
     )
-    parser.add_argument(
+    parser_required = parser.add_argument_group(title="Required Arguments")
+    parser_required.add_argument(
         "--system",
         type=str,
         required=True,
-        help=("The name of the system to simulate."),
+        help="The name of the system to simulate.",
     )
-    parser.add_argument(
+    parser_required.add_argument(
         "--settings",
         type=str,
         required=True,
-        help=("The simulation settings to use."),
+        help="The simulation settings to use.",
     )
-    parser.add_argument(
+    parser_required.add_argument(
         "--structure",
         type=str,
         required=False,
@@ -258,7 +286,8 @@ if __name__ == "__main__":  # noqa: C901
             " %(default)s"
         ),
     )
-    parser.add_argument(
+    parser_resub = parser.add_argument_group(title="Resubmission")
+    parser_resub.add_argument(
         "--continue",
         type=int,
         required=False,
@@ -276,7 +305,7 @@ if __name__ == "__main__":  # noqa: C901
             " .mdp file (whatever happens earlier).  Default: %(default)s"
         ),
     )
-    parser.add_argument(
+    parser_resub.add_argument(
         "--nresubmits",
         type=int,
         required=False,
@@ -286,14 +315,15 @@ if __name__ == "__main__":  # noqa: C901
             "  Default: %(default)s"
         ),
     )
-    parser.add_argument(
+    parser_resub.add_argument(
         "--no-backup",
         required=False,
         default=False,
         action="store_true",
-        help=("Skip backup before continuing a previous simulation."),
+        help="Skip backup before continuing a previous simulation.",
     )
-    parser.add_argument(
+    parser_gmx = parser.add_argument_group(title="Gromacs-Specifig Options")
+    parser_gmx.add_argument(
         "--gmx-lmod",
         type=str,
         required=False,
@@ -305,14 +335,14 @@ if __name__ == "__main__":  # noqa: C901
             " %(default)s"
         ),
     )
-    parser.add_argument(
+    parser_gmx.add_argument(
         "--gmx-exe",
         type=str,
         required=False,
         default="gmx",
-        help=("Name of the Gromacs executable.  Default: %(default)s"),
+        help="Name of the Gromacs executable.  Default: %(default)s",
     )
-    parser.add_argument(
+    parser_gmx.add_argument(
         "--gmx-mpi-exe",
         type=str,
         required=False,
@@ -326,7 +356,7 @@ if __name__ == "__main__":  # noqa: C901
             " %(default)s"
         ),
     )
-    parser.add_argument(
+    parser_gmx.add_argument(
         "--no-guess-threads",
         required=False,
         default=False,
@@ -337,7 +367,7 @@ if __name__ == "__main__":  # noqa: C901
             "  If given, --ntasks-per-node must be provided to sbatch."
         ),
     )
-    parser.add_argument(
+    parser_gmx.add_argument(
         "--mdrun-flags",
         type=str,
         required=False,
@@ -347,7 +377,7 @@ if __name__ == "__main__":  # noqa: C901
             " as one long, enquoted string.  Default: '%(default)s'"
         ),
     )
-    parser.add_argument(
+    parser_gmx.add_argument(
         "--grompp-flags",
         type=str,
         required=False,
@@ -360,20 +390,28 @@ if __name__ == "__main__":  # noqa: C901
     )
     opts = opthandler.get_opts(
         argparser=parser,
-        secs_known=("submit", "submit.simulation"),
-        secs_unknown=("sbatch", "sbatch.simulation"),
+        secs_known=("submit", "submit.simulation", "submit.simulation.gmx"),
+        secs_unknown=("sbatch", "sbatch.simulation", "sbatch.simulation.gmx"),
     )
     args = opts["submit"]
     args_sbatch = opts["sbatch"]
+
+    gmx_infile_pattern = args["settings"] + "_" + args["system"]
+    gmx_outfile_pattern = args["settings"] + "_out_" + args["system"]
+    MDP_FILE = gmx_infile_pattern + ".mdp"
+    TPR_FILE = gmx_infile_pattern + ".tpr"
+    CPT_FILE = gmx_outfile_pattern + ".cpt"
+    NDX_FILE = args["system"] + ".ndx"
+    TOP_FILE = args["system"] + ".top"
 
     print("Checking parsed arguments...")
     if args["nresubmits"] < 0:
         raise ValueError(
             "--nresubmits ({}) must not be negative".format(args["nresubmits"])
         )
-    if (
+    if "ntasks-per-node" not in args_sbatch and (
         args["gmx_mpi_exe"] is not None or args["no_guess_threads"]
-    ) and "ntasks-per-node" not in args_sbatch:
+    ):
         raise ValueError(
             "--ntasks-per-node must be provided to sbatch if --gmx-exe-mpi"
             " and/or --no-guess-threads is given"
@@ -410,15 +448,15 @@ if __name__ == "__main__":  # noqa: C901
                 " start a new simulation"
             )
         files = {
-            "parameter": args["settings"] + "_" + args["system"] + ".mdp",
+            "parameter": MDP_FILE,
             "structure": args["structure"],
-            "topology": args["system"] + ".top",
+            "topology": TOP_FILE,
         }
     elif args["continue"] in (1, 3):  # Continue a previous simulation
         files = {
-            "parameter": args["settings"] + "_" + args["system"] + ".mdp",
-            "run-input": args["settings"] + "_" + args["system"] + ".tpr",
-            "checkpoint": args["settings"] + "_out_" + args["system"] + ".cpt",
+            "parameter": MDP_FILE,
+            "run input": TPR_FILE,
+            "checkpoint": CPT_FILE,
         }
     else:
         raise ValueError(
@@ -430,7 +468,7 @@ if __name__ == "__main__":  # noqa: C901
                 "No such file: '{}' ({} file)".format(filename, filetype)
             )
     ndx_files = glob.glob("*.ndx")
-    if len(ndx_files) > 0 and args["system"] + ".ndx" not in ndx_files:
+    if len(ndx_files) > 0 and NDX_FILE not in ndx_files:
         warnings.warn(
             "Detected .ndx file(s) in the working directory, but no .ndx file"
             " named '{0}.ndx'.  Only an .ndx file named '{0}.ndx' will be"
@@ -442,29 +480,17 @@ if __name__ == "__main__":  # noqa: C901
     print("Constructing the submit command...")
     # Assemble arguments to parse to sbatch
     if "job-name" not in args_sbatch and "J" not in args_sbatch:
-        args_sbatch["job-name"] = args["settings"] + "_" + args["system"]
+        args_sbatch["job-name"] = gmx_infile_pattern
     if "output" not in args_sbatch and "o" not in args_sbatch:
-        args_sbatch["output"] = (
-            args["settings"] + "_out_" + args["system"] + "_slurm-%j.out"
-        )
+        args_sbatch["output"] = gmx_outfile_pattern + "_slurm-%j.out"
     sbatch = "sbatch "
     sbatch += opthandler.optdict2str(
         args_sbatch, skiped_opts=("None", "False"), dumped_vals=("True",)
     )
     # Assemble position arguments to parse to the batch script itself
-    batch_script = os.path.join(file_root, "gmx_mdrun.sh")
-    if not os.path.isfile(batch_script):
-        raise FileNotFoundError(
-            "No such file: '{}'.  This might happen if you change the"
-            " directory structure of this project".format(batch_script)
-        )
-    bash_dir = os.path.join(file_root, "../../bash")
-    if not os.path.isdir(bash_dir):
-        raise FileNotFoundError(
-            "No such directory: '{}'.  This might happen if you change the"
-            " directory structure of this project".format(bash_dir)
-        )
-    gmx_lmod = os.path.join(file_root, "../../lmod/" + args["gmx_lmod"])
+    gmx_lmod = os.path.abspath(
+        os.path.join(FILE_ROOT, "../../lmod/" + args["gmx_lmod"])
+    )
     if not os.path.isfile(gmx_lmod):
         raise FileNotFoundError(
             "No such file: '{}'.  This might happen if you change the"
@@ -472,12 +498,14 @@ if __name__ == "__main__":  # noqa: C901
             " source file relative to the lmod directory of this project with"
             " --gmx-lmod".format(gmx_lmod)
         )
-    nsteps = gmx.get_nsteps_from_mdp(
-        args["settings"] + "_" + args["system"] + ".mdp"
-    )
+    if args["gmx_exe"] is not None:
+        args["gmx_exe"] = os.path.expandvars(args["gmx_exe"])
+    if args["gmx_mpi_exe"] is not None:
+        args["gmx_mpi_exe"] = os.path.expandvars(args["gmx_mpi_exe"])
+    nsteps = gmx.get_nsteps_from_mdp(MDP_FILE)
     # Position arguments must be in the right order for the batch script
-    pos_args_list = [
-        bash_dir,
+    posargs_list = [
+        BASH_DIR,
         args["system"],
         args["settings"],
         args["structure"],
@@ -491,29 +519,25 @@ if __name__ == "__main__":  # noqa: C901
         args["mdrun_flags"],
         args["grompp_flags"],
     ]
-    # Convert `True` to 1 and `False` to 0
-    pos_args_list = [
-        int(arg) if isinstance(arg, bool) else arg for arg in pos_args_list
-    ]
-    pos_args = shlex.join(str(arg) for arg in pos_args_list)
+    posargs = opthandler.posargs2str(posargs_list, prec=ARG_PREC)
 
     print("Submitting job(s) to Slurm...")
-    submit = sbatch + " " + batch_script + " " + pos_args
+    submit = sbatch + " " + BATCH_SCRIPT + " " + posargs
     job_id = subproc.check_output(shlex.split(submit))
     if args["continue"] in (2, 3):  # Resubmit
         job_id = strng.extract_ints_from_str(job_id)[0]
         # After the first job submission the following jobs always
         # continue a previous simulation. => The `continue` option of
         # all following jobs must be set to 3.
-        pos_args_list[4] = 3  # Set `continue` to 3.
-        pos_args = shlex.join(str(arg) for arg in pos_args_list)
+        posargs_list[4] = 3  # Set `continue` to 3.
+        posargs = opthandler.posargs2str(posargs_list, prec=ARG_PREC)
         # After the first job submission the following jobs only depend
         # on the respective previous job => Remove possible dependencies
         # that the user specified for the first job.
         sbatch = opthandler.rm_option(sbatch, ("--dependency", "-d"))
         for _ in range(args["nresubmits"]):
             sbatch_dep = sbatch + " --dependency afterok:{}".format(job_id)
-            submit = sbatch_dep + " " + batch_script + " " + pos_args
+            submit = sbatch_dep + " " + BATCH_SCRIPT + " " + posargs
             job_id = subproc.check_output(shlex.split(submit))
             job_id = strng.extract_ints_from_str(job_id)[0]
 
