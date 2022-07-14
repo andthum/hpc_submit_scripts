@@ -35,7 +35,7 @@ import tomlkit
 # Recursively import all directories containing Pyhon scripts.
 directories = ("analysis", "python", "simulation")
 for directory in directories:
-    for path in os.walk(os.path.abspath("./../../" + directory)):
+    for path in os.walk(os.path.abspath("../../" + directory)):
         sys.path.insert(1, path[0])
 
 
@@ -519,7 +519,7 @@ coverage_show_missing_items = True
 
 # A list of directories that will be added to sys.path when the doctest
 # builder is used.  Make sure it contains absolute paths.
-doctest_path = [os.path.abspath("./../..")]
+doctest_path = [os.path.abspath("../../")]
 
 # Python code that is treated like it were put in a testsetup directive
 # for every file that is tested.
