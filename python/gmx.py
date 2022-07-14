@@ -59,3 +59,40 @@ def get_nsteps_from_mdp(fname):
     nsteps = line_nsteps.split("=")[1]
     nsteps = nsteps.split(";")[0]  # Remove potential comments
     return int(nsteps)
+
+
+def tail(fname, n):
+    """
+    Read the last n lines from a file.
+
+    Parameters
+    ----------
+    fname : str
+        Name of the input file.
+    n : int
+        The number of lines to read from the end of the input file.
+
+    Returns
+    -------
+    lines : list
+        List containing the last `n` lines of the input file.  Each list
+        item represents one line of the file.
+    """
+    lines = []
+    if n <= 0:
+        return lines
+    # Step width to move the cursor (emprical value giving best
+    # performance).
+    step_width = max(10 * n, 1)
+    with open(fname, "r") as file:
+        file.seek(0, 2)  # Set cursor to end of file.
+        pos = file.tell()  # Get current cursor position.
+        # n+1 required to get the entire n-th line and not just its
+        # ending.
+        while len(lines) < n + 1:
+            pos -= min(step_width, pos)
+            file.seek(pos, 0)  # Move cursor backwards.
+            lines = file.readlines()
+            if pos == 0:  # Reached start of file.
+                break
+    return lines[-n:]
