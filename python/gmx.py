@@ -8,6 +8,26 @@ performed with |Gromacs|.
 """
 
 
+def get_box_from_gro(fname):
+    """
+    Extract the simulation box dimensions from a |gro_file|.
+
+    Parameters
+    ----------
+    fname : str
+        Name of the |gro_file|.
+
+    Returns
+    -------
+    box : list
+        A list containing the simulation box dimensions read from the
+        last line of the input file.
+    """  # noqa: W505,E501
+    box = tail(fname, 1)[0].split()
+    box = [float(b) for b in box]
+    return box
+
+
 def get_last_time_from_log(fname):
     """
     Extract the time of the last frame of an |Gromacs| MD simulation
