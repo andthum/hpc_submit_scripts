@@ -254,6 +254,7 @@ rst-substitutions =
     isort,
     Flake8,
     pytest,
+    MDTools,
     RTD,
     Sphinx,
     RST,
