@@ -52,6 +52,31 @@ def get_last_time_from_log(fname):
         line_prev = line
 
 
+def get_nbins(fname, binwidth):
+    """
+    Get the number of bins.
+
+    Determine the number of bins to use to divide the z dimension of the
+    simulation box stored in the provided |gro_file| in bins of the
+    given bin width.
+
+    Parameters
+    ----------
+    fname : str
+        Name of the |gro_file| that holds the box dimensions.
+    binwidth : float
+        The desired bin width.
+
+    Returns
+    -------
+    num_bins : int
+        The number of bins required to divide the simulation box in bins
+        of the given width.
+    """
+    box_z = get_box_from_gro(fname)[2]
+    return round(box_z / binwidth)
+
+
 def get_nsteps_from_mdp(fname):
     """
     Extract the maximum number of simulation steps of an |Gromacs| MD
