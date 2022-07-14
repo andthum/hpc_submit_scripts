@@ -5,37 +5,33 @@ hpcss Documentation
 This directory contains the files for building the documentation of
 hpcss using Sphinx_.
 
-To build the documentation, the requirements in
-``docs/requirements.txt`` must be installed (paths are given relative to
-the project's root directory):
+To build the documentation, the dependencies in
+``docs/requirements-docs.txt`` must be installed:
 
 .. code-block:: bash
 
-    # Clone the project repository
+    # Clone the project repository.
     git clone https://github.com/andthum/hpc_submit_scripts.git
-    # Enter the project directory
-    cd hpc_submit_scripts
-    # Install/upgrade virtualenv
-    python3 -m pip install --user --upgrade virtualenv
-    # Create a virtual Python environment called "env"
-    python3 -m virtualenv env
-    # Activate the virtual Python environment
-    source env/bin/activate
-    # Upgrade pip, setuptools and wheel
+    # Enter the docs directory of the project.
+    cd hpc_submit_scripts/docs/
+    # Create a virtual Python environment called ".venv-docs".
+    python3 -m venv .venv-docs
+    # Activate the virtual Python environment.
+    source .venv-docs/bin/activate
+    # Upgrade pip, setuptools and wheel.
     python3 -m pip install --upgrade pip setuptools wheel
-    # Install the requirements to build the docs
-    python3 -m pip install --upgrade -r docs/requirements.txt
+    # Install the requirements to build the docs.
+    python3 -m pip install --upgrade -r requirements-docs.txt
 
 After installing all requirements, the documentation can be built via
 
 .. code-block:: bash
 
-    cd docs
-    # Create the documentation
+    # Create the documentation.
     make html
-    # Check if the code examples in the documentation work as expected
+    # Check if the code examples in the documentation work as expected.
     make doctest
-    # Deactivate the virtual Python environment
+    # Deactivate the virtual Python environment.
     deactivate
 
 
