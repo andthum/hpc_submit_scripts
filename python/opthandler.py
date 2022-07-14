@@ -1022,6 +1022,49 @@ def optlist2dict(optlist, convert=False, **kwargs):
     return optdict
 
 
+def posargs2str(posargs, prec=3):
+    """
+    Convert a list of positional arguments to a string.
+
+    Parameters
+    ----------
+    posargs : iterable
+        The list of positional arguments.
+    prec : int, optional
+        The number of decimal places to use for floating point numbers.
+
+    Returns
+    -------
+    posargs : str
+        The positional arguments as string.
+
+    Notes
+    -----
+    This function is meant to generate a string of positional arguments
+    that can be parsed to the Slurm job scripts of this project.
+
+    ``True``/``False`` are converted to ``'1'``/``'0'``.
+
+    Examples
+    --------
+    .. testsetup::
+
+        from opthandler import posargs2str
+
+    >>> posargs = ["in", "out", 0, 12.345, 12.344, True, "arg1 arg2"]
+    >>> posargs2str(posargs, prec=2)
+    "in out 0 12.35 12.34 1 'arg1 arg2'"
+    """
+    # Set a fixed number of decimal points for floats.
+    posargs = (
+        "{:.{p}f}".format(arg, p=prec) if isinstance(arg, float) else arg
+        for arg in posargs
+    )
+    # Convert `True` to 1 and `False` to 0.
+    posargs = (int(arg) if isinstance(arg, bool) else arg for arg in posargs)
+    return shlex.join(str(arg) for arg in posargs)
+
+
 def read_config(conf_file="hpcssrc.ini"):
     """
     Search and read options from a |config_file|.
