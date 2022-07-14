@@ -182,8 +182,6 @@ rst_epilog = """
     :raw-html:`<a href="https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/">virtual Python environment</a>`
 .. |venv| replace::
     :raw-html:`<a href="https://docs.python.org/3/library/venv.html">venv</a>`
-.. |Virtualenv| replace::
-    :raw-html:`<a href="https://virtualenv.pypa.io/en/latest/">Virtualenv</a>`
 .. |Black| replace::
     :raw-html:`<a href="https://github.com/psf/black/">Black</a>`
 .. |isort| replace::
