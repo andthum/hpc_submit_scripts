@@ -3,9 +3,11 @@
 #SBATCH --signal=INT@300
 #SBATCH --job-name="gmx_mdrun"
 #SBATCH --output="gmx_mdrun_slurm-%j.out"
+# The above options are only default values that can be overwritten by
+# command-line arguments
 
 # MIT License
-# Copyright (c) 2021  All authors listed in the file AUTHORS.rst
+# Copyright (c) 2021, 2022  All authors listed in the file AUTHORS.rst
 
 # This script is meant to be submitted by submit_gmx_mdrun.py
 
@@ -27,7 +29,7 @@ nsteps=${6}             # Maximum number of simulation steps
 backup=${7}             # Backup old files?  0 = No.  1 = Yes.
 gmx_lmod=${8}           # File containing the modules to load Gromacs
 gmx_exe=${9}            # Name of the Gromacs executable
-gmx_mpi_exe=${10}       # MPI version of the Gromacs executable (0 = no MPI)
+gmx_mpi_exe=${10}       # MPI version of the Gromacs executable (None = no MPI)
 guess_num_threads=${11} # Guess number of thread-MPI ranks and OMP threads.  0 = No, 1 = Yes
 # See https://github.com/koalaman/shellcheck/wiki/SC2086#exceptions
 # and https://github.com/koalaman/shellcheck/wiki/SC2206
@@ -93,7 +95,7 @@ elif [[ ${guess_num_threads} -eq 0 ]]; then
     if [[ -z ${SLURM_NTASKS_PER_NODE} ]]; then
         echo
         echo "ERROR: SLURM_NTASKS_PER_NODE is not assigned.  Make sure"
-        echo "--ntasks-per-node is set by sbtach"
+        echo "--ntasks-per-node is provided to sbtach"
         exit 1
     fi
     if [[ -z ${SLURM_CPUS_PER_TASK} ]]; then
@@ -119,50 +121,19 @@ fi
 # Get Access to the Gromacs Executable                                 #
 ########################################################################
 
-if [[ -z ${SLURM_CLUSTER_NAME} ]]; then
-    echo
-    echo "Unexpected ERROR: SLURM_CLUSTER_NAME is not assigned"
-    exit 1
-fi
-if [[ ${SLURM_CLUSTER_NAME} == palma2 ]]; then
-    if [[ ${gmx_lmod} == 0 ]]; then
-        gmx_lmod="${bash_dir}/../lmod/palma/2019a/gmx2018-8_foss.sh"
-        echo
-        echo "NOTE: SLURM_CLUSTER_NAME is '${SLURM_CLUSTER_NAME}' but gmx_lmod"
-        echo "is set to zero.  I will try to load Gromacs from '${gmx_lmod}'"
-    fi
-    if [[ ! -f ${gmx_lmod} ]]; then
-        echo
-        echo "ERROR: Cannot load Gromacs.  No such file: '${gmx_lmod}'"
-        exit 1
-    fi
-    module --force purge || exit
-    # shellcheck source=/dev/null
-    source "${gmx_lmod}" || exit
-    echo
-    module list
-elif [[ ${SLURM_CLUSTER_NAME} == bagheera ]]; then
-    # shellcheck source=/dev/null
-    source "${HOME}/usr/local/gromacs/bin/GMXRC" || exit
-else
-    echo
-    echo "ERROR: Unkown cluster name '${SLURM_CLUSTER_NAME}'"
-    exit 1
-fi
-
-if [[ ${SLURM_JOB_NUM_NODES} -gt 1 ]] && [[ ${gmx_mpi_exe} == 0 ]]; then
+if [[ ${SLURM_JOB_NUM_NODES} -gt 1 ]] && [[ ${gmx_mpi_exe} == "None" ]]; then
     gmx_mpi_exe="gmx_mpi"
     echo
     echo "NOTE: SLURM_JOB_NUM_NODES (${SLURM_JOB_NUM_NODES}) is greater than"
     echo "one but you did not provide the MPI executable of Gromacs."
     echo "I will try '${gmx_mpi_exe}' as MPI executable"
 fi
-echo
-echo "Gromacs executable:"
-if [[ ${gmx_mpi_exe} == 0 ]]; then
-    which "${gmx_exe}" || exit
+if [[ ${gmx_mpi_exe} == "None" ]]; then
+    # shellcheck source=/dev/null
+    source "${bash_dir}/load_gmx.sh" "${gmx_lmod}" "${gmx_exe}"
 else
-    which "${gmx_mpi_exe}" || exit
+    # shellcheck source=/dev/null
+    source "${bash_dir}/load_gmx.sh" "${gmx_lmod}" "${gmx_mpi_exe}"
 fi
 
 ########################################################################
@@ -170,18 +141,23 @@ fi
 ########################################################################
 
 clean_up() {
+    echo
     if [[ -d ${settings}_${system} ]]; then
-        echo
         echo "WARNING: The directory already exists: '${settings}_${system}'"
     elif [[ ! -d ${settings}_${system} ]]; then
         mkdir -v "${settings}_${system}" || exit
         if [[ -f ${structure} ]]; then
             mv -v "${structure}" "${settings}_${system}"
         fi
+        if [[ -f ${system}.top ]]; then
+            mv -v "${system}.top" "${settings}_${system}"
+        fi
+        if [[ -f ${system}.ndx ]]; then
+            mv -v "${system}.ndx" "${settings}_${system}"
+        fi
         mv -v "${settings}_${system}"* "${settings}_${system}"
         mv -v "${settings}_out_${system}"* "${settings}_${system}"
     else
-        echo
         echo "Unexpected WARNING: Existence of directory cannot be checked:"
         echo "'${settings}_${system}'"
     fi
@@ -206,8 +182,9 @@ finish() {
 }
 
 gmx_energy() {
-    echo -e "\n"
     timestamp=$(date +%Y-%m-%d_%H-%M-%S || exit)
+    echo -e "\n"
+    echo "================================================================="
     echo -e \
         "Potential \n" \
         "Kinetic-E \n" \
@@ -221,6 +198,7 @@ gmx_energy() {
             -s "${settings}_${system}.tpr" \
             -o "${settings}_out_${system}_energy_${timestamp}.xvg" ||
         exit
+    echo "================================================================="
 }
 
 gmx_check_corruption() {
@@ -235,37 +213,51 @@ gmx_check_corruption() {
     fi
     if [[ -f ${dir}/${settings}_out_${system}.cpt ]]; then
         echo -e "\n"
+        echo "================================================================="
         "${gmx_exe}" check -f "${dir}/${settings}_out_${system}.cpt" || exit
+        echo "================================================================="
     fi
     if [[ -f ${dir}/${settings}_out_${system}.edr ]]; then
         echo -e "\n"
+        echo "================================================================="
         "${gmx_exe}" check -e "${dir}/${settings}_out_${system}.edr" || exit
+        echo "================================================================="
     fi
     if [[ -f ${dir}/${settings}_out_${system}.gro ]]; then
         echo -e "\n"
+        echo "================================================================="
         "${gmx_exe}" check -f "${dir}/${settings}_out_${system}.gro" || exit
+        echo "================================================================="
     fi
     if [[ -f ${dir}/${settings}_out_${system}_prev.cpt ]]; then
         echo -e "\n"
+        echo "================================================================="
         "${gmx_exe}" check -f "${dir}/${settings}_out_${system}_prev.cpt" || exit
+        echo "================================================================="
     fi
     if [[ -f ${dir}/${settings}_out_${system}.trr ]] &&
         [[ -f ${dir}/${settings}_${system}.tpr ]]; then
         echo -e "\n"
+        echo "================================================================="
         echo 0 | "${gmx_exe}" trjconv \
             -f "${dir}/${settings}_out_${system}.trr" \
             -s "${dir}/${settings}_${system}.tpr" \
             -o "${dir}/test.xtc" \
             -e 0 ||
             exit
+        echo "================================================================="
+        echo
         rm -v "${dir}/test.xtc"
     elif [[ -f ${dir}/${settings}_out_${system}.trr ]]; then
         echo -e "\n"
+        echo "================================================================="
         "${gmx_exe}" trjconv \
             -f "${dir}/${settings}_out_${system}.trr" \
             -o "${dir}/test.xtc" \
             -e 0 ||
             exit
+        echo "================================================================="
+        echo
         rm -v "${dir}/test.xtc"
     fi
 }
@@ -313,7 +305,7 @@ if [[ ${backup} -eq 1 ]]; then
     echo "Creating backup of files from a previous simulation..."
     if [[ -f ${settings}_${system}_mdout.mdp ]] ||
         [[ -f ${settings}_${system}.tpr ]] ||
-        compgen -G "${settings}_out_${system}*" >/dev/null; then
+        compgen -G "${settings}_out_${system}*" > /dev/null; then
         echo "Found files from a previous simulation"
         echo "Going to backup them to ${backup_dir}"
         if [[ -d ${backup_dir} ]]; then
@@ -424,7 +416,7 @@ fi
 ########################################################################
 
 # Prepare Gromacs mdrun command:
-if [[ ${gmx_mpi_exe} == 0 ]]; then
+if [[ ${gmx_mpi_exe} == "None" ]]; then
     mdrun="srun --ntasks 1 ${gmx_exe} mdrun"
 else
     mdrun="srun ${gmx_mpi_exe}"
@@ -434,7 +426,7 @@ mdrun="${mdrun} \
     -deffnm ${settings}_out_${system} \
     ${mdrun_flags[*]}"
 if [[ ${guess_num_threads} -eq 0 ]]; then
-    if [[ ${gmx_mpi_exe} == 0 ]]; then
+    if [[ ${gmx_mpi_exe} == "None" ]]; then
         mdrun="${mdrun} -ntmpi ${SLURM_NTASKS_PER_NODE}"
     fi
     mdrun="${mdrun} -ntomp ${CPUS_PER_TASK}"
@@ -447,7 +439,6 @@ fi
 
 if [[ ${continue} -eq 0 ]] || [[ ${continue} -eq 2 ]]; then
     # Start a new simulation
-    echo -e "\n"
     grompp="${gmx_exe} grompp \
         -f ${settings}_${system}.mdp \
         -c ${structure} \
@@ -457,7 +448,10 @@ if [[ ${continue} -eq 0 ]] || [[ ${continue} -eq 2 ]]; then
     if [[ -f ${system}.ndx ]]; then
         grompp="${grompp} -n ${system}.ndx"
     fi
+    echo -e "\n"
+    echo "================================================================="
     ${grompp} || exit
+    echo "================================================================="
     echo -e "\n"
     mv -v "mdout.mdp" "${settings}_${system}_mdout.mdp"
 elif [[ ${continue} -eq 1 ]] || [[ ${continue} -eq 3 ]]; then
@@ -472,7 +466,9 @@ else
     exit 1
 fi
 echo -e "\n"
+echo "================================================================="
 ${mdrun} # Don't exit on failure (INT signal also causes non-zero exit)
+echo "================================================================="
 gmx_energy
 if [[ ${continue} -eq 0 ]] || [[ ${continue} -eq 1 ]]; then
     # Single slurm job
