@@ -1,4 +1,5 @@
 # Flake8 configuration file.
+# Written in INI language.
 # See https://flake8.pycqa.org/en/latest/user/configuration.html
 #
 # Sort all entries alphabetically!
@@ -240,6 +241,9 @@ rst-substitutions =
     Lmod,
     rsync,
     Gromacs,
+    gro_file,
+    log_file,
+    mdp_file,
     Python,
     PyPI,
     pip,
