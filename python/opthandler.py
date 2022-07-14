@@ -293,7 +293,9 @@ def conv_configparser_opts(
     return config_converted
 
 
-def conv_configparser_vals(config, converter, sections=None):
+def conv_configparser_vals(
+    config, converter, sections=None, skip_missing_sec=False
+):
     """
     Convert the values of a :class:`~configparser.ConfigParser`.
 
@@ -308,6 +310,9 @@ def conv_configparser_vals(config, converter, sections=None):
     sections : iterable or str or None, optional
         The sections of `config` whose option names should be converted.
         If ``None``, convert the option names in all sections.
+    skip_missing_sec : bool, optional
+        If ``True``, don't raise an exception if a given section is not
+        contained in `config` but instead simply skip this section.
 
     Returns
     -------
@@ -359,6 +364,8 @@ def conv_configparser_vals(config, converter, sections=None):
     elif isinstance(sections, str):
         sections = (sections,)
     for sec in sections:
+        if not config.has_section(sec) and skip_missing_sec:
+            continue
         for opt, val in config.items(sec):
             config_converted[sec][opt] = converter(val)
     return config_converted
