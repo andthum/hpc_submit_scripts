@@ -192,6 +192,8 @@ rst_epilog = """
     :raw-html:`<a href="https://github.com/pycqa/flake8">Flake8</a>`
 .. |pytest| replace::
     :raw-html:`<a href="https://docs.pytest.org/en/stable/">pytest</a>`
+.. |MDTools| replace::
+    :raw-html:`<a href="https://github.com/andthum/mdtools">MDTools</a>`
 
 .. |RTD| replace::
     :raw-html:`<a href="https://readthedocs.org/">Read the Docs</a>`
