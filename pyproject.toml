@@ -1,4 +1,5 @@
-# Configuration file for Python projects.  See
+# Configuration file for Python projects.
+# See
 # https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
 # https://peps.python.org/pep-0621/#example
 
@@ -12,10 +13,10 @@ readme = "README.rst"
 requires-python = ">=3.8, <3.10"
 license = {file = "LICENSE.txt"}
 authors = [
-    {name = "Andreas Thum", email = "coding.anthum@e.mail.de"},
+    {name = "Andreas Thum", email = "coding.andthum@e.mail.de"},
 ]
 maintainers = [
-    {name = "Andreas Thum", email = "coding.anthum@e.mail.de"},
+    {name = "Andreas Thum", email = "coding.andthum@e.mail.de"},
 ]
 keywords = [
     "Scripts Collection",
