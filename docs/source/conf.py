@@ -165,6 +165,12 @@ rst_epilog = """
     :raw-html:`<a href="https://rsync.samba.org/">rsync</a>`
 .. |Gromacs| replace::
     :raw-html:`<a href="https://manual.gromacs.org/">Gromacs</a>`
+.. |gro_file| replace::
+    :raw-html:`<a href="https://manual.gromacs.org/documentation/current/reference-manual/file-formats.html#gro">.gro file</a>`
+.. |log_file| replace::
+    :raw-html:`<a href="https://manual.gromacs.org/documentation/current/reference-manual/file-formats.html#gro">.log file</a>`
+.. |mdp_file| replace::
+    :raw-html:`<a href="https://manual.gromacs.org/documentation/current/user-guide/mdp-options.html">.mdp file</a>`
 
 .. |Python| replace::
     :raw-html:`<a href="https://www.python.org/">Python</a>`
