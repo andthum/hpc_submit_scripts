@@ -19,11 +19,6 @@ When writting Bash code for this project, please
       :file:`shfmt -ln=bash -i=4 -ci -sr -w path/to/spam.sh` in a
       terminal.
 
-      shfmt can e.g. be installed as a `snap package
-      <https://snapcraft.io/shfmt>`_.  Alternatively, you can install
-      the Python package |shfmt-py|, which is anyway listed in
-      :file:`requirements-dev.txt`.
-
     * Lint your code with |shellcheck|.
 
       To lint a file :file:`spam.sh` run
@@ -31,18 +26,14 @@ When writting Bash code for this project, please
       use are specified in :file:`.shellcheckrc`, which is automatically
       read by shellcheck.
 
-      For many Linux distributions, shellcheck can be install from the
-      official repositories.  Alternatively, you can install the Python
-      package |shellcheck-py|, which is anyway listed in
-      :file:`requirements-dev.txt`.
-
 .. note::
 
     The listed formatters and linters offer plugins for many popular
-    text editors.  When using these plugins, your code is formatted and
-    lintted on the fly, so you don't have to run the commands yourself.
+    text editors and integrated development environments (IDEs).  When
+    using these plugins, your code is formatted and lintted on the fly,
+    so you don't have to run the commands yourself.
 
 .. note::
 
-    If you set up :ref:`pre-commit-label` (strongly recommended), the
+    If you have :ref:`set up pre-commit <set-up-pre-commit-label>`, the
     above formatters and linters check your code before every commit.

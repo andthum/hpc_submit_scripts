@@ -1,7 +1,7 @@
 .. _doc-guide-label:
 
-Documentation
-=============
+Documentation Guidelines
+========================
 
 Comment and document your code!  Code without or with poor documentation
 will probably never be used by someone else.  Ask yourself, would you
@@ -66,9 +66,9 @@ Documentation Style
       apply:
 
         - The "Parameters" section is replaced by an "Options" section.
-        - In the "Options" section, use a
-          `reStructuredText option list`_ to list the options with which
-          the script can/must be called and their meaning.
+        - In the "Options" section, use a |RST_option_list| to list the
+          options with which the script can/must be called and their
+          meaning.
         - The "Options" sections is followed by a "Config File" section
           stating which sections from a |config_file| are read by the
           script.
@@ -94,19 +94,17 @@ Convention for Section Levels in the Documentation
 Order of Characters in Nested `Bullet Lists`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    * Top level: "*"
+    * Top level: ``*``
 
-        - 2nd level: "-"
+        - 2nd level: ``-``
 
-            + 3rd level: "+"
+            + 3rd level: ``+``
 
-                * Afterwards start again with "*"
+                * Afterwards start again with ``*``
 
 
 .. _sphinx.ext.autodoc:
     https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
-.. _reStructuredText option list:
-    https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#option-lists
 .. _docstring convention for functions:
     https://numpydoc.readthedocs.io/en/latest/format.html#sections
 .. _Bullet Lists:

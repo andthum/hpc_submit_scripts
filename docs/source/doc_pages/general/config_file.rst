@@ -35,8 +35,8 @@ built-in :mod:`configparser` Python module.
 
 .. note::
 
-    * Don't use quotation marks in option values unless you explicitly
-      want them to be part of the value.
+    Don't use quotation marks in option values unless you explicitly
+    want them to be part of the option value.
 
 Differences to the default behaviour of :mod:`configparser`:
 
@@ -58,13 +58,13 @@ Generraly,
     * Options in [submit\*] sections are parsed to Python submit
       scripts.
     * Options in [sbatch\*] sections are parsed to |sbatch|.
-    * Options in [\*.simulation] subsections are only read by Python
+    * Options in [\*.simulation\*] subsections are only read by Python
       scripts that submit simulations.
-    * Options in [\*.analysis] subsections are only read by Python
+    * Options in [\*.analysis\*] subsections are only read by Python
       scripts that submit analysis tasks.
 
-Options in subsections ([section.subsection]) overwrite same options in
-top-level sections ([section]).
+Options in lower-level sections ([section.subsection.subsubsection...])
+overwrite same options in top-level sections ([section]).
 
 
 Config Options

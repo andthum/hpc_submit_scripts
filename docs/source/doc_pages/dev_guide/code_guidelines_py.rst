@@ -42,31 +42,14 @@ When writting Python code for this project, please
 .. note::
 
     The listed formatters and linters offer plugins for many popular
-    text editors.  When using these plugins, your code is formatted and
-    lintted on the fly, so you don't have to run the commands yourself.
+    text editors and integrated development environments (IDEs).  When
+    using these plugins, your code is formatted and lintted on the fly,
+    so you don't have to run the commands yourself.
 
 .. note::
 
-    If you set up :ref:`pre-commit-label` (strongly recommended), the
+    If you have :ref:`set up pre-commit <set-up-pre-commit-label>`, the
     above formatters and linters check your code before every commit.
-
-.. note::
-
-    All python packages that are required for the development process
-    are listed in :file:`requirements-dev.txt`, so you can easily
-    install them with |pip|.  It is recommended to install the packages
-    inside a |virtual_Python_environment| within the project directory:
-
-    .. code-block:: bash
-
-        python3 -m pip install --user --upgrade virtualenv
-        python3 -m virtualenv env
-        source env/bin/activate
-        python3 -m pip install --upgrade pip setuptools wheel
-        python3 -m pip install --upgrade requirements-dev.txt
-
-    To exit the virtual environment when finishing work on the project
-    type :bash:`deactivate`.
 
 
 Other Python Code Guidelines
@@ -74,8 +57,8 @@ Other Python Code Guidelines
 
     * Adhere to the Zen of Python (:pep:`20`).
 
-    * Naming conventions (A comprehensive summary of the following
-      naming conventions can be found
+    * Naming conventions (a comprehensive summary of Python naming
+      conventions can be found
       `here <https://github.com/naming-convention/naming-convention-guides/tree/master/python>`_):
 
         - Use meaningful, descriptive, but not too long names.
@@ -85,7 +68,8 @@ Other Python Code Guidelines
           (avoid underscores)
         - Module names (i.e. ultimately filenames):
           ``lower_case_with_underscores``
-        - Class names: ``CapitalizedWords``
+        - Class names: ``CapitalizedWords`` (also known as
+          ``CamelCase``)
         - Function names: ``lower_case_with_underscores``
         - Variable names: ``lower_case_with_underscores``
         - Constant variable names: ``UPPER_CASE_WITH_UNDERSCORES``

@@ -23,7 +23,7 @@ Introduction
 This project contains job and submit scripts to run and analyse
 Molecular Dynamics (MD) simulations on High Performance Computing (HPC)
 clusters.  Most of the scripts are job scripts for the |Slurm| (Simple
-Linux Utility for Resource Management) workload manager.
+Linux Utility for Resource Management) Workload Manager.
 
 This project only contains batch scripts and Python scripts that submit
 these batch scripts to Slurm.  It does **not** contain the actual
@@ -94,7 +94,7 @@ section.  The basic usage of the scripts is described in the
 Support
 =======
 
-If you have any questions, feel free to use our |Q&A| forum on |GitHub|.
+If you have any questions, feel free to use the |Q&A| forum on |GitHub|.
 If you encounter a bug or want to request a new feature, please open a
 new |Issue|.
 

@@ -14,13 +14,11 @@ Prerequisites
 The following software is assumed to run on your target machine:
 
     * Bash shell.
-    * |Python|\3 for the Python submit scripts.
+    * |Python|\3.8 or higher for the Python submit scripts.
     * |Slurm| to submit the Slurm job scripts.  If you run the scripts
       on another HPC cluster than |Palma2| or |Bagheera|, you need to
       modify the parts of the job scripts where the cluster name is
-      checked.  Search for :bash:`${SLURM_CLUSTER_NAME}` to find these
-      parts.
-    * |Lmod| (optional).
+      checked.  This is done in the :bash:`bash/load_*.sh` files.
     * Any software that is evoked in the Slurm job scripts you want to
       run.
 
@@ -53,6 +51,12 @@ After cloning or pulling the repository, you may want to change the
 default settings using a |config_file|.  For example, you may want to
 set the default for the \--mail-user option of sbatch to your mail
 adress.
+
+
+Development Installation
+------------------------
+
+See the :ref:`dev-install-label` section in the |dev_guide|.
 
 
 Uninstall

@@ -26,7 +26,7 @@ specifiers can be appended.
     stabilized), even **MINOR** increases *may* introduce incompatible
     API changes.
 
-.. contents:: Site contents
+.. contents:: Site Contents
     :depth: 2
     :local:
 
@@ -48,7 +48,7 @@ Follow these steps when publishing a new release.
     useful guidelines.
 
 
-2. Create a new tag
+2. Create a New Tag
 ^^^^^^^^^^^^^^^^^^^
 
 Create a new tag that contains the new MAJOR.MINOR.PATCH version number
