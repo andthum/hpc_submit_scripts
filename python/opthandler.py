@@ -678,6 +678,7 @@ def get_opts(
         config,
         converter=lambda s: str.replace(s, "-", "_"),
         sections=secs_known,
+        skip_missing_sec=create_missing_secs,
     )
 
     # Convert configparser.ConfigParser to dictionary.
