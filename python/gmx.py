@@ -8,6 +8,30 @@ performed with |Gromacs|.
 """
 
 
+def get_last_time_from_log(fname):
+    """
+    Extract the time of the last frame of an |Gromacs| MD simulation
+    from the |log_file|.
+
+    Parameters
+    ----------
+    fname : str
+        Name of the |log_file|.
+
+    Returns
+    -------
+    time : float
+        The time of the last frame in the |log_file|.
+    """  # noqa: W505,E501
+    lines = tail(fname, 300)
+    line_prev = ""
+    for line in lines[::-1]:
+        if "Step" in line and "Time" in line:
+            step, time = line_prev.split()
+            return float(time)
+        line_prev = line
+
+
 def get_nsteps_from_mdp(fname):
     """
     Extract the maximum number of simulation steps of an |Gromacs| MD
