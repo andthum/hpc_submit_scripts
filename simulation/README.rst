@@ -13,7 +13,7 @@ that reside in the same subdirectory as the job scripts.  Python scripts
 that submit Slurm job scripts to the Slurm Workload Manager start with
 :bash:`submit_*.py`.  For help how to use these scripts type
 :bash:`python3 path/to/the/script.py -h` in a terminal or read the
-docstring inside the script.
+documentation of the script.
 
 
 Directory Tree / Contents
