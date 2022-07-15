@@ -16,7 +16,7 @@ The hpcss Development Team consists of:
     * Andreas Thum
 
 
-Release-wise List of Authors
+Release-Wise List of Authors
 ============================
 
 Upcoming release
@@ -25,6 +25,10 @@ Upcoming release
       Athors are ordered alphabetically by their full name.
       Additionally, add your name to the `authors` option of the
       `[project]` section in `pyproject.toml`.
+    * Andreas Thum
+
+0.1.0
+
     * Andreas Thum
 
 0.0.0.dev0
