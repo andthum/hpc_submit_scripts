@@ -1,0 +1,53 @@
+# GitHub issue form for feature requests.
+# See
+# https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository#creating-issue-forms=
+
+name: "Feature request"
+description: "Request a new feature."
+title: "[Feat]: Descriptive Title"
+labels: ["enhancement"]
+body:
+  - type: "markdown"
+    attributes:
+      value: "Thank you for enhancing HPC Submit Scripts!"
+  - type: "textarea"
+    id: "motivation"
+    attributes:
+      label: "Motivation / Context"
+      description: |
+        Why is the new feature required?
+        What are possible use cases?
+      placeholder: |
+        * I want to do X...
+        * Doing X is rather cumbersome.  There must be an easier way Y...
+        etc.
+    validations:
+      required: true
+  - type: "textarea"
+    id: "solution"
+    attributes:
+      label: "Proposed Solution"
+      description: "Describe the solution you would like to have."
+      placeholder: |
+        * I want a new function/class X that does Y via method Z...
+        * I want the existing function/class X to have a new argument/method Y
+          that does Z...
+        * I want a new script X that does Y via method Z...
+        * I want the existing script X to have a new option Y that does Z...
+        etc.
+    validations:
+      required: true
+  - type: "textarea"
+    id: "alternatives"
+    attributes:
+      label: "Alternative Solutions"
+      description: "Describe alternative solutions you have considered."
+    validations:
+      required: false
+  - type: "textarea"
+    id: "additional_context"
+    attributes:
+      label: "Additional Context"
+      description: "Add any other context and additional information here."
+    validations:
+      required: false

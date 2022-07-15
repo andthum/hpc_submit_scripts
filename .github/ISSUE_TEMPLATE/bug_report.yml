@@ -1,0 +1,133 @@
+# GitHub issue form for bug reports.
+# See
+# https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository#creating-issue-forms=
+
+name: "Bug report"
+description: "Submit a bug report."
+title: "[Bug]: Descriptive Title"
+labels: ["bug"]
+body:
+  - type: "markdown"
+    attributes:
+      value: "Thank you for taking the time to report a bug!"
+  - type: "input"
+    id: "hpcss_version"
+    attributes:
+      label: "hpcss Version"
+      description: |
+        Your HPC Submit Scripts (hpcss) version.
+        You can find the version in the pyproject.toml file.
+      placeholder: "Example: 0.2.1.dev3"
+    validations:
+      required: true
+  - type: "input"
+    id: "python_version"
+    attributes:
+      label: "Python Version"
+      description: |
+        Your Python version.
+        You can check your Python version via
+        "python3 --version"
+      placeholder: "Example: 3.8.10"
+    validations:
+      required: true
+  - type: "input"
+    id: "bash_version"
+    attributes:
+      label: "Bash Version"
+      description: |
+        Your Bash version.
+        You can check your Bash version via
+        "bash --version"
+      placeholder: "Example: GNU bash 4.4.23"
+    validations:
+      required: true
+  - type: "input"
+    id: "slurm_version"
+    attributes:
+      label: "Slurm Version"
+      description: |
+        Your Slurm version.
+        You can check your Slurm version e.g. via
+        "sbatch --version"
+      placeholder: "Example: 21.08.8-2"
+    validations:
+      required: true
+  - type: "input"
+    id: "lmod_version"
+    attributes:
+      label: "Lmod Version"
+      description: |
+        Your Lmod version (only if you use the Lmod module system).
+        You can check your Lmod version e.g. via
+        "module --version"
+      placeholder: "Example: 8.4.6"
+    validations:
+      required: false
+  - type: "input"
+    id: "os_version"
+    attributes:
+      label: "Operating System"
+      description: |
+        Your operating system.
+        On Linux you can check your OS version e.g. via
+        "cat /etc/os-release"
+      placeholder: "Example: CentOS Linux 7 (Core)"
+    validations:
+      required: true
+  - type: "textarea"
+    id: "expected_behavior"
+    attributes:
+      label: "Expected Behavior"
+      description: |
+        A clear and concise description of what are you expecting to happen.
+      placeholder: "When I do this, I expect that."
+    validations:
+      required: true
+  - type: "textarea"
+    id: "actual_behavior"
+    attributes:
+      label: "Actual Behavior"
+      description: |
+        A clear and concise description of what is actually happening.
+      placeholder: "When I do this, it happens that."
+    validations:
+      required: true
+  - type: "textarea"
+    id: "reproduction"
+    attributes:
+      label: "Steps to Reproduce"
+      description: >
+        Steps to reproduce the bug.  Optimally, provide a minimal working
+        example.
+      placeholder: |
+         1. Do this.
+         2. Do that.
+         3. See the bug.
+    validations:
+      required: true
+  - type: "textarea"
+    id: "bug_location"
+    attributes:
+      label: "Supposed Bug Location"
+      description: "Where do you suppose the bug to be?"
+      placeholder: |
+        In line XY of the script `submit_gmx_mdrun.py`.
+        Somewhere in `bash/load_gmx.sh`.
+        etc.
+    validations:
+      required: false
+  - type: "textarea"
+    id: "solution"
+    attributes:
+      label: "Possible Solution"
+      description: "Can you propose a solution for the bug?"
+    validations:
+      required: false
+  - type: "textarea"
+    id: "additional_context"
+    attributes:
+      label: "Additional Context"
+      description: "Add any other context and additional information here."
+    validations:
+      required: false
