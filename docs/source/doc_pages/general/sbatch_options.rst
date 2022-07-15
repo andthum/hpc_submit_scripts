@@ -13,8 +13,8 @@ Refer to the `documetation of sbatch
 options.
 
 You can set defaults for all sbatch options in the |config_file|.  This
-is especially useful for options like \--account, \--mail-type or
-\--mail-user.
+is especially useful for options like \--account, \--mail-type,
+\--mail-user or \--partition.
 
 --account
     Charge resources used by this job to the specified account (`more

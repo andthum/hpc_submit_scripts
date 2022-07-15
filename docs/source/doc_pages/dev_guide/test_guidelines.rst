@@ -10,17 +10,17 @@ Test Guidelines
     expected.  Without full test suites we cannot leave the alpha state
     of development.
 
-.. contents:: Site contents
+.. contents:: Site Contents
     :depth: 2
     :local:
 
 
 .. _writing-tests-label:
 
-Writing tests
+Writing Tests
 -------------
 
-Consistency checks at runtime
+Consistency Checks at Runtime
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Implement consistency checks in your code that check at runtime whether
@@ -28,25 +28,25 @@ the input and output of scripts, functions and other objects is
 sensible.
 
 
-Unit tests
+Unit Tests
 ^^^^^^^^^^
 
 
-Integration tests
+Integration Tests
 ^^^^^^^^^^^^^^^^^
 
 
-Regression tests
+Regression Tests
 ^^^^^^^^^^^^^^^^
 
 
-Performance tests
+Performance Tests
 ^^^^^^^^^^^^^^^^^
 
 
 .. _running-tests-label:
 
-Running tests
+Running Tests
 -------------
 
 Tests are automatically run as `GitHub Actions`_ when pushing changes
@@ -69,11 +69,11 @@ to run doctest on all our example codes.  Simply do:
     make doctest
 
 Note that you have to install the requirements in
-:file:`docs/requirements.txt` to be able to run the above command (see
-:file:`docs/README.rst`).
+:file:`docs/requirements-docs.txt` to be able to run the above command
+(see :ref:`build-docs-label`).
 
 
-Unit tests
+Unit Tests
 ^^^^^^^^^^
 
 We plan to use |pytest| to run unit tests.  The tests can then be run
@@ -85,15 +85,15 @@ via
     python3 -m pytest .
 
 
-Integration tests
+Integration Tests
 ^^^^^^^^^^^^^^^^^
 
 
-Regression tests
+Regression Tests
 ^^^^^^^^^^^^^^^^
 
 
-Performance tests
+Performance Tests
 ^^^^^^^^^^^^^^^^^
 
 

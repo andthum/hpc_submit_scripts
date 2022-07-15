@@ -38,5 +38,4 @@ Python scripts that submit analysis tasks to the Slurm Workload Manager.
     :recursive:
     :nosignatures:
 
-..    submit_gmx_analyses
-..    submit_mdt_analyses
+    submit_gmx_analyses_lintf2_ether

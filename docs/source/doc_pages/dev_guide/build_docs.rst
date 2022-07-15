@@ -1,16 +1,13 @@
-###################
-hpcss Documentation
-###################
+.. _build-docs-label:
 
-This directory contains the files for building the documentation of
-hpcss using Sphinx_.
+Building the Documentation
+==========================
 
-To build the documentation, the dependencies in
-``docs/requirements-docs.txt`` must be installed:
+Follow these steps to build the docs:
 
 .. code-block:: bash
 
-    # Clone the project repository.
+    # If not already done, clone the project repository.
     git clone https://github.com/andthum/hpc_submit_scripts.git
     # Enter the docs directory of the project.
     cd hpc_submit_scripts/docs/
@@ -33,6 +30,3 @@ After installing all requirements, the documentation can be built via
     make doctest
     # Deactivate the virtual Python environment.
     deactivate
-
-
-.. _Sphinx: https://www.sphinx-doc.org/

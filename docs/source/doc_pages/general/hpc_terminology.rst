@@ -85,7 +85,7 @@ Job
 Step
     A self-contained part of a job.
 Task
-    A single run of a single process.
+    A single run of a single program.
 
 
 Parallel Computing
@@ -114,9 +114,10 @@ OpenMP
 
 Usually, all CPUs on one node share the same memory but different nodes
 have different memory spaces.  Hence, if you want to run your program on
-multiple nodes, you must use MPI for communication between processes on
-different nodes and you can use OpenMP for communication between
-processes/threads on the same node.
+multiple nodes, you *must* use MPI for communication between processes
+on different nodes and you *can* use OpenMP for communication between
+processes/threads on the same node (this would be a so-called hybrid
+MPI-OpenMP job).
 
 MPI ranks can be identified with Slurm tasks and OpenMP threads
 correspond to the number of cores per task (sbatch's \--cpus-per-task

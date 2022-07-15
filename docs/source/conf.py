@@ -35,7 +35,7 @@ import tomlkit
 # Recursively import all directories containing Pyhon scripts.
 directories = ("analysis", "python", "simulation")
 for directory in directories:
-    for path in os.walk(os.path.abspath("./../../" + directory)):
+    for path in os.walk(os.path.abspath("../../" + directory)):
         sys.path.insert(1, path[0])
 
 
@@ -182,8 +182,6 @@ rst_epilog = """
     :raw-html:`<a href="https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/">virtual Python environment</a>`
 .. |venv| replace::
     :raw-html:`<a href="https://docs.python.org/3/library/venv.html">venv</a>`
-.. |Virtualenv| replace::
-    :raw-html:`<a href="https://virtualenv.pypa.io/en/latest/">Virtualenv</a>`
 .. |Black| replace::
     :raw-html:`<a href="https://github.com/psf/black/">Black</a>`
 .. |isort| replace::
@@ -519,7 +517,7 @@ coverage_show_missing_items = True
 
 # A list of directories that will be added to sys.path when the doctest
 # builder is used.  Make sure it contains absolute paths.
-doctest_path = [os.path.abspath("./../..")]
+doctest_path = [os.path.abspath("../../")]
 
 # Python code that is treated like it were put in a testsetup directive
 # for every file that is tested.

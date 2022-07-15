@@ -77,7 +77,7 @@ jobs:
     - name: Install/Upgrade setuptools and wheel
       run: python -m pip install --user --upgrade setuptools wheel
     - name: Install/Upgrade requirements to build the documentation
-      run: python -m pip install --user --upgrade -r docs/requirements.txt
+      run: python -m pip install --user --upgrade -r docs/requirements-docs.txt
     - name: Test build of the documentation
       run: make -C ./docs/ html
     - name: doctest

@@ -27,11 +27,12 @@ mess.
     :titlesonly:
     :glob:
 
+    dev_install
+    build_docs
     code_guidelines_py
     code_guidelines_bash
     code_guidelines_md
     doc_guidelines
     test_guidelines
-    pre_commit
     git_workflow
     versioning

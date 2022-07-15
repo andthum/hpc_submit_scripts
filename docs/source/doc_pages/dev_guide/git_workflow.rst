@@ -28,10 +28,12 @@ See also:
     * Git Book chapter `Contributing to a Project`_.
     * GitHub Docs `Contributing to projects`_.
 
-.. contents:: Site contents
+.. contents:: Site Contents
     :depth: 2
     :local:
 
+
+.. _step0-label:
 
 0. Fork the Project
 -------------------
@@ -54,7 +56,7 @@ upstream) repository:
 
 .. code-block:: bash
 
-    cd hpc_submit_scripts
+    cd hpc_submit_scripts/
     git remote add upstream https://github.com/andthum/hpc_submit_scripts.git
 
 In this way you can fetch the latest changes directly from the upstream
@@ -152,10 +154,15 @@ use).
 
 .. note::
 
-    Many editors offer to load the requested code formatters and linters
-    as plugins.  These plugins format and lint the code on the fly as
-    you type or on each save.  When using the corresponding plugins, you
-    can skip this step.
+    Many editors and integrated development environments (IDEs) offer to
+    load the requested code formatters and linters as plugins.  These
+    plugins format and lint the code on the fly as you type or on each
+    save.  When using the corresponding plugins, you can skip this step.
+
+.. note::
+
+    If you have :ref:`set up pre-commit <set-up-pre-commit-label>`, your
+    code is automatically formatted and linted before every commit.
 
 
 5. Run Tests
@@ -166,9 +173,10 @@ Run the test suites (see :ref:`running-tests-label`).
 If you did not touch the source code and did not write or change code
 examples in the documentation, you can skip this step.  Also in other
 cases you might skip this step, because all tests suites are run
-automatically when pushing changes to the upstream repository.  However,
-if the tests on GitHub fail, you might simply be asked to fix the
-failing tests before your code is reviewed.
+automatically as part of our Continuous Integration (CI) workflow when
+pushing changes to the upstream repository.  However, if the tests on
+GitHub fail, you might simply be asked to fix the failing tests before
+your code is reviewed.
 
 
 6. Stage and Commit Your Changes
@@ -275,6 +283,9 @@ Either your pull request is merged directly into the upstream
 repository, your pull request is rejected or you are asked to make some
 changes.  In the latter case, please go back to
 :ref:`Step 3 <step3-label>` and incorporate the requested changes.
+
+**Thank you** very much for your contribution and taking all the long
+way down until here!
 
 
 .. _project repository: https://github.com/andthum/hpc_submit_scripts

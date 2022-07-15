@@ -27,10 +27,11 @@ When writting markdown language, please
 .. note::
 
     The listed formatters and linters offer plugins for many popular
-    text editors.  When using these plugins, your code is formatted and
-    lintted on the fly, so you don't have to run the commands yourself.
+    text editors and integrated development environments (IDEs).  When
+    using these plugins, your code is formatted and lintted on the fly,
+    so you don't have to run the commands yourself.
 
 .. note::
 
-    If you set up :ref:`pre-commit-label` (strongly recommended), the
+    If you have :ref:`set up pre-commit <set-up-pre-commit-label>`, the
     above formatters and linters check your code before every commit.
