@@ -12,7 +12,7 @@ programs are available to the user.
 
 On HPC clusters that use Lmod, you typically have to load specific
 modules before you can run a certain program.  Which modules to load and
-how they are called depends on how you cluster administrator has set up
+how they are called depends on how your cluster administrator has set up
 the Lmod module system.
 
 
@@ -22,7 +22,7 @@ Directory Tree / Contents
 This directory contains predefined bash scripts that can be used to load
 specific modules to get access to specific software.  Note that the
 scripts must be sourced with :bash:`source path/to/the/script.sh` to
-make the modules available in the parent shell.
+make the modules available in the current shell.
 
     * :bash:`palma`:  Bash scripts that load modules on the Palma2 HPC
       cluster of the University of Münster, ordered into subdirectories
