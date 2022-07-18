@@ -1,11 +1,11 @@
-# GitHub issue form for feature requests.
+# GitHub issue form for documentation requests.
 # See
 # https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository#creating-issue-forms=
 
-name: "Feature Request"
-description: "Request a new feature."
-title: "[Feat]: Descriptive Title"
-labels: ["enhancement"]
+name: "Documentation Request"
+description: "Request a documentation update/change."
+title: "[Docs]: Descriptive title"
+labels: ["documentation"]
 body:
   - type: "markdown"
     attributes:
@@ -14,12 +14,10 @@ body:
     id: "motivation"
     attributes:
       label: "Motivation / Context"
-      description: |
-        Why is the new feature required?
-        What are possible use cases?
+      description: "Why is the documentation update/change required?"
       placeholder: |
-        * I want to do X...
-        * Doing X is rather cumbersome.  There must be an easier way Y...
+        * The documentation of X is unclear about Y...
+        * The documentation of Z does not fit to the actual behavior...
         etc.
     validations:
       required: true
@@ -29,11 +27,8 @@ body:
       label: "Proposed Solution"
       description: "Describe the solution you would like to have."
       placeholder: |
-        * I want a new function/class X that does Y via method Z...
-        * I want the existing function/class X to have a new argument/method Y
-          that does Z...
-        * I want a new script X that does Y via method Z...
-        * I want the existing script X to have a new option Y that does Z...
+        * I want the documenation of X to be more clear about Y...
+        * The documenation of Z should describe the actual behavior, i.e. ...
         etc.
     validations:
       required: true

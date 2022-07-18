@@ -4,9 +4,9 @@
 
 blank_issues_enabled: true
 contact_links:
-  - name: Question&Answer forum
+  - name: Question&Answer Forum
     url: https://github.com/andthum/hpc_submit_scripts/discussions/categories/q-a
     about: Please ask support questions here.
-  - name: Discussions forum
+  - name: Discussions Forum
     url: https://github.com/andthum/hpc_submit_scripts/discussions
     about: Please start general discussions here.
