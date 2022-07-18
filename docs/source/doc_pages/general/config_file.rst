@@ -64,7 +64,7 @@ Generraly,
       scripts that submit analysis tasks.
 
 Options in lower-level sections ([section.subsection.subsubsection...])
-overwrite same options in top-level sections ([section]).
+overwrite same options in higher-level sections.
 
 
 Config Options
