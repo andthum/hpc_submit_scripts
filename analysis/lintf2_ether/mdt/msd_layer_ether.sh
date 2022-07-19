@@ -104,13 +104,14 @@ save_dir="msd_layer_ether_slurm-${SLURM_JOB_ID}"
 if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
-    # https://unix.stackexchange.com/questions/238809/match-zero-or-more-operator-in-shell-globbing
-    shopt -s extglob || exit
     mv -v \
         "${settings}_${system}_ether_msd_layer.txt" \
-        "${settings}_${system}_ether_m"?(s)"dx_layer.txt" \
-        "${settings}_${system}_ether_m"?(s)"dy_layer.txt" \
-        "${settings}_${system}_ether_m"?(s)"dz_layer.txt" \
+        "${settings}_${system}_ether_msdx_layer.txt" \
+        "${settings}_${system}_ether_msdy_layer.txt" \
+        "${settings}_${system}_ether_msdz_layer.txt" \
+        "${settings}_${system}_ether_mdx_layer.txt" \
+        "${settings}_${system}_ether_mdy_layer.txt" \
+        "${settings}_${system}_ether_mdz_layer.txt" \
         "${settings}_${system}_msd_layer_ether_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
