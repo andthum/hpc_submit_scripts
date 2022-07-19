@@ -93,13 +93,14 @@ save_dir="msd_layer_OBT_slurm-${SLURM_JOB_ID}"
 if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
-    # https://unix.stackexchange.com/questions/238809/match-zero-or-more-operator-in-shell-globbing
-    shopt -s extglob || exit
     mv -v \
         "${settings}_${system}_OBT_msd_layer.txt" \
-        "${settings}_${system}_OBT_m"?(s)"dx_layer.txt" \
-        "${settings}_${system}_OBT_m"?(s)"dy_layer.txt" \
-        "${settings}_${system}_OBT_m"?(s)"dz_layer.txt" \
+        "${settings}_${system}_OBT_msdx_layer.txt" \
+        "${settings}_${system}_OBT_msdy_layer.txt" \
+        "${settings}_${system}_OBT_msdz_layer.txt" \
+        "${settings}_${system}_OBT_mdx_layer.txt" \
+        "${settings}_${system}_OBT_mdy_layer.txt" \
+        "${settings}_${system}_OBT_mdz_layer.txt" \
         "${settings}_${system}_msd_layer_OBT_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
