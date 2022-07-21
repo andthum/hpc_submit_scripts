@@ -66,14 +66,15 @@ outfile="${settings}_${system}_energy_${begin_ns}-${end_ns}ns.xvg"
 
 echo -e "\n"
 echo "================================================================="
-echo -e "Potential
-         Kinetic-E
-         Total-E
-         Conserved-E
-         Temperature
-         Pressure
-         Volume
-         Density" |
+echo -e \
+    "Potential \n" \
+    "Kinetic-E \n" \
+    "Total-E \n" \
+    "Conserved-E \n" \
+    "Temperature \n" \
+    "Pressure \n" \
+    "Volume \n" \
+    "Density" |
     ${gmx_exe} energy \
         -f "${settings}_out_${system}.edr" \
         -s "${settings}_${system}.tpr" \
