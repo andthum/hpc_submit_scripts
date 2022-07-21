@@ -189,6 +189,7 @@ gmx_energy() {
         "Potential \n" \
         "Kinetic-E \n" \
         "Total-E \n" \
+        "Conserved-E \n" \
         "Temperature \n" \
         "Pressure \n" \
         "Volume \n" \
