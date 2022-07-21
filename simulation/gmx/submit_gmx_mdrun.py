@@ -55,13 +55,10 @@ Resubmission
     useful if your simulation takes longer than the maximum allowed
     simulation time on your computing cluster.  This option is ignored
     if \--continue is set to ``0`` or ``1``.  Default: ``10``.
---no-backup
-    By default, old simulation files will be backed up into a
-    subdirectory before continuing a previous simulation using |rsync|.
-    This might take up to a few hours depending on the size of the
-    files.  With \--no-backup you can skip this backup, but be aware
-    that your trajectory (and other simulation files) might get
-    corrupted if the continuation of the simulation fails badly.
+--backup
+    Backup old simulation files into a subdirectory using |rsync| before
+    continuing a previous simulation.  This might take up to a few hours
+    depending on the size of the files.
 
 Gromacs-Specifig Options
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -316,11 +313,14 @@ if __name__ == "__main__":  # noqa: C901
         ),
     )
     parser_resub.add_argument(
-        "--no-backup",
+        "--backup",
         required=False,
         default=False,
         action="store_true",
-        help="Skip backup before continuing a previous simulation.",
+        help=(
+            "Backup old simulation files before continuing a previous"
+            " simulation."
+        ),
     )
     parser_gmx = parser.add_argument_group(title="Gromacs-Specifig Options")
     parser_gmx.add_argument(
@@ -511,7 +511,7 @@ if __name__ == "__main__":  # noqa: C901
         args["structure"],
         args["continue"],
         nsteps,
-        not args["no_backup"],
+        args["backup"],
         gmx_lmod,
         args["gmx_exe"],
         args["gmx_mpi_exe"],
