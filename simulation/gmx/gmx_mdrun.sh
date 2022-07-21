@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --signal=INT@300
+#SBATCH --signal=INT@900
 #SBATCH --job-name="gmx_mdrun"
 #SBATCH --output="gmx_mdrun_slurm-%j.out"
 # The above options are only default values that can be overwritten by
@@ -118,7 +118,7 @@ else
 fi
 
 ########################################################################
-# Get Access to the Gromacs Executable                                 #
+# Load required executable(s)                                          #
 ########################################################################
 
 if [[ ${SLURM_JOB_NUM_NODES} -gt 1 ]] && [[ ${gmx_mpi_exe} == "None" ]]; then
@@ -140,9 +140,62 @@ fi
 # Function Definitions                                                 #
 ########################################################################
 
+rm_old_energy_files() {
+    echo -e "\n"
+    echo "Removing old energy.xvg files..."
+    # From https://stackoverflow.com/a/34862475
+    # shellcheck disable=SC2010
+    ls "${settings}_out_${system}_energy_"[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]*".xvg" -tp |
+        grep -v '/$' |
+        tail -n +2 |
+        xargs -I {} rm -v -- {}
+    if compgen -G "${settings}_out_${system}_energy_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]*.xvg" > /dev/null; then
+        mv -v \
+            "${settings}_out_${system}_energy_"[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]*".xvg" \
+            "${settings}_out_${system}_energy.xvg"
+    fi
+}
+
+compress() {
+    echo -e "\n"
+    echo "Compressing large files..."
+    if [[ -z ${SLURM_CPUS_ON_NODE} ]]; then
+        if [[ -z ${SLURM_CPUS_PER_TASK} ]]; then
+            echo
+            echo "Unexpected ERROR: SLURM_CPUS_ON_NODE and SLURM_CPUS_PER_TASK"
+            echo "are not assigned"
+            exit 1
+        fi
+        NCPUS=${SLURM_CPUS_PER_TASK}
+    else
+        NCPUS=${SLURM_CPUS_ON_NODE}
+    fi
+    NJOBS=3
+    NCPUS=$((NCPUS / NJOBS > 0 ? NCPUS / NJOBS : 1))
+    if [[ -f ${settings}_out_${system}.edr ]]; then
+        srun --cpus-per-task "${NCPUS}" --exclusive \
+            gzip --best --verbose "${settings}_out_${system}.edr" &
+        # Decompress with
+        # gzip --decompress "${settings}_out_${system}.edr"
+    fi
+    if [[ -f ${settings}_out_${system}.log ]]; then
+        srun --cpus-per-task "${NCPUS}" --exclusive \
+            gzip --best --verbose "${settings}_out_${system}.log" &
+    fi
+    if [[ -f ${settings}_out_${system}_energy.xvg ]]; then
+        srun --cpus-per-task "${NCPUS}" --exclusive \
+            gzip --best --verbose "${settings}_out_${system}_energy.xvg" &
+    fi
+    wait
+}
+
 clean_up() {
-    echo
+    rm_old_energy_files
+    compress
+    echo -e "\n"
+    echo "Moving simulation files to '${settings}_${system}'..."
     if [[ -d ${settings}_${system} ]]; then
+        echo
         echo "WARNING: The directory already exists: '${settings}_${system}'"
     elif [[ ! -d ${settings}_${system} ]]; then
         mkdir -v "${settings}_${system}" || exit
@@ -158,6 +211,7 @@ clean_up() {
         mv -v "${settings}_${system}"* "${settings}_${system}"
         mv -v "${settings}_out_${system}"* "${settings}_${system}"
     else
+        echo
         echo "Unexpected WARNING: Existence of directory cannot be checked:"
         echo "'${settings}_${system}'"
     fi
@@ -404,6 +458,7 @@ if [[ ${backup} -eq 1 ]]; then
             exit
         mv -v "${rsync_log_file}" "${backup_dir}"
     else
+        echo
         echo "NOTE: No files to backup"
     fi
 elif [[ ${backup} -ne 0 ]]; then
