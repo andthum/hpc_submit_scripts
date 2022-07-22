@@ -19,13 +19,14 @@
 # Slab RDFs using center of mass often crash
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #
 
+analysis="rdf_slab-z_ether-com"
 thisfile=$(basename "${BASH_SOURCE[0]}")
 echo "${thisfile}"
 start_time=$(date --rfc-3339=seconds || exit)
 echo "Start time = ${start_time}"
 
 ########################################################################
-# Argument Parsing                                                     #                                                #
+# Argument Parsing                                                     #
 ########################################################################
 
 bash_dir=${1}  # Directory containing bash scripts used by this script
@@ -74,11 +75,15 @@ if [[ ${solvent} == peo* ]]; then
 fi
 
 ########################################################################
-# Start the Analysis                                                   #                                      #
+# Load required executable(s)                                          #
 ########################################################################
 
 # shellcheck source=/dev/null
 source "${bash_dir}/load_gmx.sh" "${gmx_lmod}" "${gmx_exe}" || exit
+
+########################################################################
+# Start the Analysis                                                   #
+########################################################################
 
 echo -e "\n"
 echo "${solvent}-${solvent} (COM) slab-z ${zmin}-${zmax} nm"
@@ -86,8 +91,8 @@ echo "================================================================="
 ${gmx_exe} rdf \
     -f "${settings}_out_${system}_pbc_whole_mol.xtc" \
     -s "${settings}_${system}.tpr" \
-    -o "${settings}_${system}_rdf_slab-z_ether-com_${zmin}-${zmax}nm.xvg" \
-    -cn "${settings}_${system}_cnrdf_slab-z_ether-com_${zmin}-${zmax}nm.xvg" \
+    -o "${settings}_${system}_${analysis}_${zmin}-${zmax}nm.xvg" \
+    -cn "${settings}_${system}_cn${analysis}_${zmin}-${zmax}nm.xvg" \
     -b "${begin}" \
     -e "${end}" \
     -dt "${dt}" \
@@ -102,14 +107,14 @@ echo "================================================================="
 # Cleanup                                                              #
 ########################################################################
 
-save_dir="rdf_slab-z_ether-com_${zmin}-${zmax}nm_slurm-${SLURM_JOB_ID}"
+save_dir="${analysis}_${zmin}-${zmax}nm_slurm-${SLURM_JOB_ID}"
 if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
-        "${settings}_${system}_rdf_slab-z_ether-com_${zmin}-${zmax}nm.xvg" \
-        "${settings}_${system}_cnrdf_slab-z_ether-com_${zmin}-${zmax}nm.xvg" \
-        "${settings}_${system}_rdf_slab-z_ether-com_${zmin}-${zmax}nm_slurm-${SLURM_JOB_ID}.out" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}nm.xvg" \
+        "${settings}_${system}_cn${analysis}_${zmin}-${zmax}nm.xvg" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}nm_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
         "${system}" \
