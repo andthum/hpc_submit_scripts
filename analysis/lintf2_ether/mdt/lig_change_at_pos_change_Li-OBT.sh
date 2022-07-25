@@ -15,6 +15,7 @@
 # This script is meant to be submitted by
 # submit_mdt_analyses_lintf2_ether.py
 
+analysis="lig_change_at_pos_change_Li-OBT"
 thisfile=$(basename "${BASH_SOURCE[0]}")
 echo "${thisfile}"
 start_time=$(date --rfc-3339=seconds || exit)
@@ -60,11 +61,15 @@ echo -e "\n"
 bash "${bash_dir}/echo_slurm_output_environment_variables.sh"
 
 ########################################################################
-# Start the Analysis                                                   #
+# Load required executable(s)                                          #
 ########################################################################
 
 # shellcheck source=/dev/null
 source "${bash_dir}/load_python.sh" "${py_lmod}" "${py_exe}" || exit
+
+########################################################################
+# Start the Analysis                                                   #
+########################################################################
 
 echo -e "\n"
 echo "=================================================================="
@@ -72,7 +77,7 @@ ${py_exe} -u \
     "${mdt_path}/scripts/structure/lig_change_at_pos_change.py" \
     -f "${settings}_out_${system}_pbc_whole_mol.xtc" \
     -s "${settings}_${system}.tpr" \
-    -o "${settings}_${system}_lig_change_at_pos_change_Li-OBT" \
+    -o "${settings}_${system}_${analysis}" \
     -b "${begin}" \
     -e "${end}" \
     --every "${every}" \
@@ -87,25 +92,25 @@ ${py_exe} -u \
     exit
 echo "=================================================================="
 
-if [[ -f ${settings}_${system}_lig_change_at_pos_change_Li-OBT_contacts.txt ]]; then
+if [[ -f ${settings}_${system}_${analysis}_contacts.txt ]]; then
     echo -e "\n"
     mv -v \
-        "${settings}_${system}_lig_change_at_pos_change_Li-OBT_contacts.txt" \
-        "${settings}_${system}_lig_change_at_pos_change_Li-OBT.txt"
+        "${settings}_${system}_${analysis}_contacts.txt" \
+        "${settings}_${system}_${analysis}.txt"
 fi
 
 ########################################################################
 # Cleanup                                                              #
 ########################################################################
 
-save_dir="lig_change_at_pos_change_Li-OBT_slurm-${SLURM_JOB_ID}"
+save_dir="${analysis}_slurm-${SLURM_JOB_ID}"
 if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
-        "${settings}_${system}_lig_change_at_pos_change_Li-OBT.txt" \
-        "${settings}_${system}_lig_change_at_pos_change_Li-OBT_bins.txt" \
-        "${settings}_${system}_lig_change_at_pos_change_Li-OBT_slurm-${SLURM_JOB_ID}.out" \
+        "${settings}_${system}_${analysis}.txt" \
+        "${settings}_${system}_${analysis}_bins.txt" \
+        "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
         "${system}" \

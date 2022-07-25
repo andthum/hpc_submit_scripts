@@ -15,6 +15,7 @@
 # This script is meant to be submitted by
 # submit_mdt_analyses_lintf2_ether.py
 
+analysis="discrete-z_Li_state_lifetime_discrete"
 thisfile=$(basename "${BASH_SOURCE[0]}")
 echo "${thisfile}"
 start_time=$(date --rfc-3339=seconds || exit)
@@ -52,11 +53,15 @@ echo -e "\n"
 bash "${bash_dir}/echo_slurm_output_environment_variables.sh"
 
 ########################################################################
-# Start the Analysis                                                   #
+# Load required executable(s)                                          #
 ########################################################################
 
 # shellcheck source=/dev/null
 source "${bash_dir}/load_python.sh" "${py_lmod}" "${py_exe}" || exit
+
+########################################################################
+# Start the Analysis                                                   #
+########################################################################
 
 echo -e "\n"
 echo "state_lifetime_discrete.py --continuous"
@@ -65,7 +70,7 @@ ${py_exe} -u \
     "${mdt_path}/scripts/discretization/state_lifetime_discrete.py" \
     --f1 "${settings}_${system}_discrete-z_Li_dtrj.npy" \
     --f2 "${settings}_${system}_discrete-z_Li_dtrj.npy" \
-    -o "${settings}_${system}_discrete-z_Li_state_lifetime_discrete_continuous.txt" \
+    -o "${settings}_${system}_${analysis}_continuous.txt" \
     -b "0" \
     -e "-1" \
     --every "1" \
@@ -81,7 +86,7 @@ ${py_exe} -u \
     "${mdt_path}/scripts/discretization/state_lifetime_discrete.py" \
     --f1 "${settings}_${system}_discrete-z_Li_dtrj.npy" \
     --f2 "${settings}_${system}_discrete-z_Li_dtrj.npy" \
-    -o "${settings}_${system}_discrete-z_Li_state_lifetime_discrete.txt" \
+    -o "${settings}_${system}_${analysis}.txt" \
     -b "0" \
     -e "-1" \
     --every "1" \
@@ -93,14 +98,14 @@ echo "================================================================="
 # Cleanup                                                              #
 ########################################################################
 
-save_dir="discrete-z_Li_state_lifetime_discrete_slurm-${SLURM_JOB_ID}"
+save_dir="${analysis}_slurm-${SLURM_JOB_ID}"
 if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
-        "${settings}_${system}_discrete-z_Li_state_lifetime_discrete.txt" \
-        "${settings}_${system}_discrete-z_Li_state_lifetime_discrete_continuous.txt" \
-        "${settings}_${system}_discrete-z_Li_state_lifetime_discrete_slurm-${SLURM_JOB_ID}.out" \
+        "${settings}_${system}_${analysis}.txt" \
+        "${settings}_${system}_${analysis}_continuous.txt" \
+        "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
         "${system}" \
