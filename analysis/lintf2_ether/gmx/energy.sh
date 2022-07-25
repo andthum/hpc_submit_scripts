@@ -60,6 +60,15 @@ bash "${bash_dir}/echo_slurm_output_environment_variables.sh"
 source "${bash_dir}/load_gmx.sh" "${gmx_lmod}" "${gmx_exe}" || exit
 
 ########################################################################
+# Decompress input file(s) if necessary                                #
+########################################################################
+
+echo -e "\n"
+echo "Decompressing input file(s) if necessary..."
+infile="${settings}_out_${system}.edr"
+decompressed=$("${bash_dir}/decompress.sh" "${infile}" "--keep --verbose")
+
+########################################################################
 # Start the Analysis                                                   #
 ########################################################################
 
@@ -81,7 +90,7 @@ echo -e \
     "Volume \n" \
     "Density" |
     ${gmx_exe} energy \
-        -f "${settings}_out_${system}.edr" \
+        -f "${infile}" \
         -s "${settings}_${system}.tpr" \
         -o "${outfile}" \
         -b "${begin}" \
@@ -90,15 +99,29 @@ echo -e \
 echo "================================================================="
 
 ########################################################################
+# Compress output file(s)                                              #
+########################################################################
+
+echo -e "\n"
+echo "Compressing output file(s)..."
+gzip --best --verbose "${outfile}" || exit
+
+########################################################################
 # Cleanup                                                              #
 ########################################################################
+
+if [[ ${decompressed} -eq 1 ]]; then
+    echo -e "\n"
+    echo "Removing decompressed input file(s)..."
+    rm -v "${infile}"
+fi
 
 save_dir="${analysis}_slurm-${SLURM_JOB_ID}"
 if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
-        "${outfile}" \
+        "${outfile}.gz" \
         "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
