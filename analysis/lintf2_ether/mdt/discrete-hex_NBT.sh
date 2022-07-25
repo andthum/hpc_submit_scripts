@@ -15,6 +15,7 @@
 # This script is meant to be submitted by
 # submit_mdt_analyses_lintf2_ether.py
 
+analysis="discrete-hex_NBT"
 thisfile=$(basename "${BASH_SOURCE[0]}")
 echo "${thisfile}"
 start_time=$(date --rfc-3339=seconds || exit)
@@ -70,11 +71,15 @@ echo -e "\n"
 bash "${bash_dir}/echo_slurm_output_environment_variables.sh"
 
 ########################################################################
-# Start the Analysis                                                   #
+# Load required executable(s)                                          #
 ########################################################################
 
 # shellcheck source=/dev/null
 source "${bash_dir}/load_python.sh" "${py_lmod}" "${py_exe}" || exit
+
+########################################################################
+# Start the Analysis                                                   #
+########################################################################
 
 if (($(echo "${zmax} < 50.0" | bc || exit))); then
     electrode="B1"
@@ -90,7 +95,7 @@ ${py_exe} -u \
     "${mdt_path}/scripts/structure/discrete_hex.py" \
     -f "${settings}_out_${system}_pbc_whole_mol.xtc" \
     -s "${settings}_${system}.tpr" \
-    -o "${settings}_${system}_discrete-hex_NBT_${zmin}-${zmax}A" \
+    -o "${settings}_${system}_${analysis}_${zmin}-${zmax}A" \
     -b "${begin}" \
     -e "${end}" \
     --every "${every}" \
@@ -103,11 +108,11 @@ ${py_exe} -u \
     exit
 echo "================================================================="
 
-if [[ -f ${settings}_${system}_discrete-hex_NBT_${zmin}-${zmax}A_traj.npy ]]; then
+if [[ -f ${settings}_${system}_${analysis}_${zmin}-${zmax}A_traj.npy ]]; then
     echo -e "\n"
     mv -v \
-        "${settings}_${system}_discrete-hex_NBT_${zmin}-${zmax}A_traj.npy" \
-        "${settings}_${system}_discrete-hex_NBT_${zmin}-${zmax}A_dtrj.npy"
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_traj.npy" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_dtrj.npy"
 fi
 
 echo -e "\n"
@@ -115,8 +120,8 @@ echo "state_lifetime.py --continuous"
 echo "================================================================="
 ${py_exe} -u \
     "${mdt_path}/scripts/discretization/state_lifetime.py" \
-    -f "${settings}_${system}_discrete-hex_NBT_${zmin}-${zmax}A_dtrj.npy" \
-    -o "${settings}_${system}_discrete-hex_NBT_${zmin}-${zmax}A_state_lifetime_discard-all-neg_continuous.txt" \
+    -f "${settings}_${system}_${analysis}_${zmin}-${zmax}A_dtrj.npy" \
+    -o "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg_continuous.txt" \
     -b "0" \
     -e "-1" \
     --every "1" \
@@ -132,8 +137,8 @@ echo "state_lifetime.py"
 echo "================================================================="
 ${py_exe} -u \
     "${mdt_path}/scripts/discretization/state_lifetime.py" \
-    -f "${settings}_${system}_discrete-hex_NBT_${zmin}-${zmax}A_dtrj.npy" \
-    -o "${settings}_${system}_discrete-hex_NBT_${zmin}-${zmax}A_state_lifetime_discard-all-neg.txt" \
+    -f "${settings}_${system}_${analysis}_${zmin}-${zmax}A_dtrj.npy" \
+    -o "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg.txt" \
     -b "0" \
     -e "-1" \
     --every "1" \
@@ -147,17 +152,17 @@ echo "================================================================="
 # Cleanup                                                              #
 ########################################################################
 
-save_dir="discrete-hex_NBT_${zmin}-${zmax}A_slurm-${SLURM_JOB_ID}"
+save_dir="${analysis}_${zmin}-${zmax}A_slurm-${SLURM_JOB_ID}"
 if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
-        "${settings}_${system}_discrete-hex_NBT_${zmin}-${zmax}A_lattice_faces.npy" \
-        "${settings}_${system}_discrete-hex_NBT_${zmin}-${zmax}A_lattice_vertices.npy" \
-        "${settings}_${system}_discrete-hex_NBT_${zmin}-${zmax}A_dtrj.npy" \
-        "${settings}_${system}_discrete-hex_NBT_${zmin}-${zmax}A_slurm-${SLURM_JOB_ID}.out" \
-        "${settings}_${system}_discrete-hex_NBT_${zmin}-${zmax}A_state_lifetime_discard-all-neg.txt" \
-        "${settings}_${system}_discrete-hex_NBT_${zmin}-${zmax}A_state_lifetime_discard-all-neg_continuous.txt" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_lattice_faces.npy" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_lattice_vertices.npy" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_dtrj.npy" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_slurm-${SLURM_JOB_ID}.out" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg.txt" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg_continuous.txt" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
         "${system}" \

@@ -15,6 +15,7 @@
 # This script is meant to be submitted by
 # submit_mdt_analyses_lintf2_ether.py
 
+analysis="renewal_events_Li-NTf2_state_lifetime"
 thisfile=$(basename "${BASH_SOURCE[0]}")
 echo "${thisfile}"
 start_time=$(date --rfc-3339=seconds || exit)
@@ -54,11 +55,15 @@ echo -e "\n"
 bash "${bash_dir}/echo_slurm_output_environment_variables.sh"
 
 ########################################################################
-# Start the Analysis                                                   #
+# Load required executable(s)                                          #
 ########################################################################
 
 # shellcheck source=/dev/null
 source "${bash_dir}/load_python.sh" "${py_lmod}" "${py_exe}" || exit
+
+########################################################################
+# Start the Analysis                                                   #
+########################################################################
 
 echo -e "\n"
 echo "state_lifetime.py --continuous"
@@ -66,7 +71,7 @@ echo "================================================================="
 ${py_exe} -u \
     "${mdt_path}/scripts/discretization/state_lifetime.py" \
     -f "${settings}_${system}_renewal_events_Li-NTf2_dtrj.npy" \
-    -o "${settings}_${system}_renewal_events_Li-NTf2_state_lifetime_discard-neg-start_continuous.txt" \
+    -o "${settings}_${system}_${analysis}_discard-neg-start_continuous.txt" \
     -b "0" \
     -e "-1" \
     --every "1" \
@@ -83,7 +88,7 @@ echo "================================================================="
 ${py_exe} -u \
     "${mdt_path}/scripts/discretization/state_lifetime.py" \
     -f "${settings}_${system}_renewal_events_Li-NTf2_dtrj.npy" \
-    -o "${settings}_${system}_renewal_events_Li-NTf2_state_lifetime_discard-neg-start.txt" \
+    -o "${settings}_${system}_${analysis}_discard-neg-start.txt" \
     -b "0" \
     -e "-1" \
     --every "1" \
@@ -97,14 +102,14 @@ echo "================================================================="
 # Cleanup                                                              #
 ########################################################################
 
-save_dir="renewal_events_Li-NTf2_state_lifetime_slurm-${SLURM_JOB_ID}"
+save_dir="${analysis}_slurm-${SLURM_JOB_ID}"
 if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
-        "${settings}_${system}_renewal_events_Li-NTf2_state_lifetime_discard-neg-start.txt" \
-        "${settings}_${system}_renewal_events_Li-NTf2_state_lifetime_discard-neg-start_continuous.txt" \
-        "${settings}_${system}_renewal_events_Li-NTf2_state_lifetime_slurm-${SLURM_JOB_ID}.out" \
+        "${settings}_${system}_${analysis}_discard-neg-start.txt" \
+        "${settings}_${system}_${analysis}_discard-neg-start_continuous.txt" \
+        "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
         "${system}" \

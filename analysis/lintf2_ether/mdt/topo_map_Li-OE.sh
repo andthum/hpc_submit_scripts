@@ -15,6 +15,7 @@
 # This script is meant to be submitted by
 # submit_mdt_analyses_lintf2_ether.py
 
+analysis="topo_map_Li-OE"
 thisfile=$(basename "${BASH_SOURCE[0]}")
 echo "${thisfile}"
 start_time=$(date --rfc-3339=seconds || exit)
@@ -60,11 +61,15 @@ echo -e "\n"
 bash "${bash_dir}/echo_slurm_output_environment_variables.sh"
 
 ########################################################################
-# Start the Analysis                                                   #
+# Load required executable(s)                                          #
 ########################################################################
 
 # shellcheck source=/dev/null
 source "${bash_dir}/load_python.sh" "${py_lmod}" "${py_exe}" || exit
+
+########################################################################
+# Start the Analysis                                                   #
+########################################################################
 
 echo -e "\n"
 echo "Li-OE"
@@ -73,7 +78,7 @@ ${py_exe} -u \
     "${mdt_path}/scripts/structure/topological_map.py" \
     -f "${settings}_out_${system}_pbc_whole_mol.xtc" \
     -s "${settings}_${system}.tpr" \
-    -o "${settings}_${system}_topo_map_Li-OE_Li${li_ix}.txt" \
+    -o "${settings}_${system}_${analysis}_Li${li_ix}.txt" \
     -b "${begin}" \
     -e "${end}" \
     --every "${every}" \
@@ -87,13 +92,13 @@ echo "================================================================="
 # Cleanup                                                              #
 ########################################################################
 
-save_dir="topo_map_Li-OE_Li${li_ix}_slurm-${SLURM_JOB_ID}"
+save_dir="${analysis}_Li${li_ix}_slurm-${SLURM_JOB_ID}"
 if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
-        "${settings}_${system}_topo_map_Li-OE_Li${li_ix}.txt" \
-        "${settings}_${system}_topo_map_Li-OE_slurm-${SLURM_JOB_ID}.out" \
+        "${settings}_${system}_${analysis}_Li${li_ix}.txt" \
+        "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
         "${system}" \
