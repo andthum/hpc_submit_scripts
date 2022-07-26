@@ -168,7 +168,7 @@ rst_epilog = """
 .. |gro_file| replace::
     :raw-html:`<a href="https://manual.gromacs.org/documentation/current/reference-manual/file-formats.html#gro">.gro file</a>`
 .. |log_file| replace::
-    :raw-html:`<a href="https://manual.gromacs.org/documentation/current/reference-manual/file-formats.html#gro">.log file</a>`
+    :raw-html:`<a href="https://manual.gromacs.org/documentation/current/reference-manual/file-formats.html#log">.log file</a>`
 .. |mdp_file| replace::
     :raw-html:`<a href="https://manual.gromacs.org/documentation/current/user-guide/mdp-options.html">.mdp file</a>`
 
