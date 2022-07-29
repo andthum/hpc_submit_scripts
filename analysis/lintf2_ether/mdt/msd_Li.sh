@@ -78,7 +78,7 @@ ${py_exe} -u \
     "${mdt_path}/scripts/dynamics/msd_serial.py" \
     -f "${settings}_out_${system}_pbc_whole_mol_nojump.xtc" \
     -s "${settings}_${system}.tpr" \
-    -o "${settings}_${system}_${analysis}.txt" \
+    -o "${settings}_${system}_${analysis}.txt.gz" \
     -b "${begin}" \
     -e "${end}" \
     --every "${every}" \
@@ -97,7 +97,7 @@ if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
-        "${settings}_${system}_${analysis}.txt" \
+        "${settings}_${system}_${analysis}.txt.gz" \
         "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \

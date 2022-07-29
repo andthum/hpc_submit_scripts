@@ -63,14 +63,20 @@ source "${bash_dir}/load_python.sh" "${py_lmod}" "${py_exe}" || exit
 # Start the Analysis                                                   #
 ########################################################################
 
+if [[ -f ${settings}_${system}_discrete-z_Li_dtrj.npy ]]; then
+    infile="${settings}_${system}_discrete-z_Li_dtrj.npy"
+else
+    infile="${settings}_${system}_discrete-z_Li_dtrj.npz"
+fi
+
 echo -e "\n"
 echo "state_lifetime_discrete.py --continuous"
 echo "================================================================="
 ${py_exe} -u \
     "${mdt_path}/scripts/discretization/state_lifetime_discrete.py" \
-    --f1 "${settings}_${system}_discrete-z_Li_dtrj.npy" \
-    --f2 "${settings}_${system}_discrete-z_Li_dtrj.npy" \
-    -o "${settings}_${system}_${analysis}_continuous.txt" \
+    --f1 "${infile}" \
+    --f2 "${infile}" \
+    -o "${settings}_${system}_${analysis}_continuous.txt.gz" \
     -b "0" \
     -e "-1" \
     --every "1" \
@@ -84,9 +90,9 @@ echo "state_lifetime_discrete.py"
 echo "================================================================="
 ${py_exe} -u \
     "${mdt_path}/scripts/discretization/state_lifetime_discrete.py" \
-    --f1 "${settings}_${system}_discrete-z_Li_dtrj.npy" \
-    --f2 "${settings}_${system}_discrete-z_Li_dtrj.npy" \
-    -o "${settings}_${system}_${analysis}.txt" \
+    --f1 "${infile}" \
+    --f2 "${infile}" \
+    -o "${settings}_${system}_${analysis}.txt.gz" \
     -b "0" \
     -e "-1" \
     --every "1" \
@@ -103,8 +109,8 @@ if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
-        "${settings}_${system}_${analysis}.txt" \
-        "${settings}_${system}_${analysis}_continuous.txt" \
+        "${settings}_${system}_${analysis}.txt.gz" \
+        "${settings}_${system}_${analysis}_continuous.txt.gz" \
         "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
