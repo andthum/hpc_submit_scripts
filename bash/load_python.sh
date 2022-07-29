@@ -24,6 +24,7 @@ if [[ ${SLURM_CLUSTER_NAME} == palma2 ]]; then
     module --force purge || exit
     # shellcheck source=/dev/null
     source "${py_lmod}" || exit
+    module load gzip || exit
     echo
     module list
 elif [[ ${SLURM_CLUSTER_NAME} != bagheera ]]; then
@@ -33,5 +34,10 @@ elif [[ ${SLURM_CLUSTER_NAME} != bagheera ]]; then
 fi
 
 echo
-echo "Python executable:"
+echo "Python executable and version:"
 which "${py_exe}" || exit
+${py_exe} --version || exit
+echo
+echo "gzip executable and version:"
+which gzip || exit
+gzip --version || exit

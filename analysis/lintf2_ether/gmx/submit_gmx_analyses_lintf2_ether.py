@@ -54,7 +54,8 @@ Options for Trajectory Reading
     First frame (in ps) to read from trajectory.  Default: ``0``.
 --end
     Last frame (in ps) to read from trajectory.  Default: Last frame in
-    :file:`${settings}_out_${system}.log`.
+    :file:`${settings}_out_${system}.log`.  Reading from |log_file|\s
+    compressed with gzip, bzip2, XZ or LZMA is supported.
 --every
     Only use frame if t MOD dt == first time (in ps).  Default: ``1``.
 
@@ -612,10 +613,16 @@ if __name__ == "__main__":  # noqa: C901
     XTC_FILE_WRAPPED = gmx_outfile_pattern + "_pbc_whole_mol.xtc"
     XTC_FILE_UNWRAPPED = gmx_outfile_pattern + "_pbc_whole_mol_nojump.xtc"
     NDX_FILE = args["system"] + ".ndx"
+    LOG_FILES = [
+        LOG_FILE,
+        LOG_FILE + ".gz",
+        LOG_FILE + ".bz2",
+        LOG_FILE + ".xz",
+    ]
 
     print("Processing parsed arguments...")
     if args["end"] is None:
-        if not os.path.isfile(LOG_FILE):
+        if not any(os.path.isfile(file) for file in LOG_FILES):
             raise FileNotFoundError(
                 "Could not get the time of the last frame from the .log file."
                 "  No such file: '{}'.  Either provide the .log file or set"

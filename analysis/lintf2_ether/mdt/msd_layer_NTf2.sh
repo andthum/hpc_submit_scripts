@@ -92,6 +92,20 @@ ${py_exe} -u \
 echo "================================================================="
 
 ########################################################################
+# Compress output file(s)                                              #
+########################################################################
+
+echo -e "\n"
+echo "Compressing output file(s)..."
+gzip --best --verbose "${settings}_${system}_NTf2_msd_layer.txt" || exit
+gzip --best --verbose "${settings}_${system}_NTf2_msdx_layer.txt" || exit
+gzip --best --verbose "${settings}_${system}_NTf2_msdy_layer.txt" || exit
+gzip --best --verbose "${settings}_${system}_NTf2_msdz_layer.txt" || exit
+gzip --best --verbose "${settings}_${system}_NTf2_mdx_layer.txt" || exit
+gzip --best --verbose "${settings}_${system}_NTf2_mdy_layer.txt" || exit
+gzip --best --verbose "${settings}_${system}_NTf2_mdz_layer.txt" || exit
+
+########################################################################
 # Cleanup                                                              #
 ########################################################################
 
@@ -100,13 +114,13 @@ if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
-        "${settings}_${system}_NTf2_msd_layer.txt" \
-        "${settings}_${system}_NTf2_msdx_layer.txt" \
-        "${settings}_${system}_NTf2_msdy_layer.txt" \
-        "${settings}_${system}_NTf2_msdz_layer.txt" \
-        "${settings}_${system}_NTf2_mdx_layer.txt" \
-        "${settings}_${system}_NTf2_mdy_layer.txt" \
-        "${settings}_${system}_NTf2_mdz_layer.txt" \
+        "${settings}_${system}_NTf2_msd_layer.txt.gz" \
+        "${settings}_${system}_NTf2_msdx_layer.txt.gz" \
+        "${settings}_${system}_NTf2_msdy_layer.txt.gz" \
+        "${settings}_${system}_NTf2_msdz_layer.txt.gz" \
+        "${settings}_${system}_NTf2_mdx_layer.txt.gz" \
+        "${settings}_${system}_NTf2_mdy_layer.txt.gz" \
+        "${settings}_${system}_NTf2_mdz_layer.txt.gz" \
         "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \

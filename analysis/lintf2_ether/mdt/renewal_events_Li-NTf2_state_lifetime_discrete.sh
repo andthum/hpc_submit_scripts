@@ -63,14 +63,25 @@ source "${bash_dir}/load_python.sh" "${py_lmod}" "${py_exe}" || exit
 # Start the Analysis                                                   #
 ########################################################################
 
+if [[ -f ${settings}_${system}_renewal_events_Li-NTf2_dtrj.npy ]]; then
+    infile1="${settings}_${system}_renewal_events_Li-NTf2_dtrj.npy"
+else
+    infile1="${settings}_${system}_renewal_events_Li-NTf2_dtrj.npz"
+fi
+if [[ -f ${settings}_${system}_discrete-z_Li_dtrj.npy ]]; then
+    infile2="${settings}_${system}_discrete-z_Li_dtrj.npy"
+else
+    infile2="${settings}_${system}_discrete-z_Li_dtrj.npz"
+fi
+
 echo -e "\n"
 echo "state_lifetime_discrete.py --continuous"
 echo "================================================================="
 ${py_exe} -u \
     "${mdt_path}/scripts/discretization/state_lifetime_discrete.py" \
-    --f1 "${settings}_${system}_renewal_events_Li-NTf2_dtrj.npy" \
-    --f2 "${settings}_${system}_discrete-z_Li_dtrj.npy" \
-    -o "${settings}_${system}_${analysis}_discard-neg-start_continuous.txt" \
+    --f1 "${infile1}" \
+    --f2 "${infile2}" \
+    -o "${settings}_${system}_${analysis}_discard-neg-start_continuous.txt.gz" \
     -b "0" \
     -e "-1" \
     --every "1" \
@@ -85,9 +96,9 @@ echo "state_lifetime_discrete.py"
 echo "================================================================="
 ${py_exe} -u \
     "${mdt_path}/scripts/discretization/state_lifetime_discrete.py" \
-    --f1 "${settings}_${system}_renewal_events_Li-NTf2_dtrj.npy" \
-    --f2 "${settings}_${system}_discrete-z_Li_dtrj.npy" \
-    -o "${settings}_${system}_${analysis}_discard-neg-start.txt" \
+    --f1 "${infile1}" \
+    --f2 "${infile2}" \
+    -o "${settings}_${system}_${analysis}_discard-neg-start.txt.gz" \
     -b "0" \
     -e "-1" \
     --every "1" \
@@ -105,8 +116,8 @@ if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
-        "${settings}_${system}_${analysis}_discard-neg-start.txt" \
-        "${settings}_${system}_${analysis}_discard-neg-start_continuous.txt" \
+        "${settings}_${system}_${analysis}_discard-neg-start.txt.gz" \
+        "${settings}_${system}_${analysis}_discard-neg-start_continuous.txt.gz" \
         "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \

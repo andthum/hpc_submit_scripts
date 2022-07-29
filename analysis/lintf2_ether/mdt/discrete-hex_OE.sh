@@ -108,20 +108,13 @@ ${py_exe} -u \
     exit
 echo "================================================================="
 
-if [[ -f ${settings}_${system}_${analysis}_${zmin}-${zmax}A_traj.npy ]]; then
-    echo -e "\n"
-    mv -v \
-        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_traj.npy" \
-        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_dtrj.npy"
-fi
-
 echo -e "\n"
 echo "state_lifetime.py --continuous"
 echo "================================================================="
 ${py_exe} -u \
     "${mdt_path}/scripts/discretization/state_lifetime.py" \
-    -f "${settings}_${system}_${analysis}_${zmin}-${zmax}A_dtrj.npy" \
-    -o "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg_continuous.txt" \
+    -f "${settings}_${system}_${analysis}_${zmin}-${zmax}A_dtrj.npz" \
+    -o "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg_continuous.txt.gz" \
     -b "0" \
     -e "-1" \
     --every "1" \
@@ -137,8 +130,8 @@ echo "state_lifetime.py"
 echo "================================================================="
 ${py_exe} -u \
     "${mdt_path}/scripts/discretization/state_lifetime.py" \
-    -f "${settings}_${system}_${analysis}_${zmin}-${zmax}A_dtrj.npy" \
-    -o "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg.txt" \
+    -f "${settings}_${system}_${analysis}_${zmin}-${zmax}A_dtrj.npz" \
+    -o "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg.txt.gz" \
     -b "0" \
     -e "-1" \
     --every "1" \
@@ -157,12 +150,12 @@ if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
-        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_lattice_faces.npy" \
-        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_lattice_vertices.npy" \
-        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_dtrj.npy" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_lattice_faces.npz" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_lattice_vertices.npz" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_dtrj.npz" \
         "${settings}_${system}_${analysis}_${zmin}-${zmax}A_slurm-${SLURM_JOB_ID}.out" \
-        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg.txt" \
-        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg_continuous.txt" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg.txt.gz" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg_continuous.txt.gz" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
         "${system}" \
