@@ -95,7 +95,7 @@ repos:
       - id: "check-pre-commit-ci-config"
 
   - repo: "https://github.com/python-jsonschema/check-jsonschema"
-    rev: "0.16.2"
+    rev: "0.17.1"
     hooks:
       # Validate GitHub Actions against the schema provided by
       # SchemaStore.
