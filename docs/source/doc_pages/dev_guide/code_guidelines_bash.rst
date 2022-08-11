@@ -11,7 +11,7 @@ Bash Code Guidelines
 Formatters and Linters
 ----------------------
 
-When writting Bash code for this project, please
+When writing Bash code for this project, please
 
     * Format your code with |shfmt|.
 
@@ -30,7 +30,7 @@ When writting Bash code for this project, please
 
     The listed formatters and linters offer plugins for many popular
     text editors and integrated development environments (IDEs).  When
-    using these plugins, your code is formatted and lintted on the fly,
+    using these plugins, your code is formatted and linted on the fly,
     so you don't have to run the commands yourself.
 
 .. note::

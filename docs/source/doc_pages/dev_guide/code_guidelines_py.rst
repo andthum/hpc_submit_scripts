@@ -1,7 +1,7 @@
 .. _code-guide-py-label:
 
-Pyhon Code Guidelines
-=====================
+Python Code Guidelines
+======================
 
 .. contents:: Site Contents
     :depth: 2
@@ -15,7 +15,7 @@ Formatters and linters automatically enforce a specific code style and
 quality.  They help you to focus on your actual task - the coding -
 without having to think about the code style.
 
-When writting Python code for this project, please
+When writing Python code for this project, please
 
     * Format your code with |Black| (automatically enforces Python code
       style guide :pep:`8`).
@@ -43,7 +43,7 @@ When writting Python code for this project, please
 
     The listed formatters and linters offer plugins for many popular
     text editors and integrated development environments (IDEs).  When
-    using these plugins, your code is formatted and lintted on the fly,
+    using these plugins, your code is formatted and linted on the fly,
     so you don't have to run the commands yourself.
 
 .. note::
@@ -98,5 +98,5 @@ Other Python Code Guidelines
 Code Guidelines for Python Submit Scripts
 -----------------------------------------
 
-    * When writting a script, use :mod:`opthandler.get_opts` to read
+    * When writing a script, use :mod:`opthandler.get_opts` to read
       options from |config_file| and command-line.
