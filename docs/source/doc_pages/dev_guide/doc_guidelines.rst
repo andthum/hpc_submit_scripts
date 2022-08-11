@@ -66,7 +66,7 @@ Documentation Style
       apply:
 
         - The "Parameters" section is replaced by an "Options" section.
-        - In the "Options" section, use a |RST_option_list| to list the
+        - In the "Options" section, use an |RST_option_list| to list the
           options with which the script can/must be called and their
           meaning.
         - The "Options" sections is followed by a "Config File" section
