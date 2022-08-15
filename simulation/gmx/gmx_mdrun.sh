@@ -173,17 +173,15 @@ compress() {
     NJOBS=3
     NCPUS=$((NCPUS / NJOBS > 0 ? NCPUS / NJOBS : 1))
     if [[ -f ${settings}_out_${system}.edr ]]; then
-        srun --cpus-per-task "${NCPUS}" --exclusive \
+        srun --ntasks 1 --cpus-per-task "${NCPUS}" --exclusive \
             gzip --best --verbose "${settings}_out_${system}.edr" &
-        # Decompress with
-        # gzip --decompress "${settings}_out_${system}.edr"
     fi
     if [[ -f ${settings}_out_${system}.log ]]; then
-        srun --cpus-per-task "${NCPUS}" --exclusive \
+        srun --ntasks 1 --cpus-per-task "${NCPUS}" --exclusive \
             gzip --best --verbose "${settings}_out_${system}.log" &
     fi
     if [[ -f ${settings}_out_${system}_energy.xvg ]]; then
-        srun --cpus-per-task "${NCPUS}" --exclusive \
+        srun --ntasks 1 --cpus-per-task "${NCPUS}" --exclusive \
             gzip --best --verbose "${settings}_out_${system}_energy.xvg" &
     fi
     wait
