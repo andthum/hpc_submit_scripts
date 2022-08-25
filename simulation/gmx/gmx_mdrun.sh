@@ -230,7 +230,45 @@ final_info() {
 finish() {
     clean_up
     final_info
-    exit
+    exit "${mdrun_exit_code}"
+}
+
+check_resubmission_and_quit() {
+    current_step=$(bash \
+        "${bash_dir}/gmx_get_num_steps_from_log.sh" \
+        -f "${settings}_out_${system}.log" ||
+        exit)
+    echo -e "\n"
+    if [[ ${nsteps} -lt 0 ]]; then
+        echo "nsteps (${nsteps}) < 0 (No simulation step limit)"
+        echo "NOTE: Setting exit code to 0 so that the depending jobs can start"
+        final_info
+        script_exit_code=0
+    elif [[ ${current_step} -lt ${nsteps} ]]; then
+        echo "current_step (${current_step}) < nsteps (${nsteps})"
+        echo "NOTE: Setting exit code to 0 so that the depending jobs can start"
+        final_info
+        script_exit_code=0
+    elif [[ ${current_step} -ge ${nsteps} ]]; then
+        echo "current_step (${current_step}) >= nsteps (${nsteps})"
+        echo "NOTE: Setting exit code to 9 so that the depending jobs will be"
+        echo "cancelled."
+        clean_up
+        final_info
+        script_exit_code=9
+    else
+        echo "Unexpected ERROR: The current number of simulation steps is"
+        echo "neither less than nor greater than nor equal to nsteps:"
+        echo "current_step (${current_step}) <>=? nsteps (${nsteps})"
+        script_exit_code=1
+    fi
+    if [[ ${mdrun_exit_code} -eq 0 ]] || [[ ${mdrun_exit_code} -eq 1 ]]; then
+        # gmx mdrun finished gracefully or was terminated by INT signal.
+        exit "${script_exit_code}"
+    else
+        # gmx mdrun exited with an error.
+        exit "${mdrun_exit_code}"
+    fi
 }
 
 gmx_energy() {
@@ -312,37 +350,6 @@ gmx_check_corruption() {
         echo "================================================================="
         echo
         rm -v "${dir}/test.xtc"
-    fi
-}
-
-check_resubmission_and_quit() {
-    current_step=$(bash \
-        "${bash_dir}/gmx_get_num_steps_from_log.sh" \
-        -f "${settings}_out_${system}.log" ||
-        exit)
-    echo -e "\n"
-    if [[ ${nsteps} -lt 0 ]]; then
-        echo "nsteps (${nsteps}) < 0 (No simulation step limit)"
-        echo "NOTE: Setting exit code to 0 so that the depending jobs can start"
-        final_info
-        exit 0
-    elif [[ ${current_step} -lt ${nsteps} ]]; then
-        echo "current_step (${current_step}) < nsteps (${nsteps})"
-        echo "NOTE: Setting exit code to 0 so that the depending jobs can start"
-        final_info
-        exit 0
-    elif [[ ${current_step} -ge ${nsteps} ]]; then
-        echo "current_step (${current_step}) >= nsteps (${nsteps})"
-        echo "NOTE: Setting exit code to 9 so that the depending jobs will be"
-        echo "cancelled."
-        clean_up
-        final_info
-        exit 9
-    else
-        echo "Unexpected ERROR: The current number of simulation steps is"
-        echo "neither less than nor greater than nor equal to nsteps:"
-        echo "current_step (${current_step}) <>=? nsteps (${nsteps})"
-        exit 1
     fi
 }
 
@@ -529,10 +536,8 @@ echo "================================================================="
 ${mdrun}
 mdrun_exit_code="$?"
 echo "================================================================="
+
 gmx_energy
-if [[ ${mdrun_exit_code} -ne 0 ]] && [[ ${mdrun_exit_code} -ne 1 ]]; then
-    exit "${mdrun_exit_code}"
-fi
 
 if [[ ${continue} -eq 0 ]] || [[ ${continue} -eq 1 ]]; then
     # No resubmission, single slurm job.
