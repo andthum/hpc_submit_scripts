@@ -519,16 +519,26 @@ else
     echo "'${continue}'"
     exit 1
 fi
+
 echo -e "\n"
 echo "================================================================="
-${mdrun} # Don't exit on failure (INT signal also causes non-zero exit)
+# A single INT signal causes gmx mdrun to exit with exit code 1.
+# => Don't simply exit on non-zero exit code, because in this case
+# depending jobs will be cancelled even if gmx mdrun was stopped by an
+# INT signal from Slurm shortly before reaching the job's time limit.
+${mdrun}
+mdrun_exit_code="$?"
 echo "================================================================="
 gmx_energy
+if [[ ${mdrun_exit_code} -ne 0 ]] && [[ ${mdrun_exit_code} -ne 1 ]]; then
+    exit "${mdrun_exit_code}"
+fi
+
 if [[ ${continue} -eq 0 ]] || [[ ${continue} -eq 1 ]]; then
-    # Single slurm job
+    # No resubmission, single slurm job.
     finish
 elif [[ ${continue} -eq 2 ]] || [[ ${continue} -eq 3 ]]; then
-    # Multiple dependend slurm jobs
+    # Potential resubmission, multiple dependend slurm jobs.
     check_resubmission_and_quit
 else
     echo
