@@ -446,7 +446,7 @@ if __name__ == "__main__":  # noqa: C901
         required=False,
         default=None,
         help=(
-            "First frame (in ps) to read from trajectory.  Default: Last frame"
+            "Last frame (in ps) to read from trajectory.  Default: Last frame"
             " in SETTINGS_out_SYSTEM.log."
         ),
     )
