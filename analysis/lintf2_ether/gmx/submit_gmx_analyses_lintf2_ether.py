@@ -446,7 +446,7 @@ if __name__ == "__main__":  # noqa: C901
         required=False,
         default=None,
         help=(
-            "First frame (in ps) to read from trajectory.  Default: Last frame"
+            "Last frame (in ps) to read from trajectory.  Default: Last frame"
             " in SETTINGS_out_SYSTEM.log."
         ),
     )
@@ -622,13 +622,18 @@ if __name__ == "__main__":  # noqa: C901
 
     print("Processing parsed arguments...")
     if args["end"] is None:
-        if not any(os.path.isfile(file) for file in LOG_FILES):
+        found_log_file = False
+        for file in LOG_FILES:
+            if os.path.isfile(file):
+                args["end"] = gmx.get_last_time_from_log(file)
+                found_log_file = True
+                break
+        if not found_log_file:
             raise FileNotFoundError(
                 "Could not get the time of the last frame from the .log file."
                 "  No such file: '{}'.  Either provide the .log file or set"
                 " --end manually".format(LOG_FILE)
             )
-        args["end"] = gmx.get_last_time_from_log(LOG_FILE)
     if args["slabwidth"] <= 0:
         raise ValueError(
             "--slabwidth ({}) must be greater than"
