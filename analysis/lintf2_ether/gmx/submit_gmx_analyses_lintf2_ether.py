@@ -613,27 +613,18 @@ if __name__ == "__main__":  # noqa: C901
     XTC_FILE_WRAPPED = gmx_outfile_pattern + "_pbc_whole_mol.xtc"
     XTC_FILE_UNWRAPPED = gmx_outfile_pattern + "_pbc_whole_mol_nojump.xtc"
     NDX_FILE = args["system"] + ".ndx"
-    LOG_FILES = [
-        LOG_FILE,
-        LOG_FILE + ".gz",
-        LOG_FILE + ".bz2",
-        LOG_FILE + ".xz",
-    ]
 
     print("Processing parsed arguments...")
     if args["end"] is None:
-        found_log_file = False
-        for file in LOG_FILES:
-            if os.path.isfile(file):
-                args["end"] = gmx.get_last_time_from_log(file)
-                found_log_file = True
-                break
-        if not found_log_file:
+        try:
+            log_file = gmx.get_compressed_file(LOG_FILE)
+        except FileNotFoundError as err:
             raise FileNotFoundError(
-                "Could not get the time of the last frame from the .log file."
-                "  No such file: '{}'.  Either provide the .log file or set"
-                " --end manually".format(LOG_FILE)
+                "Could not get the time of the last frame from the .log file:"
+                " {}.  Either make sure that the .log file exists or set --end"
+                " manually".format(err)
             )
+        args["end"] = gmx.get_last_time_from_log(log_file)
     if args["slabwidth"] <= 0:
         raise ValueError(
             "--slabwidth ({}) must be greater than"
@@ -706,7 +697,7 @@ if __name__ == "__main__":  # noqa: C901
     files = {"run input": TPR_FILE}
     for script in args["scripts"].split():
         if script in REQUIRE_EDR:
-            files.setdefault("energy", EDR_FILE)
+            files.setdefault("energy", gmx.get_compressed_file(EDR_FILE))
         if script in REQUIRE_NDX:
             files.setdefault("index", NDX_FILE)
         if script in REQUIRE_TRR:
@@ -718,7 +709,7 @@ if __name__ == "__main__":  # noqa: C901
                 "unwrapped compressed trajectory", XTC_FILE_UNWRAPPED
             )
         if script == "0" or script == "1":  # All (bulk) scripts.
-            files.setdefault("energy", EDR_FILE)
+            files.setdefault("energy", gmx.get_compressed_file(EDR_FILE))
             files.setdefault("full-precision trajectory", TRR_FILE)
         elif script == "2":  # All slab scripts.
             files.setdefault("index", NDX_FILE)

@@ -35,6 +35,50 @@ def get_box_from_gro(fname):
     return box
 
 
+def get_compressed_file(fname):
+    """
+    Check if the input file or a compressed version it exsists.
+
+    Check if the input file exsists.  If it does not exist, check
+    whether a file with the same name but with one of the following
+    extensions exsists:
+
+        1. .gz
+        2. .bz2
+        3. .xz
+        4. .lzma
+
+    Files are checked in the given order.  The name of the first file
+    found will be returned.  If none of the files exsists, an exception
+    is raised.
+
+    Parameters
+    ----------
+    fname : str or bytes or os.PathLike
+        Name of the input file.
+
+    Returns
+    -------
+    found_file : str or bytes
+        Name of the first file found.
+
+    Raises
+    ------
+    FileNotFoundError :
+        If neither the input file itself nor the input file with one of
+        the above mentioned extensions exists.
+    """
+    fname = os.fspath(fname)
+    formats = ["", ".gz", ".bz2", ".xz", ".lzma"]
+    if isinstance(fname, bytes):
+        formats = [fmt.encode() for fmt in formats]
+    files = [fname + fmt for fmt in formats]
+    for file in files:
+        if os.path.isfile(file):
+            return file
+    raise FileNotFoundError("No such files: '{}'".format("' '".join(files)))
+
+
 def get_last_time_from_log(fname):
     """
     Extract the time of the last frame of an |Gromacs| MD simulation
