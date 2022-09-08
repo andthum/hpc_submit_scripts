@@ -57,7 +57,8 @@ Options for Trajectory Reading
     :file:`${settings}_out_${system}.log`.  Reading from |log_file|\s
     compressed with gzip, bzip2, XZ or LZMA is supported.
 --every
-    Only use frame if t MOD dt == first time (in ps).  Default: ``1``.
+    Only use frame if t MOD every == first time (in ps).  Default:
+    ``0``.
 
 Options for MSD Calculation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -454,9 +455,9 @@ if __name__ == "__main__":  # noqa: C901
         "--every",
         type=float,
         required=False,
-        default=1,
+        default=0,
         help=(
-            "Only use frame if t MOD dt == first time (in ps).  Default:"
+            "Only use frame if t MOD every == first time (in ps).  Default:"
             " %(default)s."
         ),
     )
