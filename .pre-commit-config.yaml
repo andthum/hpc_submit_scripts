@@ -128,6 +128,12 @@ repos:
       # Check if inline code touches normal text.
       - id: "rst-inline-touching-normal"
 
+  - repo: "https://github.com/asottile/yesqa"
+    rev: "v1.4.0"
+    hooks:
+      # Remove unnecessary `# noqa` comments.
+      - id: yesqa
+
   - repo: "https://github.com/PyCQA/isort"
     rev: "5.10.1"
     hooks:
