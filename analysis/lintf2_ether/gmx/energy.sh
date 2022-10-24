@@ -66,7 +66,11 @@ source "${bash_dir}/load_gmx.sh" "${gmx_lmod}" "${gmx_exe}" || exit
 echo -e "\n"
 echo "Decompressing input file(s) if necessary..."
 infile="${settings}_out_${system}.edr"
-decompressed=$("${bash_dir}/decompress.sh" "${infile}" "--keep --verbose")
+decompressed=$(bash \
+    "${bash_dir}/decompress.sh" \
+    "${infile}" \
+    --keep \
+    --verbose)
 
 ########################################################################
 # Start the Analysis                                                   #
