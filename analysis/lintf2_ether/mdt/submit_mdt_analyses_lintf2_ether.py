@@ -1015,9 +1015,16 @@ if __name__ == "__main__":  # noqa: C901
             files.setdefault("discretized trajectory", DTRJ_RENEWAL_TFSI_FILE)
     for filetype, filename in files.items():
         if not os.path.isfile(filename):
-            raise FileNotFoundError(
-                "No such file: '{}' ({} file)".format(filename, filetype)
-            )
+            filename, extension = os.path.splitext(filename)
+            if extension == ".npy" and os.path.isfile(filename + ".npz"):
+                # A compressed version of the file exists.
+                continue
+            else:
+                # Neither the file itself nor a compressed version
+                # exsits.
+                raise FileNotFoundError(
+                    "No such file: '{}' ({} file)".format(filename, filetype)
+                )
 
     print("Preparing positional arguments for the slurm job scripts...")
     py_lmod = os.path.abspath(
