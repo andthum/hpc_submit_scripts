@@ -170,7 +170,9 @@ if not os.path.isdir(PYTHON_DIR):
         " directory structure of this project".format(PYTHON_DIR)
     )
 sys.path.insert(1, PYTHON_DIR)
-# Third-party libraries
+
+
+# First-party libraries
 import gmx  # noqa: E402
 import opthandler  # noqa: E402
 import strng  # noqa: E402
@@ -626,6 +628,11 @@ if __name__ == "__main__":  # noqa: C901
                 " manually".format(err)
             )
         args["end"] = gmx.get_last_time_from_log(log_file)
+    if args["binwidth"] <= 0:
+        raise ValueError(
+            "--binwidth ({}) must be greater than"
+            " zero".format(args["binwidth"])
+        )
     if args["slabwidth"] <= 0:
         raise ValueError(
             "--slabwidth ({}) must be greater than"
