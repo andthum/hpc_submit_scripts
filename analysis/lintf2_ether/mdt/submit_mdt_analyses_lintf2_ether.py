@@ -218,7 +218,9 @@ if not os.path.isdir(PYTHON_DIR):
         " directory structure of this project".format(PYTHON_DIR)
     )
 sys.path.insert(1, PYTHON_DIR)
-# Third-party libraries
+
+
+# First-party libraries
 import gmx  # noqa: E402
 import opthandler  # noqa: E402
 import strng  # noqa: E402
