@@ -68,6 +68,8 @@ Required Arguments
         :11:    All renewal event analyses.
         :11.1:  All scripts extracting renewal events.
         :11.2:  All scripts calculating renewal event lifetimes.
+        :11.3:  All "normal" bulk renewal event lifetimes.
+        :11.4:  All spatially discretized renewal event lifetimes.
 
 Options for Trajectory Reading
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -350,9 +352,7 @@ REQUIRE_XTC_UNWRAPPED = (
 REQUIRE_DTRJ_DISCRETE_Z = (
     # `${settings}_${system}_discrete-z_Li_dtrj.npy`
     "discrete-z_Li_state_lifetime_discrete",
-    "renewal_events_Li-ether_state_lifetime",
     "renewal_events_Li-ether_state_lifetime_discrete",
-    "renewal_events_Li-NTf2_state_lifetime",
     "renewal_events_Li-NTf2_state_lifetime_discrete",
 )
 REQUIRE_DTRJ_RENEWAL_ETHER = (
@@ -600,6 +600,8 @@ if __name__ == "__main__":  # noqa: C901
             "  11 = All renewal event analyses."
             "  11.1 = All scripts extracting renewal events."
             "  11.2 = All scripts calculating renewal event lifetimes."
+            "  11.3 = All 'normal' bulk renewal event lifetimes."
+            "  11.4 = All spatially discretized renewal event lifetimes."
         ),
     )
     parser_trj_reading = parser.add_argument_group(
@@ -1001,6 +1003,13 @@ if __name__ == "__main__":  # noqa: C901
                 "unwrapped compressed trajectory", XTC_FILE_UNWRAPPED
             )
         elif script == "11.2":  # All renewal event lifetimes.
+            files.setdefault("discretized trajectory", DTRJ_DISCRETE_Z_FILE)
+            files.setdefault("discretized trajectory", DTRJ_RENEWAL_ETHER_FILE)
+            files.setdefault("discretized trajectory", DTRJ_RENEWAL_TFSI_FILE)
+        elif script == "11.3":  # All bulk renewal event lifetimes.
+            files.setdefault("discretized trajectory", DTRJ_RENEWAL_ETHER_FILE)
+            files.setdefault("discretized trajectory", DTRJ_RENEWAL_TFSI_FILE)
+        elif script == "11.4":  # All spatially discretized renew times.
             files.setdefault("discretized trajectory", DTRJ_DISCRETE_Z_FILE)
             files.setdefault("discretized trajectory", DTRJ_RENEWAL_ETHER_FILE)
             files.setdefault("discretized trajectory", DTRJ_RENEWAL_TFSI_FILE)
@@ -1475,6 +1484,23 @@ if __name__ == "__main__":  # noqa: C901
             if (
                 "renewal_events" in batch_script
                 and "state_lifetime" in batch_script
+            ):
+                n_scripts_submitted += _submit(args_sbatch, batch_script)
+    if "11.3" in args["scripts"].split():
+        # All "normal" bulk renewal event lifetimes.
+        for batch_script in posargs.keys():
+            if (
+                "renewal_events" in batch_script
+                and "state_lifetime" in batch_script
+                and "discrete" not in batch_script
+            ):
+                n_scripts_submitted += _submit(args_sbatch, batch_script)
+    if "11.3" in args["scripts"].split():
+        # All spatially discretized renewal event lifetimes.
+        for batch_script in posargs.keys():
+            if (
+                "renewal_events" in batch_script
+                and "state_lifetime_discrete" in batch_script
             ):
                 n_scripts_submitted += _submit(args_sbatch, batch_script)
     print("Submitted {} jobs".format(n_scripts_submitted))
