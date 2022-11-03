@@ -1502,7 +1502,7 @@ if __name__ == "__main__":  # noqa: C901
                 and "discrete" not in batch_script
             ):
                 n_scripts_submitted += _submit(args_sbatch, batch_script)
-    if "11.3" in args["scripts"].split():
+    if "11.4" in args["scripts"].split():
         # All spatially discretized renewal event lifetimes.
         for batch_script in posargs.keys():
             if (
