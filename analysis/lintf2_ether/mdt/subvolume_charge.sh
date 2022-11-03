@@ -4,8 +4,8 @@
 #SBATCH --job-name="mdt_subvolume_charge"
 #SBATCH --output="mdt_subvolume_charge_slurm-%j.out"
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=2
-#SBATCH --mem=1G
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=4G
 # The above options are only default values that can be overwritten by
 # command-line arguments
 
