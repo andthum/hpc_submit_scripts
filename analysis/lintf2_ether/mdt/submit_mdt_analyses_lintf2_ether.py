@@ -90,6 +90,12 @@ Options for Trajectory Reading
     sliding widow method (like calculation of mean square displacements
     or autocorrelation functions).  Default: 500"
 
+Options for Distance Resolved Quantities (like RDFs)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--binwidth
+    Bin width (in nm) for distance resolved quantities.  Default:
+    ``0.05``.
+
 Options for Contact Analyses
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 --cutoff
@@ -287,6 +293,7 @@ REQUIRE_TPR = (
     "msd_at_coord_change_Li-NTf2",
     "renewal_events_Li-ether",
     "renewal_events_Li-NTf2",
+    "subvolume_charge",
     "topo_map_Li-OBT",
     "topo_map_Li-OE",
 )
@@ -326,6 +333,7 @@ REQUIRE_XTC_WRAPPED = (
     "lig_change_at_pos_change_blocks_Li-OE",
     "lig_change_at_pos_change_blocks_hist_Li-OBT",
     "lig_change_at_pos_change_blocks_hist_Li-OE",
+    "subvolume_charge",
     "topo_map_Li-OBT",
     "topo_map_Li-OE",
 )
@@ -656,6 +664,19 @@ if __name__ == "__main__":  # noqa: C901
             " sliding widow method.  Default: %(default)s."
         ),
     )
+    parser_dist = parser.add_argument_group(
+        title="Options for Distance Resolved Quantities (like RDFs)"
+    )
+    parser_dist.add_argument(
+        "--binwidth",
+        type=float,
+        required=False,
+        default=0.05,
+        help=(
+            "Bin width (in nm) for distance resolved quantities.  Default:"
+            " %(default)s."
+        ),
+    )
     parser_contact = parser.add_argument_group(
         title="Options for Contact Analyses"
     )
@@ -850,6 +871,11 @@ if __name__ == "__main__":  # noqa: C901
     BIN_FILE = gmx_infile_pattern + "_density-z_number_Li_binsA.txt"
 
     print("Processing parsed arguments...")
+    if args["binwidth"] <= 0:
+        raise ValueError(
+            "--binwidth ({}) must be greater than"
+            " zero".format(args["binwidth"])
+        )
     if args["slabwidth"] <= 0:
         raise ValueError(
             "--slabwidth ({}) must be greater than"
@@ -1057,6 +1083,7 @@ if __name__ == "__main__":  # noqa: C901
         args["nblocks"],
         args["restart"],
     ]
+    posargs_dist = [args["binwidth"]]
     posargs_contact = [args["cutoff"]]
     posargs_discrete = [
         args["intermittency"],
@@ -1239,6 +1266,7 @@ if __name__ == "__main__":  # noqa: C901
         "renewal_events_Li-NTf2_state_lifetime_discrete": (
             posargs_general + [posargs_trj[4]]
         ),
+        "subvolume_charge": (posargs_general + posargs_trj[:3] + posargs_dist),
         "topo_map_Li-OBT": (
             posargs_general + posargs_trj[:3] + posargs_contact + posargs_atom
         ),
