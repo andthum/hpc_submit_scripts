@@ -25,16 +25,16 @@ echo "Start time = ${start_time}"
 # Argument Parsing                                                     #
 ########################################################################
 
-bash_dir=${1}  # Directory containing bash scripts used by this script
-py_lmod=${2}   # File containing the modules to load Python
-py_exe=${3}    # Name of the Python executable
-mdt_path=${4}  # Path to the MDTools installation
-system=${5}    # The name of the system to analyze
-settings=${6}  # The used simulation settings
-begin=${7}     # First frame to read.  Frame numbering starts at 0
-end=${8}       # Last frame to read (exclusive)
-every=${9}     # Read every n-th frame
-bin_width=${9} # Bin width in Anstrom
+bash_dir=${1}   # Directory containing bash scripts used by this script
+py_lmod=${2}    # File containing the modules to load Python
+py_exe=${3}     # Name of the Python executable
+mdt_path=${4}   # Path to the MDTools installation
+system=${5}     # The name of the system to analyze
+settings=${6}   # The used simulation settings
+begin=${7}      # First frame to read.  Frame numbering starts at 0
+end=${8}        # Last frame to read (exclusive)
+every=${9}      # Read every n-th frame
+bin_width=${10} # Bin width in Anstrom
 
 echo -e "\n"
 echo "Parsed arguments:"
