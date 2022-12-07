@@ -33,6 +33,9 @@ Required Arguments
     space-separated as one enquoted string.  To list all possible script
     names type
     :bash:`ls path/to/hpc_submit_scripts/analysis/lintf2_ether/mdt/`.
+    Note that scripts that take an |edr_file| as input are excluded from
+    the number options unless they are explicitily mentioned to be
+    included.
 
         :0:     All scripts.  Note that all lig_change_at_pos_change*
                 scripts are excluded.
@@ -45,7 +48,8 @@ Required Arguments
                 excluded, because msd_layer_serial.py (and
                 msd_layer_parallel.py) must first be fixed for
                 simulations with periodc boundary conditions in the
-                discretized direction.
+                discretized direction (see MDTools Issue
+                `#98 <https://github.com/andthum/mdtools/issues/98>`_).
         :2:     All scripts analyzing a slab in xy plane.
 
         :3:     discrete-z_Li and discrete-z_Li_state_lifetime_discrete.
@@ -296,6 +300,10 @@ REQUIRE_TPR = (
     "subvolume_charge",
     "topo_map_Li-OBT",
     "topo_map_Li-OE",
+)
+REQUIRE_EDR = (
+    # `${settings}_out_${system}.edr`
+    "energy_dist",
 )
 REQUIRE_XTC_WRAPPED = (
     # `${settings}_out_${system}_pbc_whole_mol.xtc`
@@ -579,6 +587,7 @@ if __name__ == "__main__":  # noqa: C901
         required=True,
         help=(
             "The analysis script(s) to submit."
+            ""
             "  0 = All scripts.  Note that all lig_change_at_pos_change*"
             " scripts are excluded."
             "  1 = All scripts analyzing the bulk system (i.e. exclude scripts"
@@ -858,6 +867,7 @@ if __name__ == "__main__":  # noqa: C901
     gmx_infile_pattern = args["settings"] + "_" + args["system"]
     gmx_outfile_pattern = args["settings"] + "_out_" + args["system"]
     TPR_FILE = gmx_infile_pattern + ".tpr"
+    EDR_FILE = gmx_outfile_pattern + ".edr"
     GRO_FILE = gmx_outfile_pattern + ".gro"
     XTC_FILE_WRAPPED = gmx_outfile_pattern + "_pbc_whole_mol.xtc"
     XTC_FILE_UNWRAPPED = gmx_outfile_pattern + "_pbc_whole_mol_nojump.xtc"
@@ -937,6 +947,8 @@ if __name__ == "__main__":  # noqa: C901
     for script in args["scripts"].split():
         if script in REQUIRE_TPR:
             files.setdefault("run input", TPR_FILE)
+        if script in REQUIRE_EDR:
+            files.setdefault("energy", gmx.get_compressed_file(EDR_FILE))
         if script in REQUIRE_XTC_WRAPPED:
             files.setdefault("wrapped compressed trajectory", XTC_FILE_WRAPPED)
         if script in REQUIRE_XTC_UNWRAPPED:
@@ -1158,6 +1170,7 @@ if __name__ == "__main__":  # noqa: C901
         "discrete-z_Li_state_lifetime_discrete": (
             posargs_general + [posargs_trj[4]]
         ),
+        "energy_dist": posargs_general + posargs_trj[:3],
         "lifetime_autocorr_Li-ether": (
             posargs_general
             + posargs_trj
@@ -1355,6 +1368,9 @@ if __name__ == "__main__":  # noqa: C901
                 "renewal_events_Li-ether",
                 "renewal_events_Li-NTf2",
             ):
+                continue
+            if batch_script == "energy_dist":
+                # Exlcude all scripts that take an .edr file as input.
                 continue
             if "lig_change_at_pos_change" in batch_script:
                 # Exclude all lig_change_at_pos_change* scripts.
