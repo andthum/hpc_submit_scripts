@@ -37,7 +37,7 @@ def get_box_from_gro(fname):
 
 def get_compressed_file(fname):
     """
-    Check if the input file or a compressed version it exsists.
+    Check if the input file or a compressed version of it exsists.
 
     Check if the input file exsists.  If it does not exist, check
     whether a file with the same name but with one of the following
