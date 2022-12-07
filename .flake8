@@ -232,6 +232,7 @@ rst-substitutions =
     Lmod,
     rsync,
     Gromacs,
+    edr_file,
     gro_file,
     log_file,
     mdp_file,
