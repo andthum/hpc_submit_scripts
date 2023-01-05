@@ -551,7 +551,3 @@ else
     echo "'${continue}'"
     exit 1
 fi
-
-echo
-echo "Unexpected ERROR: The script should never have reached this point"
-exit 1
