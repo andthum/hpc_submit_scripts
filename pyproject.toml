@@ -10,7 +10,7 @@ name = "hpcss"
 version = "0.1.0"
 description = "Slurm scripts to run and analyze MD simulations on HPC clusters"
 readme = "README.rst"
-requires-python = ">=3.8, <3.10"
+requires-python = ">=3.8, <3.11"
 license = {file = "LICENSE.txt"}
 authors = [
     {name = "Andreas Thum", email = "coding.andthum@e.mail.de"},
