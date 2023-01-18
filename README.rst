@@ -1,4 +1,4 @@
-.. Keep REAMD.rst synchronized with index.rst (documentation)
+.. Keep REAMDE.rst synchronized with index.rst (documentation)
 
 
 ##########################
@@ -7,7 +7,7 @@ HPC Submit Scripts (hpcss)
 
 |pre-commit| |pre-commit.ci_status| |Test_Status| |CodeQL_Status|
 |Documentation_Status| |License_MIT| |Made_with_Bash| |Made_with_Python|
-|Made_with_Sphinx| |Code_style_black|
+|Code_style_black| |Made_with_Sphinx| |Doc_style_numpy|
 
 |logo|
 
@@ -19,7 +19,7 @@ HPC Submit Scripts (hpcss)
 Introduction
 ============
 
-This project contains job and submit scripts to run and analyse
+This project contains job and submit scripts to run and analyze
 Molecular Dynamics (MD) simulations on High Performance Computing (HPC)
 clusters.  Most of the scripts are job scripts for the Slurm_ (Simple
 Linux Utility for Resource Management) Workload Manager.
@@ -106,9 +106,12 @@ details.
 .. |Made_with_Python| image:: https://img.shields.io/badge/Made%20with-Python-1f425f.svg
     :alt: Made with Python
     :target: https://www.python.org/
-.. |Made_with_Sphinx| image:: https://img.shields.io/badge/Made%20with-Sphinx-1f425f.svg
-    :alt: Made with Sphinx
-    :target: https://www.sphinx-doc.org/
 .. |Code_style_black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :alt: Code style black
     :target: https://github.com/psf/black
+.. |Made_with_Sphinx| image:: https://img.shields.io/badge/Made%20with-Sphinx-1f425f.svg
+    :alt: Made with Sphinx
+    :target: https://www.sphinx-doc.org/
+.. |Doc_style_numpy| image:: https://img.shields.io/badge/%20style-numpy-459db9.svg
+    :alt: Style NumPy
+    :target: https://numpydoc.readthedocs.io/en/latest/format.html
