@@ -34,7 +34,7 @@ Required Arguments
     names type
     :bash:`ls path/to/hpc_submit_scripts/analysis/lintf2_ether/mdt/`.
     Note that scripts that take an |edr_file| as input are excluded from
-    the number options unless they are explicitily mentioned to be
+    the number options unless they are explicitly mentioned to be
     included.
 
         :0:     All scripts.  Note that all lig_change_at_pos_change*
@@ -47,7 +47,7 @@ Required Arguments
                 scripts are excluded.  The msd_layer* scripts are
                 excluded, because msd_layer_serial.py (and
                 msd_layer_parallel.py) must first be fixed for
-                simulations with periodc boundary conditions in the
+                simulations with periodic boundary conditions in the
                 discretized direction (see MDTools Issue
                 `#98 <https://github.com/andthum/mdtools/issues/98>`_).
         :2:     All scripts analyzing a slab in xy plane.
@@ -103,7 +103,7 @@ Options for Distance Resolved Quantities (like RDFs)
 Options for Contact Analyses
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 --cutoff
-    Cutoff (in Angstrom) up to which two atoms are regareded as being in
+    Cutoff (in Angstrom) up to which two atoms are regarded as being in
     contact.  Default: ``3.0``.
 
 Options for Single Atom Analyses
@@ -157,11 +157,11 @@ Options for Tools That Analyze Slabs in xy Plane
     that slab.  Must not be used together with \--discretize.  If given,
     \--zmin and \--zmax are ignored.
 
-Python-Specifig Options
+Python-Specific Options
 ^^^^^^^^^^^^^^^^^^^^^^^^
 --py-lmod
     If running on a cluster which uses the |Lmod| module system,
-    specifiy here which file to source (relative to the :file:`lmod`
+    specify here which file to source (relative to the :file:`lmod`
     subdirectory of this project) to load Python.  Default:
     ``'palma/2019a/python3-7-2.sh'``.
 --py-exe
@@ -564,7 +564,7 @@ if __name__ == "__main__":  # noqa: C901
             "Submit MDTools analysis scripts for systems containing LiTFSI and"
             " linear poly(ethylene oxides) of arbitrary length (including"
             " dimethyl ether) to the |Slurm| Workload Manager of an HPC"
-            " cluster.  For more information, refer to the documetation of"
+            " cluster.  For more information, refer to the documentation of"
             " this script."
         )
     )
@@ -695,7 +695,7 @@ if __name__ == "__main__":  # noqa: C901
         required=False,
         default=3.0,
         help=(
-            "Cutoff (in Angstrom) up to which two atoms are regareded as being"
+            "Cutoff (in Angstrom) up to which two atoms are regarded as being"
             " in contact.  Default: %(default)s."
         ),
     )
@@ -816,7 +816,7 @@ if __name__ == "__main__":  # noqa: C901
             " slab.  If given, --zmin and --zmax are ignored."
         ),
     )
-    parser_py = parser.add_argument_group(title="Python-Specifig Options")
+    parser_py = parser.add_argument_group(title="Python-Specific Options")
     parser_py.add_argument(
         "--py-lmod",
         type=str,
@@ -824,7 +824,7 @@ if __name__ == "__main__":  # noqa: C901
         default="palma/2019a/python3-7-2.sh",
         help=(
             "If running on a cluster which uses the Lmod module system,"
-            " specifiy here which file to source (relative to the lmod"
+            " specify here which file to source (relative to the lmod"
             " subdirectory of this project) to load Python.  Default:"
             " %(default)s."
         ),
@@ -1059,7 +1059,7 @@ if __name__ == "__main__":  # noqa: C901
                 continue
             else:
                 # Neither the file itself nor a compressed version
-                # exsits.
+                # exists.
                 raise FileNotFoundError(
                     "No such file: '{}' ({} file)".format(filename, filetype)
                 )
@@ -1359,7 +1359,7 @@ if __name__ == "__main__":  # noqa: C901
             ):
                 # Only bulk scripts.
                 # msd_layer_serial.py (and msd_layer_parallel.py) must
-                # first be fixed for simulations with periodc boundary
+                # first be fixed for simulations with periodic boundary
                 # conditions in the discretized direction.
                 continue
             if batch_script in (
@@ -1370,7 +1370,7 @@ if __name__ == "__main__":  # noqa: C901
             ):
                 continue
             if batch_script == "energy_dist":
-                # Exlcude all scripts that take an .edr file as input.
+                # Exclude all scripts that take an .edr file as input.
                 continue
             if "lig_change_at_pos_change" in batch_script:
                 # Exclude all lig_change_at_pos_change* scripts.
