@@ -1162,7 +1162,7 @@ if __name__ == "__main__":  # noqa: C901
         "attribute_hist_ether": posargs_general + posargs_trj[:3],
         "attribute_hist_Li": posargs_general + posargs_trj[:3],
         "attribute_hist_NBT": posargs_general + posargs_trj[:3],
-        "attribute_hist_NTF2": posargs_general + posargs_trj[:3],
+        "attribute_hist_NTf2": posargs_general + posargs_trj[:3],
         "attribute_hist_OBT": posargs_general + posargs_trj[:3],
         "attribute_hist_OE": posargs_general + posargs_trj[:3],
         "axial_hex_dist_1nn_Li": (
