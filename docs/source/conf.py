@@ -173,6 +173,8 @@ rst_epilog = """
     :raw-html:`<a href="https://manual.gromacs.org/documentation/current/reference-manual/file-formats.html#log">.log file</a>`
 .. |mdp_file| replace::
     :raw-html:`<a href="https://manual.gromacs.org/documentation/current/user-guide/mdp-options.html">.mdp file</a>`
+.. |trr_file| replace::
+    :raw-html:`<a href="https://manual.gromacs.org/documentation/current/reference-manual/file-formats.html#trr">.trr file</a>`
 
 .. |Python| replace::
     :raw-html:`<a href="https://www.python.org/">Python</a>`

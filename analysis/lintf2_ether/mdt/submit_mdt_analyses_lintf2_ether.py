@@ -33,9 +33,9 @@ Required Arguments
     space-separated as one enquoted string.  To list all possible script
     names type
     :bash:`ls path/to/hpc_submit_scripts/analysis/lintf2_ether/mdt/`.
-    Note that scripts that take an |edr_file| as input are excluded from
-    the number options unless they are explicitily mentioned to be
-    included.
+    Note that scripts that take an |edr_file| or an |trr_file| as input
+    are excluded from the number options unless they are explicitly
+    mentioned to be included.
 
         :0:     All scripts.  Note that all lig_change_at_pos_change*
                 scripts are excluded.
@@ -47,7 +47,7 @@ Required Arguments
                 scripts are excluded.  The msd_layer* scripts are
                 excluded, because msd_layer_serial.py (and
                 msd_layer_parallel.py) must first be fixed for
-                simulations with periodc boundary conditions in the
+                simulations with periodic boundary conditions in the
                 discretized direction (see MDTools Issue
                 `#98 <https://github.com/andthum/mdtools/issues/98>`_).
         :2:     All scripts analyzing a slab in xy plane.
@@ -74,6 +74,10 @@ Required Arguments
         :11.2:  All scripts calculating renewal event lifetimes.
         :11.3:  All "normal" bulk renewal event lifetimes.
         :11.4:  All spatially discretized renewal event lifetimes.
+
+        :12:    All scripts that take an |edr_file| or an |trr_file| as
+                input.
+        :13:    All attribute histograms (attribute_hist*).
 
 Options for Trajectory Reading
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -103,7 +107,7 @@ Options for Distance Resolved Quantities (like RDFs)
 Options for Contact Analyses
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 --cutoff
-    Cutoff (in Angstrom) up to which two atoms are regareded as being in
+    Cutoff (in Angstrom) up to which two atoms are regarded as being in
     contact.  Default: ``3.0``.
 
 Options for Single Atom Analyses
@@ -157,11 +161,11 @@ Options for Tools That Analyze Slabs in xy Plane
     that slab.  Must not be used together with \--discretize.  If given,
     \--zmin and \--zmax are ignored.
 
-Python-Specifig Options
+Python-Specific Options
 ^^^^^^^^^^^^^^^^^^^^^^^^
 --py-lmod
     If running on a cluster which uses the |Lmod| module system,
-    specifiy here which file to source (relative to the :file:`lmod`
+    specify here which file to source (relative to the :file:`lmod`
     subdirectory of this project) to load Python.  Default:
     ``'palma/2019a/python3-7-2.sh'``.
 --py-exe
@@ -304,6 +308,15 @@ REQUIRE_TPR = (
 REQUIRE_EDR = (
     # `${settings}_out_${system}.edr`
     "energy_dist",
+)
+REQUIRE_TRR = (
+    # `${settings}_out_${system}.trr`
+    "attribute_hist_ether.py",
+    "attribute_hist_Li.py",
+    "attribute_hist_NBT.py",
+    "attribute_hist_NTf2.py",
+    "attribute_hist_OBT.py",
+    "attribute_hist_OE.py",
 )
 REQUIRE_XTC_WRAPPED = (
     # `${settings}_out_${system}_pbc_whole_mol.xtc`
@@ -564,7 +577,7 @@ if __name__ == "__main__":  # noqa: C901
             "Submit MDTools analysis scripts for systems containing LiTFSI and"
             " linear poly(ethylene oxides) of arbitrary length (including"
             " dimethyl ether) to the |Slurm| Workload Manager of an HPC"
-            " cluster.  For more information, refer to the documetation of"
+            " cluster.  For more information, refer to the documentation of"
             " this script."
         )
     )
@@ -619,6 +632,10 @@ if __name__ == "__main__":  # noqa: C901
             "  11.2 = All scripts calculating renewal event lifetimes."
             "  11.3 = All 'normal' bulk renewal event lifetimes."
             "  11.4 = All spatially discretized renewal event lifetimes."
+            ""
+            "  12 =   All scripts that take an |edr_file| or an |trr_file| as"
+            " input."
+            "  13 =   All attribute histograms (attribute_hist*)."
         ),
     )
     parser_trj_reading = parser.add_argument_group(
@@ -695,7 +712,7 @@ if __name__ == "__main__":  # noqa: C901
         required=False,
         default=3.0,
         help=(
-            "Cutoff (in Angstrom) up to which two atoms are regareded as being"
+            "Cutoff (in Angstrom) up to which two atoms are regarded as being"
             " in contact.  Default: %(default)s."
         ),
     )
@@ -816,7 +833,7 @@ if __name__ == "__main__":  # noqa: C901
             " slab.  If given, --zmin and --zmax are ignored."
         ),
     )
-    parser_py = parser.add_argument_group(title="Python-Specifig Options")
+    parser_py = parser.add_argument_group(title="Python-Specific Options")
     parser_py.add_argument(
         "--py-lmod",
         type=str,
@@ -824,7 +841,7 @@ if __name__ == "__main__":  # noqa: C901
         default="palma/2019a/python3-7-2.sh",
         help=(
             "If running on a cluster which uses the Lmod module system,"
-            " specifiy here which file to source (relative to the lmod"
+            " specify here which file to source (relative to the lmod"
             " subdirectory of this project) to load Python.  Default:"
             " %(default)s."
         ),
@@ -869,6 +886,7 @@ if __name__ == "__main__":  # noqa: C901
     TPR_FILE = gmx_infile_pattern + ".tpr"
     EDR_FILE = gmx_outfile_pattern + ".edr"
     GRO_FILE = gmx_outfile_pattern + ".gro"
+    TRR_FILE = gmx_outfile_pattern + ".trr"
     XTC_FILE_WRAPPED = gmx_outfile_pattern + "_pbc_whole_mol.xtc"
     XTC_FILE_UNWRAPPED = gmx_outfile_pattern + "_pbc_whole_mol_nojump.xtc"
     DTRJ_DISCRETE_Z_FILE = gmx_infile_pattern + "_discrete-z_Li_dtrj.npy"
@@ -949,6 +967,8 @@ if __name__ == "__main__":  # noqa: C901
             files.setdefault("run input", TPR_FILE)
         if script in REQUIRE_EDR:
             files.setdefault("energy", gmx.get_compressed_file(EDR_FILE))
+        if script in REQUIRE_TRR:
+            files.setdefault("full-precision trajectory", TRR_FILE)
         if script in REQUIRE_XTC_WRAPPED:
             files.setdefault("wrapped compressed trajectory", XTC_FILE_WRAPPED)
         if script in REQUIRE_XTC_UNWRAPPED:
@@ -956,11 +976,19 @@ if __name__ == "__main__":  # noqa: C901
                 "unwrapped compressed trajectory", XTC_FILE_UNWRAPPED
             )
         if script in REQUIRE_DTRJ_DISCRETE_Z:
-            files.setdefault("discretized trajectory", DTRJ_DISCRETE_Z_FILE)
+            files.setdefault(
+                "discretized trajectory (spatial z)", DTRJ_DISCRETE_Z_FILE
+            )
         if script in REQUIRE_DTRJ_RENEWAL_ETHER:
-            files.setdefault("discretized trajectory", DTRJ_RENEWAL_ETHER_FILE)
+            files.setdefault(
+                "discretized trajectory (renewal Li-ether)",
+                DTRJ_RENEWAL_ETHER_FILE,
+            )
         if script in REQUIRE_DTRJ_RENEWAL_TFSI:
-            files.setdefault("discretized trajectory", DTRJ_RENEWAL_TFSI_FILE)
+            files.setdefault(
+                "discretized trajectory (renewal Li-TFSI)",
+                DTRJ_RENEWAL_TFSI_FILE,
+            )
         if script in REQUIRE_BIN_FILE:
             files.setdefault("bin", BIN_FILE)
         if script == "0" or script == "1":  # All (bulk) scripts.
@@ -1034,23 +1062,47 @@ if __name__ == "__main__":  # noqa: C901
             files.setdefault(
                 "unwrapped compressed trajectory", XTC_FILE_UNWRAPPED
             )
-            files.setdefault("discretized trajectory", DTRJ_DISCRETE_Z_FILE)
+            files.setdefault(
+                "discretized trajectory (spatial z)", DTRJ_DISCRETE_Z_FILE
+            )
         elif script == "11.1":  # All scripts extracting renewal events.
             files.setdefault("run input", TPR_FILE)
             files.setdefault(
                 "unwrapped compressed trajectory", XTC_FILE_UNWRAPPED
             )
         elif script == "11.2":  # All renewal event lifetimes.
-            files.setdefault("discretized trajectory", DTRJ_DISCRETE_Z_FILE)
-            files.setdefault("discretized trajectory", DTRJ_RENEWAL_ETHER_FILE)
-            files.setdefault("discretized trajectory", DTRJ_RENEWAL_TFSI_FILE)
+            files.setdefault(
+                "discretized trajectory (spatial z)", DTRJ_DISCRETE_Z_FILE
+            )
+            files.setdefault(
+                "discretized trajectory (renewal Li-ether)",
+                DTRJ_RENEWAL_ETHER_FILE,
+            )
+            files.setdefault(
+                "discretized trajectory (renewal Li-TFSI)",
+                DTRJ_RENEWAL_TFSI_FILE,
+            )
         elif script == "11.3":  # All bulk renewal event lifetimes.
-            files.setdefault("discretized trajectory", DTRJ_RENEWAL_ETHER_FILE)
-            files.setdefault("discretized trajectory", DTRJ_RENEWAL_TFSI_FILE)
+            files.setdefault(
+                "discretized trajectory (renewal Li-ether)",
+                DTRJ_RENEWAL_ETHER_FILE,
+            )
+            files.setdefault(
+                "discretized trajectory (renewal Li-TFSI)",
+                DTRJ_RENEWAL_TFSI_FILE,
+            )
         elif script == "11.4":  # All spatially discretized renew times.
-            files.setdefault("discretized trajectory", DTRJ_DISCRETE_Z_FILE)
-            files.setdefault("discretized trajectory", DTRJ_RENEWAL_ETHER_FILE)
-            files.setdefault("discretized trajectory", DTRJ_RENEWAL_TFSI_FILE)
+            files.setdefault(
+                "discretized trajectory (spatial z)", DTRJ_DISCRETE_Z_FILE
+            )
+            files.setdefault(
+                "discretized trajectory (renewal Li-ether)",
+                DTRJ_RENEWAL_ETHER_FILE,
+            )
+            files.setdefault(
+                "discretized trajectory (renewal Li-TFSI)",
+                DTRJ_RENEWAL_TFSI_FILE,
+            )
     for filetype, filename in files.items():
         if not os.path.isfile(filename):
             filename, extension = os.path.splitext(filename)
@@ -1059,7 +1111,7 @@ if __name__ == "__main__":  # noqa: C901
                 continue
             else:
                 # Neither the file itself nor a compressed version
-                # exsits.
+                # exists.
                 raise FileNotFoundError(
                     "No such file: '{}' ({} file)".format(filename, filetype)
                 )
@@ -1107,6 +1159,12 @@ if __name__ == "__main__":  # noqa: C901
     posargs_slab = [args["zmin"], args["zmax"]]
     # Position arguments must be in the right order for each job script.
     posargs = {
+        "attribute_hist_ether": posargs_general + posargs_trj[:3],
+        "attribute_hist_Li": posargs_general + posargs_trj[:3],
+        "attribute_hist_NBT": posargs_general + posargs_trj[:3],
+        "attribute_hist_NTF2": posargs_general + posargs_trj[:3],
+        "attribute_hist_OBT": posargs_general + posargs_trj[:3],
+        "attribute_hist_OE": posargs_general + posargs_trj[:3],
         "axial_hex_dist_1nn_Li": (
             posargs_general + posargs_trj[:3] + posargs_slab
         ),
@@ -1359,7 +1417,7 @@ if __name__ == "__main__":  # noqa: C901
             ):
                 # Only bulk scripts.
                 # msd_layer_serial.py (and msd_layer_parallel.py) must
-                # first be fixed for simulations with periodc boundary
+                # first be fixed for simulations with periodic boundary
                 # conditions in the discretized direction.
                 continue
             if batch_script in (
@@ -1370,7 +1428,10 @@ if __name__ == "__main__":  # noqa: C901
             ):
                 continue
             if batch_script == "energy_dist":
-                # Exlcude all scripts that take an .edr file as input.
+                # Exclude all scripts that take an .edr file as input.
+                continue
+            if "attribute_hist" in batch_script:
+                # Exclude all scripts that take an .trr file as input.
                 continue
             if "lig_change_at_pos_change" in batch_script:
                 # Exclude all lig_change_at_pos_change* scripts.
@@ -1553,6 +1614,19 @@ if __name__ == "__main__":  # noqa: C901
                 "renewal_events" in batch_script
                 and "state_lifetime_discrete" in batch_script
             ):
+                n_scripts_submitted += _submit(args_sbatch, batch_script)
+    if "12" in args["scripts"].split():
+        # All scripts that take an .edr file or an .trr file as input.
+        for batch_script in posargs.keys():
+            if (
+                batch_script == "energy_dist"
+                or "attribute_hist" in batch_script
+            ):
+                n_scripts_submitted += _submit(args_sbatch, batch_script)
+    if "13" in args["scripts"].split():
+        # All attribute histograms (attribute_hist*).
+        for batch_script in posargs.keys():
+            if "attribute_hist" in batch_script:
                 n_scripts_submitted += _submit(args_sbatch, batch_script)
     print("Submitted {} jobs".format(n_scripts_submitted))
     if n_scripts_submitted == 0:

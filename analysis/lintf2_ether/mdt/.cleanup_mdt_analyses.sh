@@ -17,9 +17,18 @@ gather() {
 }
 
 mv create_mda_universe_slurm-* create_mda_universe
+mv energy_dist_slurm-* energy_dist
+mv subvolume_charge_slurm-* subvolume_charge
 
 gather discrete-z
 gather lifetime_autocorr
+
+name=attribute_hist
+for cmp in Li NBT OBT OE NTf2 ether; do
+    gather "${name}"_"${cmp}"
+done
+mkdir "${name}" || exit
+mv "${name}"_* "${name}"/
 
 name=axial_hex_dist
 for cmp in 1nn 2nn; do
