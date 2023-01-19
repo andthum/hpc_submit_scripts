@@ -236,6 +236,7 @@ rst-substitutions =
     gro_file,
     log_file,
     mdp_file,
+    trr_file,
     Python,
     PyPI,
     pip,
