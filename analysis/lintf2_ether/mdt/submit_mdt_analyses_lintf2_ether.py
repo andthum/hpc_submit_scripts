@@ -956,11 +956,19 @@ if __name__ == "__main__":  # noqa: C901
                 "unwrapped compressed trajectory", XTC_FILE_UNWRAPPED
             )
         if script in REQUIRE_DTRJ_DISCRETE_Z:
-            files.setdefault("discretized trajectory", DTRJ_DISCRETE_Z_FILE)
+            files.setdefault(
+                "discretized trajectory (spatial z)", DTRJ_DISCRETE_Z_FILE
+            )
         if script in REQUIRE_DTRJ_RENEWAL_ETHER:
-            files.setdefault("discretized trajectory", DTRJ_RENEWAL_ETHER_FILE)
+            files.setdefault(
+                "discretized trajectory (renewal Li-ether)",
+                DTRJ_RENEWAL_ETHER_FILE,
+            )
         if script in REQUIRE_DTRJ_RENEWAL_TFSI:
-            files.setdefault("discretized trajectory", DTRJ_RENEWAL_TFSI_FILE)
+            files.setdefault(
+                "discretized trajectory (renewal Li-TFSI)",
+                DTRJ_RENEWAL_TFSI_FILE,
+            )
         if script in REQUIRE_BIN_FILE:
             files.setdefault("bin", BIN_FILE)
         if script == "0" or script == "1":  # All (bulk) scripts.
@@ -1034,23 +1042,47 @@ if __name__ == "__main__":  # noqa: C901
             files.setdefault(
                 "unwrapped compressed trajectory", XTC_FILE_UNWRAPPED
             )
-            files.setdefault("discretized trajectory", DTRJ_DISCRETE_Z_FILE)
+            files.setdefault(
+                "discretized trajectory (spatial z)", DTRJ_DISCRETE_Z_FILE
+            )
         elif script == "11.1":  # All scripts extracting renewal events.
             files.setdefault("run input", TPR_FILE)
             files.setdefault(
                 "unwrapped compressed trajectory", XTC_FILE_UNWRAPPED
             )
         elif script == "11.2":  # All renewal event lifetimes.
-            files.setdefault("discretized trajectory", DTRJ_DISCRETE_Z_FILE)
-            files.setdefault("discretized trajectory", DTRJ_RENEWAL_ETHER_FILE)
-            files.setdefault("discretized trajectory", DTRJ_RENEWAL_TFSI_FILE)
+            files.setdefault(
+                "discretized trajectory (spatial z)", DTRJ_DISCRETE_Z_FILE
+            )
+            files.setdefault(
+                "discretized trajectory (renewal Li-ether)",
+                DTRJ_RENEWAL_ETHER_FILE,
+            )
+            files.setdefault(
+                "discretized trajectory (renewal Li-TFSI)",
+                DTRJ_RENEWAL_TFSI_FILE,
+            )
         elif script == "11.3":  # All bulk renewal event lifetimes.
-            files.setdefault("discretized trajectory", DTRJ_RENEWAL_ETHER_FILE)
-            files.setdefault("discretized trajectory", DTRJ_RENEWAL_TFSI_FILE)
+            files.setdefault(
+                "discretized trajectory (renewal Li-ether)",
+                DTRJ_RENEWAL_ETHER_FILE,
+            )
+            files.setdefault(
+                "discretized trajectory (renewal Li-TFSI)",
+                DTRJ_RENEWAL_TFSI_FILE,
+            )
         elif script == "11.4":  # All spatially discretized renew times.
-            files.setdefault("discretized trajectory", DTRJ_DISCRETE_Z_FILE)
-            files.setdefault("discretized trajectory", DTRJ_RENEWAL_ETHER_FILE)
-            files.setdefault("discretized trajectory", DTRJ_RENEWAL_TFSI_FILE)
+            files.setdefault(
+                "discretized trajectory (spatial z)", DTRJ_DISCRETE_Z_FILE
+            )
+            files.setdefault(
+                "discretized trajectory (renewal Li-ether)",
+                DTRJ_RENEWAL_ETHER_FILE,
+            )
+            files.setdefault(
+                "discretized trajectory (renewal Li-TFSI)",
+                DTRJ_RENEWAL_TFSI_FILE,
+            )
     for filetype, filename in files.items():
         if not os.path.isfile(filename):
             filename, extension = os.path.splitext(filename)
