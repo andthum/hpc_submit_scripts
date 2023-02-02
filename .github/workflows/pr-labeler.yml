@@ -7,17 +7,23 @@ on:
     types:
       - "opened"
       - "edited"
-    branches-ignore:
-      - "dependabot/**"
 
 jobs:
   triage:
+    # Don't run pr-labeler on branches that were created by Dependabot,
+    # because this removes the labels set by Dependabot.
+    # `branches-ignore` cannot be used, because this checks against the
+    # target branch of the pull request, however we have to check
+    # against the head branch of the pull request.  Solution: if
+    # statement, taken from
+    # https://stackoverflow.com/questions/68388484/github-actions-exclude-pull-requests-from-a-branch
+    if: "startsWith(github.head_ref, 'dependabot/') == false"
     permissions:
       contents: "read"
       pull-requests: "write"
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "github/issue-labeler@v2.5"
+      - uses: "github/issue-labeler@v2.6"
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           configuration-path: ".github/pr-labeler-config.yml"
