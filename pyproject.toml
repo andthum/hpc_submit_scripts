@@ -10,7 +10,7 @@ name = "hpcss"
 version = "0.1.0"
 description = "Slurm scripts to run and analyze MD simulations on HPC clusters"
 readme = "README.rst"
-requires-python = ">=3.8, <3.11"
+requires-python = ">=3.8, <3.12"
 license = {file = "LICENSE.txt"}
 authors = [
     {name = "Andreas Thum", email = "coding.andthum@e.mail.de"},
@@ -69,9 +69,8 @@ discussions = "https://github.com/andthum/hpc_submit_scripts/discussions"
 skips = ["B404", "B603"]
 
 [tool.black]
-required-version = 22
+required-version = 23
 line-length = 79
-target-version = ["py39"]
 
 [tool.isort]
 # profile should go on top so that it does not overwrite other settings.
