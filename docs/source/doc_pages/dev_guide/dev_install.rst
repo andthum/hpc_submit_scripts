@@ -84,6 +84,20 @@ this project by typing:
 
     pre-commit install --install-hooks
 
+.. note::
+
+    You might need to install
+    `markdownlint <https://github.com/markdownlint/markdownlint>`_ (a
+    Ruby gem package) in order to get the markdownlint pre-commit hook
+    running.
+
+    Software required for installing `RubyGems <https://rubygems.org/>`_
+    packages:
+
+    * Ruby developer package
+    * `Ruby <https://www.ruby-lang.org/en/>`_
+    * `RubyGems <https://rubygems.org/>`_
+
 You can check if pre-commit works properly by running
 
 .. code-block:: bash
