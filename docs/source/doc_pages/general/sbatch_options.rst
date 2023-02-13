@@ -8,7 +8,7 @@ scripts (additional to the script's own options).  These options will be
 parsed to the |sbatch| command that submits the Slurm job scripts.
 
 This page contains a subset of sbatch options you might consider useful.
-Refer to the `documetation of sbatch
+Refer to the `documentation of sbatch
 <https://slurm.schedmd.com/sbatch.html>`__ for a full list of all
 options.
 

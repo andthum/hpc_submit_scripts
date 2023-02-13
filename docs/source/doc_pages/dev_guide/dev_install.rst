@@ -60,7 +60,7 @@ interfere with other Python packages installed on your computer.
 3. Install the Development Packages
 -----------------------------------
 
-Install the pacakges required for developing the project (i.e.
+Install the packages required for developing the project (i.e.
 formatters, linters, testing packages, pre-commit, etc.) into the
 :ref:`development environment <set-up-dev-env-label>`:
 

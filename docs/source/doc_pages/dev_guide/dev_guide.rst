@@ -20,7 +20,7 @@ mess.
     comfortable with that *before* you contribute to the project.
 
 .. toctree::
-    :caption: Table of Contens
+    :caption: Table of Contents
     :name: dev-guide-toc
     :maxdepth: 1
     :hidden:

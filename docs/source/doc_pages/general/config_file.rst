@@ -38,7 +38,7 @@ built-in :mod:`configparser` Python module.
     Don't use quotation marks in option values unless you explicitly
     want them to be part of the option value.
 
-Differences to the default behaviour of :mod:`configparser`:
+Differences to the default behavior of :mod:`configparser`:
 
     * The only values that are interpreted as booleans are true and
       false. yes/no and on/off are read as strings.
@@ -53,7 +53,7 @@ Config Sections
 Which sections are recognized by which submit script is stated in the
 "Config File" section of each script right below the "Options" section.
 
-Generraly,
+Generally,
 
     * Options in [submit\*] sections are parsed to Python submit
       scripts.
