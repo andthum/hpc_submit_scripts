@@ -5,7 +5,7 @@
 # Sort all entries alphabetically!
 #
 # Keep Flake8 plugins in sync with `requirements-dev.txt` and
-# `.pre-commit-confic.yaml`!
+# `.pre-commit-config.yaml`!
 
 
 [flake8]
@@ -50,7 +50,10 @@ extend-exclude =
     *ENV*/,
     *VENV*/,
 extend-ignore =
-    ### Allow for docstring summaries that are longer than one line ###
+    ### Allow assert statements for consitency checks ###
+    # S101: Use of assert detected
+    S101,
+    ### Allow docstring summaries that are longer than one line ###
     # D205: 1 blank line required between summary line and description
     # D400: First line should end with a period
     D205,
@@ -74,7 +77,7 @@ extend-ignore =
 extend-select =
     ### Compatibility with black ###
     # W504: line break after binary operator
-    W504
+    W504,
 # List of glob patterns to include for checks.
 filename = *.py
 # Files that are checked by PyFlakes for doctest syntax.
@@ -104,6 +107,18 @@ require-plugins =
 rst-directives =
     autosummary,
     moduleauthor,
+    # reStructuredText admonitions from
+    # https://docutils.sourceforge.io/docs/ref/rst/directives.html
+    attention,
+    caution,
+    danger,
+    error,
+    hint,
+    important,
+    note,
+    tip,
+    todo,
+    warning,
     # Spinx-specific directives from
     # https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html
     centered,
