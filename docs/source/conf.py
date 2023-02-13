@@ -20,6 +20,7 @@ http://www.sphinx-doc.org/en/master/config
 # Standard libraries
 import os
 import sys
+from datetime import datetime
 
 # Third-party libraries
 import tomlkit
@@ -32,11 +33,12 @@ import tomlkit
 # is relative to the  documentation root, use os.path.abspath to make it
 # absolute, like shown here.
 
-# Recursively import all directories containing Pyhon scripts.
+# Recursively import all directories containing Python scripts.
 directories = ("analysis", "python", "simulation")
 for directory in directories:
-    for path in os.walk(os.path.abspath("../../" + directory)):
-        sys.path.insert(1, path[0])
+    for root, _dirs, _files in os.walk(os.path.abspath("../../" + directory)):
+        if os.path.basename(os.path.normpath(root)) not in ("", "__pycache__"):
+            sys.path.insert(1, root)
 
 
 # -- Project information -----------------------------------------------
@@ -50,7 +52,8 @@ project = str(metadata["project"]["name"])
 author = ", ".join(str(dct["name"]) for dct in metadata["project"]["authors"])
 
 # A copyright statement in the style "2008, Author Name".
-years = "2021, 2022"
+now = datetime.now().year
+years = "2021-{}, ".format(now)
 copyright = "Copyright (C) " + years + " " + author  # noqa: A001
 
 # The short X.Y version
@@ -228,7 +231,7 @@ primary_domain = "py"
 default_role = None
 
 # If your documentation needs a minimal Sphinx version, state it here.
-needs_sphinx = "3.0"
+needs_sphinx = "5.0"
 
 # If true, Sphinx will warn about all references where the target cannot
 # be found.  This includes also argument types like "array_like",
@@ -304,7 +307,7 @@ html_logo = "../logo/hpcss_logo_200x272.png"
 # large.
 html_favicon = "../logo/hpcss_favicon_32x32.png"
 
-# A list of CSS files.  Filenams must be relative to html_static_path.
+# A list of CSS files.  Filenames must be relative to html_static_path.
 html_css_files = ["custom.css"]
 
 # A list of paths that contain custom static files (such as style sheets

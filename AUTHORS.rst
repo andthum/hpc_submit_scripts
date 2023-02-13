@@ -22,7 +22,7 @@ Release-Wise List of Authors
 Upcoming release
 
     * Add your name, if you have contributed to the upcoming release.
-      Athors are ordered alphabetically by their full name.
+      Authors are ordered alphabetically by their full name.
       Additionally, add your name to the `authors` option of the
       `[project]` section in `pyproject.toml`.
     * Andreas Thum

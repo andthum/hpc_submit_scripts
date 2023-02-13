@@ -3,10 +3,13 @@
 Versioning
 ==========
 
-.. note::
+.. contents:: Site Contents
+    :depth: 2
+    :local:
 
-    New versions can only be released by project maintainers that have
-    write access to the upstream repository.
+
+Versioning Scheme
+-----------------
 
 This project uses `semantic versioning`_.  Given a version number
 MAJOR.MINOR.PATCH, we increment the
@@ -36,34 +39,72 @@ specifiers can be appended.
 Publishing a New Release
 ------------------------
 
+.. note::
+
+    New versions can only be released by project maintainers that have
+    write access to the upstream repository.
+
 Follow these steps when publishing a new release.
 
 
-1. Update the Change Log
-^^^^^^^^^^^^^^^^^^^^^^^^
+1. Update the Version Number
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. todo::
+Create a new branch out of ``main`` named
+``chore/release/vMAJOR.MINOR.PATCH``.
 
-    Establish a change log.  See https://keepachangelog.com/ for some
-    useful guidelines.
+.. code:: bash
+
+    git checkout main
+    git checkout -b chore/release/vMAJOR.MINOR.PATCH
+
+Update :file:`AUTHORS.rst` to list all authors that have contributed to
+the new release and commit the changes to the new branch.
+
+Add authors that have contributed for the first time to the list of
+authors in the :file:`pyproject.toml` file and commit the changes to the
+new branch.
+
+Update the version number in :file:`pyproject.toml` to the new
+MAJOR.MINOR.PATCH version and commit the changes to the new branch.
+
+Push the branch to the upstream repository.
+
+.. code:: bash
+
+    git push --set-upstream origin chore/release/vMAJOR.MINOR.PATCH
+
+Open the upstream repository in GitHub, create a pull request and merge
+the branch into ``main`` when all tests passed successfully.
+
+Pull the changes to your remote repository.
+
+.. code:: bash
+
+    git checkout main
+    git pull
 
 
-2. Create a New Tag
+1. Create a New Tag
 ^^^^^^^^^^^^^^^^^^^
 
-Create a new tag that contains the new MAJOR.MINOR.PATCH version number
-prefixed with a "v":
+On the ``main`` branch, create a new tag that contains the new
+MAJOR.MINOR.PATCH version number prefixed with a "v":
 
 .. code-block:: bash
 
     git checkout main
-    git tag -m "Release Description" vMAJOR.MINOR.PATCH
+    git tag -a vMAJOR.MINOR.PATCH
 
-As tag message use the change log of the new release.
+As tag message enter:
 
+.. code-block:: text
 
-3. Push the Tag to the Upstream Repository
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    HPCSS version MAJOR.MINOR.PATCH
+
+    Release notes at https://github.com/andthum/hpc_submit_scripts/releases
+
+Push the tag to the upstream repository.
 
 .. important::
 
@@ -73,6 +114,18 @@ As tag message use the change log of the new release.
 
     git push
     git push --tags
+
+
+3. Create a New Release
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Open the upstream repository in GitHub and follow the steps outlined in
+the GitHub doc page
+`Creating automatically generated release notes for a new release
+<https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes#creating-automatically-generated-release-notes-for-a-new-release>`_.
+When selecting a tag, use the tag you just created in the previous step.
+Carefully check the automatically generated release notes and make
+changes if necessary.
 
 
 .. _semantic versioning: http://semver.org/

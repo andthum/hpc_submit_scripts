@@ -34,5 +34,13 @@ After installing all requirements, the documentation can be built via
     # Deactivate the virtual Python environment.
     deactivate
 
+To clean the build directory and remove all automatically generated
+files, run in the ``docs/`` directory the following commands.
+
+.. code-block:: bash
+
+    make clean
+    make clean_autosum
+
 
 .. _Sphinx: https://www.sphinx-doc.org/

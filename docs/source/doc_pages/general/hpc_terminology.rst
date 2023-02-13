@@ -95,11 +95,11 @@ Terms that you will probably come across when you perform computations
 on multiple CPUs:
 
 Distributed-Memory System
-    A computer with mutliple processors in which each processor has its
+    A computer with multiple processors in which each processor has its
     own private memory.  Processors cannot access the memory of other
     processors.
 Shared-Memory System
-    A computer with mutliple processors that all share the same memory.
+    A computer with multiple processors that all share the same memory.
 MPI
     The Message Passing Interface (MPI) is a message-passing standard
     that allows multiple processes that run in separate memory spaces to

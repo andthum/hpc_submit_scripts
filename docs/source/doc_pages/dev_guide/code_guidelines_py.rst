@@ -75,7 +75,7 @@ Other Python Code Guidelines
         - Constant variable names: ``UPPER_CASE_WITH_UNDERSCORES``
         - Underscores:
 
-            + ``_``: For throwaway varibales, i.e. for variables that
+            + ``_``: For throwaway variables, i.e. for variables that
               will never be used.  For instance if a function returns
               two values, but only one is of interest.
             + ``single_trailing_underscore_``: Used by convention to

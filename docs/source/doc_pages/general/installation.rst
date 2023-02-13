@@ -50,7 +50,7 @@ or re-download the project repository (if you don't use |Git|).
 After cloning or pulling the repository, you may want to change the
 default settings using a |config_file|.  For example, you may want to
 set the default for the \--mail-user option of sbatch to your mail
-adress.
+address.
 
 
 Development Installation
