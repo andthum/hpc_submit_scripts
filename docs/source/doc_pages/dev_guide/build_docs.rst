@@ -30,3 +30,11 @@ After installing all requirements, the documentation can be built via
     make doctest
     # Deactivate the virtual Python environment.
     deactivate
+
+To clean the build directory and remove all automatically generated
+files, run in the :file:`docs/` directory the following commands.
+
+.. code-block:: bash
+
+    make clean
+    make clean_autosum
