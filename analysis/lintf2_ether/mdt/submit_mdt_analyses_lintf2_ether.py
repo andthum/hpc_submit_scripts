@@ -162,7 +162,7 @@ Options for Tools That Analyze Slabs in xy Plane
     \--zmin and \--zmax are ignored.
 
 Python-Specific Options
-^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
 --py-lmod
     If running on a cluster which uses the |Lmod| module system,
     specify here which file to source (relative to the :file:`lmod`
@@ -173,8 +173,16 @@ Python-Specific Options
     the python executable of the |virtual_Python_environment| in which
     MDTools is installed.  Default: ``'python3'``.
 --mdt-path
-    Path to the MDTools installation.  Default:
-    ``'${HOME}/.local/lib/python3.9/site-packages/mdtools'``.
+    Path to the *cloned* MDTools repository.  Note that you really need
+    to clone MDTools
+    (:bash:`git clone https://github.com/andthum/mdtools.git`) and
+    install MDTools from the cloned repository.  For the last step refer
+    to MDTools' `documentation
+    <https://mdtools.readthedocs.io/en/latest/doc_pages/general_docs/installation.html>`_.
+    The reason for this is that the Slurm job scripts (that are launched
+    by this Python submit script) use the path to MDTools'
+    :file:`scripts/` directory to call the MDTools scripts.  Default:
+    ``'${HOME}/git/github/mdtools'``.
 
 Sbatch Options
 ^^^^^^^^^^^^^^
@@ -857,8 +865,8 @@ if __name__ == "__main__":  # noqa: C901
         "--mdt-path",
         type=str,
         required=False,
-        default="gmx",
-        help="Path to the MDTools installation.  Default: %(default)s.",
+        default="${HOME}/git/github/mdtools",
+        help="Path to the cloned MDTools repository.  Default: %(default)s.",
     )
     opts = opthandler.get_opts(
         argparser=parser,
