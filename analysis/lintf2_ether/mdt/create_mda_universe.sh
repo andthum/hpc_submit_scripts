@@ -61,6 +61,20 @@ source "${bash_dir}/load_python.sh" "${py_lmod}" "${py_exe}" || exit
 
 echo -e "\n"
 echo "Creating MDAnalysis Universe for"
+echo "${settings}_out_${system}.trr"
+echo "================================================================="
+${py_exe} -c "\
+import MDAnalysis as mda;\
+mda.Universe(\
+    '${settings}_${system}.tpr', \
+    '${settings}_out_${system}.trr' \
+)\
+" ||
+    exit
+echo "================================================================="
+
+echo -e "\n"
+echo "Creating MDAnalysis Universe for"
 echo "${settings}_out_${system}_pbc_whole_mol.xtc"
 echo "================================================================="
 ${py_exe} -c "\
