@@ -95,8 +95,7 @@ ${py_exe} -u \
         "Kinetic En." \
         "Total Energy" \
         "Temperature" \
-        "Pressure" \
-    --num-points 1000 ||
+        "Pressure" ||
     exit
 echo "================================================================="
 
@@ -116,8 +115,7 @@ ${py_exe} -u \
         "Total Energy" \
         "Temperature" \
         "Pressure" \
-    --diff \
-    --num-points 1000 ||
+    --diff ||
     exit
 echo "================================================================="
 
