@@ -937,6 +937,6 @@ if __name__ == "__main__":  # noqa: C901
                 n_scripts_submitted += _submit(args_sbatch, batch_script)
     print("Submitted {} jobs".format(n_scripts_submitted))
     if n_scripts_submitted == 0:
-        warnings.warn("No script submitted", UserWarning)
+        warnings.warn("No script submitted", UserWarning, stacklevel=2)
 
     print("{} done".format(os.path.basename(sys.argv[0])))
