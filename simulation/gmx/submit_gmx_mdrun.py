@@ -477,6 +477,7 @@ if __name__ == "__main__":  # noqa: C901
             " parsed to the Gromacs preprocessor grompp"
             " automatically".format(args["system"]),
             UserWarning,
+            stacklevel=2,
         )
 
     print("Constructing the submit command...")
