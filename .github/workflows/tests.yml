@@ -82,3 +82,6 @@ jobs:
         # https://stackoverflow.com/questions/36278590/numpy-array-dtype-is-coming-as-int32-by-default-in-a-windows-10-64-bit-machine
         if: "${{ runner.os != 'Windows' }}"
         run: "make -C ./docs/ doctest"
+      - name: "linkcheck"
+        if: "${{ runner.os == 'Linux' && matrix.python-version == '3.11' }}"
+        run: "make -C ./docs/ linkcheck"
