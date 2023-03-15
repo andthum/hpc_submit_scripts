@@ -86,7 +86,7 @@ ${py_exe} -u \
     "${mdt_path}/scripts/gmx/plot_energy_dist.py" \
     -f "${infile}" \
     --plot-out "${settings}_${system}_${analysis}_${begin}-${end}frame.pdf" \
-    --stats-out "${settings}_${system}_${analysis}_${begin}-${end}frame.txt" \
+    --stats-out "${settings}_${system}_${analysis}_${begin}-${end}frame.txt.gz" \
     -b "${begin}" \
     -e "${end}" \
     --every "${every}" \
@@ -105,7 +105,7 @@ ${py_exe} -u \
     "${mdt_path}/scripts/gmx/plot_energy_dist.py" \
     -f "${infile}" \
     --plot-out "${settings}_${system}_${analysis}_diff_${begin}-${end}frame.pdf" \
-    --stats-out "${settings}_${system}_${analysis}_diff_${begin}-${end}frame.txt" \
+    --stats-out "${settings}_${system}_${analysis}_diff_${begin}-${end}frame.txt.gz" \
     -b "${begin}" \
     -e "${end}" \
     --every "${every}" \
@@ -135,9 +135,9 @@ if [[ ! -d ${save_dir} ]]; then
     mkdir -v "${save_dir}" || exit
     mv -v \
         "${settings}_${system}_${analysis}_${begin}-${end}frame.pdf" \
-        "${settings}_${system}_${analysis}_${begin}-${end}frame.txt" \
+        "${settings}_${system}_${analysis}_${begin}-${end}frame.txt.gz" \
         "${settings}_${system}_${analysis}_diff_${begin}-${end}frame.pdf" \
-        "${settings}_${system}_${analysis}_diff_${begin}-${end}frame.txt" \
+        "${settings}_${system}_${analysis}_diff_${begin}-${end}frame.txt.gz" \
         "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \

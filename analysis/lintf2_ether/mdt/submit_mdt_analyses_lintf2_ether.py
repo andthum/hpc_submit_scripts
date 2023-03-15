@@ -387,23 +387,23 @@ REQUIRE_XTC_UNWRAPPED = (
     "renewal_events_Li-NTf2",
 )
 REQUIRE_DTRJ_DISCRETE_Z = (
-    # `${settings}_${system}_discrete-z_Li_dtrj.npy`
+    # `${settings}_${system}_discrete-z_Li_dtrj.npy` or `.npz`
     "discrete-z_Li_state_lifetime_discrete",
     "renewal_events_Li-ether_state_lifetime_discrete",
     "renewal_events_Li-NTf2_state_lifetime_discrete",
 )
 REQUIRE_DTRJ_RENEWAL_ETHER = (
-    # `${settings}_${system}_renewal_events_Li-ether_dtrj.npy`
+    # `${settings}_${system}_renewal_events_Li-ether_dtrj.npy` or `.npz`
     "renewal_events_Li-ether_state_lifetime",
     "renewal_events_Li-ether_state_lifetime_discrete",
 )
 REQUIRE_DTRJ_RENEWAL_TFSI = (
-    # `${settings}_${system}_renewal_events_Li-NTf2_dtrj.npy`
+    # `${settings}_${system}_renewal_events_Li-NTf2_dtrj.npy` or `.npz`
     "renewal_events_Li-NTf2_state_lifetime",
     "renewal_events_Li-NTf2_state_lifetime_discrete",
 )
 REQUIRE_BIN_FILE = (
-    # `${settings}_${system}_density-z_number_Li_binsA.txt`
+    # `${settings}_${system}_density-z_number_Li_binsA.txt.gz`
     "contact_hist_at_pos_change_Li-OBT",
     "contact_hist_at_pos_change_Li-OE",
     "discrete-z_Li",
@@ -904,7 +904,7 @@ if __name__ == "__main__":  # noqa: C901
     DTRJ_RENEWAL_TFSI_FILE = (
         gmx_infile_pattern + "_renewal_events_Li-NTf2_dtrj.npy"
     )
-    BIN_FILE = gmx_infile_pattern + "_density-z_number_Li_binsA.txt"
+    BIN_FILE = gmx_infile_pattern + "_density-z_number_Li_binsA.txt.gz"
 
     print("Processing parsed arguments...")
     if args["binwidth"] <= 0:

@@ -80,7 +80,7 @@ ${py_exe} -u \
     "${mdt_path}/scripts/structure/contact_hist.py" \
     -f "${settings}_out_${system}_pbc_whole_mol.xtc" \
     -s "${settings}_${system}.tpr" \
-    -o "${settings}_${system}_${analysis}_${zmin}-${zmax}A.txt" \
+    -o "${settings}_${system}_${analysis}_${zmin}-${zmax}A.txt.gz" \
     -b "${begin}" \
     -e "${end}" \
     --every "${every}" \
@@ -100,7 +100,7 @@ if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
-        "${settings}_${system}_${analysis}_${zmin}-${zmax}A.txt" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A.txt.gz" \
         "${settings}_${system}_${analysis}_${zmin}-${zmax}A_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \

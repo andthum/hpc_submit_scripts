@@ -97,7 +97,7 @@ ${py_exe} -u \
     --sel "resname ${solvent}" \
     --com residues \
     -d z \
-    --bins "${settings}_${system}_density-z_number_Li_binsA.txt" ||
+    --bins "${settings}_${system}_density-z_number_Li_binsA.txt.gz" ||
     exit
 echo "================================================================="
 

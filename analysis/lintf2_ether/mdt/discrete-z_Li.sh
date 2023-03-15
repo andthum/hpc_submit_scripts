@@ -80,8 +80,8 @@ ${py_exe} -u \
     --every "${every}" \
     --sel "type Li" \
     -d z \
-    --bins "${settings}_${system}_density-z_number_Li_binsA.txt" \
-    --bins-out "${settings}_${system}_${analysis}_bins.txt" ||
+    --bins "${settings}_${system}_density-z_number_Li_binsA.txt.gz" \
+    --bins-out "${settings}_${system}_${analysis}_bins.txt.gz" ||
     exit
 echo "================================================================="
 
@@ -94,7 +94,7 @@ if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
-        "${settings}_${system}_${analysis}_bins.txt" \
+        "${settings}_${system}_${analysis}_bins.txt.gz" \
         "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     cp -v \

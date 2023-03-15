@@ -86,7 +86,7 @@ ${py_exe} -u \
     --restart "${restart}" \
     --sel "type NBT" \
     -d z \
-    --bins "${settings}_${system}_density-z_number_Li_binsA.txt" ||
+    --bins "${settings}_${system}_density-z_number_Li_binsA.txt.gz" ||
     exit
 echo "================================================================="
 
