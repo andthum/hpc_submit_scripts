@@ -99,6 +99,14 @@ echo "${selection}" |
 echo "================================================================="
 
 ########################################################################
+# Compress output file(s)                                              #
+########################################################################
+
+echo -e "\n"
+echo "Compressing output file(s)..."
+gzip --best --verbose "${settings}_${system}_${analysis}.xvg" || exit
+
+########################################################################
 # Cleanup                                                              #
 ########################################################################
 
@@ -107,7 +115,7 @@ if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
-        "${settings}_${system}_${analysis}.xvg" \
+        "${settings}_${system}_${analysis}.xvg.gz" \
         "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
