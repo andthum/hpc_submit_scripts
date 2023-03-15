@@ -57,8 +57,12 @@ Options for Trajectory Reading
     :file:`${settings}_out_${system}.log`.  Reading from |log_file|\s
     compressed with gzip, bzip2, XZ or LZMA is supported.
 --every
-    Only use frame if t MOD every == first time (in ps).  Default:
-    ``0``.
+    Read every n-th frame from the trajectory.  The value given here is
+    passed to the -skip option of the submitted Gromacs tools that
+    support this option.  If the -skip option is not supported, the
+    value of \--every is passed to the -dt option.  For Gromacs tools
+    that do not support either of the two options, \--every has no
+    effect.  Default: ``1``.
 
 Options for MSD Calculation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -455,12 +459,11 @@ if __name__ == "__main__":  # noqa: C901
     )
     parser_trj_reading.add_argument(
         "--every",
-        type=float,
+        type=int,
         required=False,
-        default=0,
+        default=1,
         help=(
-            "Only use frame if t MOD every == first time (in ps).  Default:"
-            " %(default)s."
+            "Read every n-th frame from the trajectory.  Default: %(default)s."
         ),
     )
     parser_msd = parser.add_argument_group(title="Options for MSD Calculation")
