@@ -32,7 +32,7 @@ system=${4}   # The name of the system to analyze
 settings=${5} # The used simulation settings
 begin=${6}    # First frame to read from trajectory in ps
 end=${7}      # Last frame to read from trajectory in ps
-dt=${8}       # Only use frame when t MOD dt = first time
+skip=${8}     # Only use every n-th frame
 
 echo -e "\n"
 echo "Parsed arguments:"
@@ -43,7 +43,7 @@ echo "system   = ${system}"
 echo "settings = ${settings}"
 echo "begin    = ${begin}"
 echo "end      = ${end}"
-echo "dt       = ${dt}"
+echo "skip     = ${skip}"
 
 if [[ ! -d ${bash_dir} ]]; then
     echo
@@ -74,7 +74,7 @@ echo "System" |
         -o "${settings}_out_${system}_pbc_whole_mol_nojump.xtc" \
         -b "${begin}" \
         -e "${end}" \
-        -dt "${dt}" \
+        -skip "${skip}" \
         -pbc nojump ||
     exit
 echo "================================================================="
