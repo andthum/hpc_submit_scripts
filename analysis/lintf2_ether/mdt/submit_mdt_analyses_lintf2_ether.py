@@ -101,7 +101,7 @@ Options for Trajectory Reading
 Options for Distance Resolved Quantities (like RDFs)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 --binwidth
-    Bin width (in nm) for distance resolved quantities.  Default:
+    Bin width (in Angstrom) for distance resolved quantities.  Default:
     ``0.05``.
 
 Options for Contact Analyses
@@ -707,8 +707,8 @@ if __name__ == "__main__":  # noqa: C901
         required=False,
         default=0.05,
         help=(
-            "Bin width (in nm) for distance resolved quantities.  Default:"
-            " %(default)s."
+            "Bin width (in Angstrom) for distance resolved quantities."
+            "  Default: %(default)s."
         ),
     )
     parser_contact = parser.add_argument_group(
