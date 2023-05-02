@@ -5,7 +5,7 @@
 #SBATCH --output="mdt_attribute_hist_OBT_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=8G
+#SBATCH --mem=2G
 # The above options are only default values that can be overwritten by
 # command-line arguments
 
