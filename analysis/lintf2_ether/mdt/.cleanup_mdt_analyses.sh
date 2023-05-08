@@ -2,23 +2,23 @@
 
 # Cleanup the analysis directory after all analyses have finished.
 #
-# * Remove *_slurm-* suffix in directory names.
+# * Remove *_slurm-[0-9]* suffix in directory names.
 # * Move similar analyses into one directory.
 
 gather() {
     # Gather output of similar analyses scripts.
     root="${1}"
     mkdir "${root}" || exit
-    mv "${root}"_* "${root}"/
+    mv "${root}"_*slurm-[0-9]* "${root}"/
     cd "${root}"/ || exit
-    mv "${root}"_*/* ./
-    rm -r "${root}"_*
+    mv "${root}"_*slurm-[0-9]*/* ./
+    rm -r "${root}"_*slurm-[0-9]*
     cd ../ || exit
 }
 
-mv create_mda_universe_slurm-* create_mda_universe
-mv energy_dist_slurm-* energy_dist
-mv subvolume_charge_slurm-* subvolume_charge
+mv create_mda_universe_slurm-[0-9]* create_mda_universe
+mv energy_dist_slurm-[0-9]* energy_dist
+mv subvolume_charge_slurm-[0-9]* subvolume_charge
 
 gather discrete-z
 gather lifetime_autocorr
@@ -82,7 +82,7 @@ gather "${name2}"
 gather "${name3}"
 cd "${name3}" || exit
 for cmp in ether Li NBT NTf2 OBT OE; do
-    for file in *_"${cmp}"_slurm-*; do
+    for file in *_"${cmp}"_slurm-[0-9]*; do
         if [[ -f ${file} ]]; then
             mkdir "${name3}"_"${cmp}" || exit
             mv ./*_"${cmp}"_* "${name3}"_"${cmp}"/
