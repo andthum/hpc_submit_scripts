@@ -2,24 +2,24 @@
 
 # Cleanup the analysis directory after all analyses have finished.
 #
-# * Remove *_slurm-* suffix in directory names.
+# * Remove *_slurm-[0-9]* suffix in directory names.
 # * Move similar analyses into one directory.
 
 gather() {
     # Gather output of similar analyses scripts.
     root="${1}"
     mkdir "${root}" || exit
-    mv "${root}"_* "${root}"/
+    mv "${root}"_*slurm-[0-9]* "${root}"/
     cd "${root}"/ || exit
-    mv "${root}"_*/* ./
-    rm -r "${root}"_*
+    mv "${root}"_*slurm-[0-9]*/* ./
+    rm -r "${root}"_*slurm-[0-9]*
     cd ../ || exit
 }
 
-mv energy_slurm-* energy
-mv make_ndx_slurm-* make_ndx
-mv polystat_slurm-* polystat
-mv potential-z_slurm-* potential-z
+mv energy_slurm-[0-9]* energy
+mv make_ndx_slurm-[0-9]* make_ndx
+mv polystat_slurm-[0-9]* polystat
+mv potential-z_slurm-[0-9]* potential-z
 
 gather density-z
 gather densmap-z
