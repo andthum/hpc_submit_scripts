@@ -56,13 +56,16 @@ Options for Trajectory Reading
     Last frame (in ps) to read from trajectory.  Default: Last frame in
     :file:`${settings}_out_${system}.log`.  Reading from |log_file|\s
     compressed with gzip, bzip2, XZ or LZMA is supported.
---every
-    Read every n-th frame from the trajectory.  The value given here is
-    passed to the -skip option of the submitted Gromacs tools that
-    support this option.  If the -skip option is not supported, the
-    value of \--every is passed to the -dt option.  For Gromacs tools
-    that do not support either of the two options, \--every has no
-    effect.  Default: ``1``.
+--skip
+    Read every n-th frame from the trajectory.  Takes precedence over
+    `--dt` for Gromacs tools that support the `-skip` option.  Has no
+    effect for Gromacs tools that do not support the `-skip` option.
+    Default: ``1``.
+--dt
+    Only read frames when ``t_frame % dt == t0`` (all times in ps).  If
+    you want all frames to be read, set --dt to the time step between
+    two trajectory frames.  Has no effect for Gromacs tools that do not
+    support the `-dt` option.  Default: ``1``.
 
 Options for MSD Calculation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -458,12 +461,25 @@ if __name__ == "__main__":  # noqa: C901
         ),
     )
     parser_trj_reading.add_argument(
-        "--every",
+        "--skip",
         type=int,
         required=False,
         default=1,
         help=(
-            "Read every n-th frame from the trajectory.  Default: %(default)s."
+            "Read every n-th frame from the trajectory.  Takes precedence over"
+            " --dt for Gromacs tools that support the -skip option.  Default:"
+            " %(default)s."
+        ),
+    )
+    parser_trj_reading.add_argument(
+        "--dt",
+        type=float,
+        required=False,
+        default=1,
+        help=(
+            "Only read frames when ``t_frame % dt == t0`` (all times in ps)."
+            "  Has no effect for Gromacs tools that do not support the -dt"
+            " option.  Default: %(default)s."
         ),
     )
     parser_msd = parser.add_argument_group(title="Options for MSD Calculation")
@@ -771,56 +787,58 @@ if __name__ == "__main__":  # noqa: C901
         args["system"],
         args["settings"],
     ]
-    posargs_trj = [args["begin"], args["end"], args["every"]]
+    posargs_trj = [args["begin"], args["end"]]
+    posargs_trj_skip = posargs_trj + [args["skip"]]
+    posargs_trj_dt = posargs_trj + [args["dt"]]
     posargs_msd = [args["beginfit"], args["endfit"], args["restart"]]
     posargs_dist = [args["binwidth"]]
     posargs_slab = [args["zmin"], args["zmax"]]
     # Position arguments must be in the right order for each job script.
     posargs = {
-        "density-z_charge": posargs_general + posargs_trj + [nbins],
-        "density-z_mass": posargs_general + posargs_trj + [nbins],
-        "density-z_number": posargs_general + posargs_trj + [nbins],
+        "density-z_charge": posargs_general + posargs_trj_dt + [nbins],
+        "density-z_mass": posargs_general + posargs_trj_dt + [nbins],
+        "density-z_number": posargs_general + posargs_trj_dt + [nbins],
         "densmap-z_gra": (
-            posargs_general + posargs_trj + posargs_dist + posargs_slab
+            posargs_general + posargs_trj_dt + posargs_dist + posargs_slab
         ),
         "densmap-z_Li": (
-            posargs_general + posargs_trj + posargs_dist + posargs_slab
+            posargs_general + posargs_trj_dt + posargs_dist + posargs_slab
         ),
         "densmap-z_NBT": (
-            posargs_general + posargs_trj + posargs_dist + posargs_slab
+            posargs_general + posargs_trj_dt + posargs_dist + posargs_slab
         ),
         "densmap-z_OBT": (
-            posargs_general + posargs_trj + posargs_dist + posargs_slab
+            posargs_general + posargs_trj_dt + posargs_dist + posargs_slab
         ),
         "densmap-z_OE": (
-            posargs_general + posargs_trj + posargs_dist + posargs_slab
+            posargs_general + posargs_trj_dt + posargs_dist + posargs_slab
         ),
-        "energy": posargs_general + posargs_trj[:2],
+        "energy": posargs_general + posargs_trj_skip,
         "make_ndx": posargs_general,
-        "msd": posargs_general + posargs_trj[:2] + posargs_msd,
-        "msd_electrodes": posargs_general + posargs_trj[:2] + posargs_msd,
-        "msd_lateral-z": posargs_general + posargs_trj[:2] + posargs_msd,
-        "msd_parallel-z": posargs_general + posargs_trj[:2] + posargs_msd,
-        "msd_tensor": posargs_general + posargs_trj[:2] + posargs_msd,
-        "polystat": posargs_general + posargs_trj,
-        "potential-z": posargs_general + posargs_trj + [nbins],
-        "rdf_ether-com": posargs_general + posargs_trj + posargs_dist,
-        "rdf_Li": posargs_general + posargs_trj + posargs_dist,
-        "rdf_Li-com": posargs_general + posargs_trj + posargs_dist,
-        "rdf_NBT": posargs_general + posargs_trj + posargs_dist,
-        "rdf_NTf2-com": posargs_general + posargs_trj + posargs_dist,
-        "rdf_OE": posargs_general + posargs_trj + posargs_dist,
+        "msd": posargs_general + posargs_trj + posargs_msd,
+        "msd_electrodes": posargs_general + posargs_trj + posargs_msd,
+        "msd_lateral-z": posargs_general + posargs_trj + posargs_msd,
+        "msd_parallel-z": posargs_general + posargs_trj + posargs_msd,
+        "msd_tensor": posargs_general + posargs_trj + posargs_msd,
+        "polystat": posargs_general + posargs_trj_dt,
+        "potential-z": posargs_general + posargs_trj_dt + [nbins],
+        "rdf_ether-com": posargs_general + posargs_trj_dt + posargs_dist,
+        "rdf_Li": posargs_general + posargs_trj_dt + posargs_dist,
+        "rdf_Li-com": posargs_general + posargs_trj_dt + posargs_dist,
+        "rdf_NBT": posargs_general + posargs_trj_dt + posargs_dist,
+        "rdf_NTf2-com": posargs_general + posargs_trj_dt + posargs_dist,
+        "rdf_OE": posargs_general + posargs_trj_dt + posargs_dist,
         "rdf_slab-z_Li": (
-            posargs_general + posargs_trj + posargs_dist + posargs_slab
+            posargs_general + posargs_trj_dt + posargs_dist + posargs_slab
         ),
         "rdf_slab-z_NBT": (
-            posargs_general + posargs_trj + posargs_dist + posargs_slab
+            posargs_general + posargs_trj_dt + posargs_dist + posargs_slab
         ),
         "rdf_slab-z_OE": (
-            posargs_general + posargs_trj + posargs_dist + posargs_slab
+            posargs_general + posargs_trj_dt + posargs_dist + posargs_slab
         ),
-        "trjconv_nojump": posargs_general + posargs_trj,
-        "trjconv_whole": posargs_general + posargs_trj,
+        "trjconv_nojump": posargs_general + posargs_trj_skip,
+        "trjconv_whole": posargs_general + posargs_trj_skip,
     }
     posargs = {
         k: opthandler.posargs2str(v, prec=ARG_PREC) for k, v in posargs.items()
