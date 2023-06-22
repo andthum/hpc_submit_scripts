@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#SBATCH --time=2-00:00:00
+#SBATCH --time=0-02:00:00
 #SBATCH --job-name="mdt_discrete-z_Li"
 #SBATCH --output="mdt_discrete-z_Li_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=2G
+#SBATCH --mem=12G
 # The above options are only default values that can be overwritten by
 # command-line arguments
 
