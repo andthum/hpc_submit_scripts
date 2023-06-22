@@ -32,6 +32,7 @@ system=${4}   # The name of the system to analyze
 settings=${5} # The used simulation settings
 begin=${6}    # First frame to read from trajectory in ps
 end=${7}      # Last frame to read from trajectory in ps
+skip=${8}     # Skip every n-th frame
 
 echo -e "\n"
 echo "Parsed arguments:"
@@ -42,6 +43,7 @@ echo "system   = ${system}"
 echo "settings = ${settings}"
 echo "begin    = ${begin}"
 echo "end      = ${end}"
+echo "skip     = ${skip}"
 
 if [[ ! -d ${bash_dir} ]]; then
     echo
@@ -98,7 +100,8 @@ echo -e \
         -s "${settings}_${system}.tpr" \
         -o "${outfile}" \
         -b "${begin}" \
-        -e "${end}" ||
+        -e "${end}" \
+        -skip "${skip}" ||
     exit
 echo "================================================================="
 
