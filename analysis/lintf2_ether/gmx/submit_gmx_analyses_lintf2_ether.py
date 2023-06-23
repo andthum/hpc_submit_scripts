@@ -58,14 +58,14 @@ Options for Trajectory Reading
     compressed with gzip, bzip2, XZ or LZMA is supported.
 --skip
     Read every n-th frame from the trajectory.  Takes precedence over
-    `--dt` for Gromacs tools that support the `-skip` option.  Has no
-    effect for Gromacs tools that do not support the `-skip` option.
+    \--dt for Gromacs tools that support the -skip option.  Has no
+    effect for Gromacs tools that do not support the -skip option.
     Default: ``1``.
 --dt
     Only read frames when ``t_frame % dt == t0`` (all times in ps).  If
-    you want all frames to be read, set --dt to the time step between
+    you want all frames to be read, set \--dt to the time step between
     two trajectory frames.  Has no effect for Gromacs tools that do not
-    support the `-dt` option.  Default: ``1``.
+    support the -dt option.  Default: ``1``.
 
 Options for MSD Calculation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -477,7 +477,7 @@ if __name__ == "__main__":  # noqa: C901
         required=False,
         default=1,
         help=(
-            "Only read frames when ``t_frame % dt == t0`` (all times in ps)."
+            "Only read frames when ``t_frame %% dt == t0`` (all times in ps)."
             "  Has no effect for Gromacs tools that do not support the -dt"
             " option.  Default: %(default)s."
         ),
