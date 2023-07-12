@@ -7,20 +7,20 @@
 
 gather() {
     # Gather output of similar analyses scripts.
-    root="${1}"
+    local root="${1}"
     if [[ -d ${root} ]]; then
         echo "WARNING: Directory already exists: '${root}'"
         return 0
     fi
-    if [[ -n $(find . -maxdepth 1 -type d -name "${root}_*slurm-[0-9]*" -print -quit) ]]; then
+    if [[ -n $(find . -maxdepth 1 -type d -name "${root}*_slurm-[0-9]*" -print -quit) ]]; then
         mkdir "${root}/" || exit
-        mv "${root}"_*slurm-[0-9]*/ "${root}/" || exit
+        mv "${root}"*_slurm-[0-9]*/ "${root}/" || exit
         cd "${root}/" || exit
-        mv "${root}"_*slurm-[0-9]*/* ./ || exit
-        rm -r "${root:?}"_*slurm-[0-9]*/ || exit
+        mv "${root}"*_slurm-[0-9]*/* ./ || exit
+        rm -r "${root:?}"*_slurm-[0-9]*/ || exit
         cd ../ || exit
     else
-        echo "WARNING: No directory matching pattern '${root}_*slurm-[0-9]*'"
+        echo "WARNING: No directory matching pattern '${root}*_slurm-[0-9]*'"
     fi
 }
 
