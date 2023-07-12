@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#SBATCH --time=7-00:00:00
+#SBATCH --time=1-00:00:00
 #SBATCH --job-name="mdt_msd_OBT"
 #SBATCH --output="mdt_msd_OBT_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=16G
+#SBATCH --mem=24G
 # The above options are only default values that can be overwritten by
 # command-line arguments
 
