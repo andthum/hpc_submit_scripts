@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # MIT License
-# Copyright (c) 2021, 2022  All authors listed in the file AUTHORS.rst
+# Copyright (c) 2021-2023  All authors listed in the file AUTHORS.rst
 
 
 r"""
@@ -1113,8 +1113,8 @@ if __name__ == "__main__":  # noqa: C901
             )
     for filetype, filename in files.items():
         if not os.path.isfile(filename):
-            filename, extension = os.path.splitext(filename)
-            if extension == ".npy" and os.path.isfile(filename + ".npz"):
+            fname, extension = os.path.splitext(filename)
+            if extension == ".npy" and os.path.isfile(fname + ".npz"):
                 # A compressed version of the file exists.
                 continue
             else:
