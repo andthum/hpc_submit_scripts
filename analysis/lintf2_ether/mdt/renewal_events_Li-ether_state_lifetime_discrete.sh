@@ -1,16 +1,16 @@
 #!/bin/bash
 
-#SBATCH --time=2-00:00:00
+#SBATCH --time=1-00:00:00
 #SBATCH --job-name="mdt_renewal_events_Li-ether_state_lifetime_discrete"
 #SBATCH --output="mdt_renewal_events_Li-ether_state_lifetime_discrete_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=4G
+#SBATCH --mem=18G
 # The above options are only default values that can be overwritten by
 # command-line arguments
 
 # MIT License
-# Copyright (c) 2021, 2022  All authors listed in the file AUTHORS.rst
+# Copyright (c) 2021-2023  All authors listed in the file AUTHORS.rst
 
 # This script is meant to be submitted by
 # submit_mdt_analyses_lintf2_ether.py
