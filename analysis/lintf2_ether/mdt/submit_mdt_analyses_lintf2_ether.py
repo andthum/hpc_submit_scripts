@@ -43,13 +43,7 @@ Required Arguments
                 scripts that analyze only a part, e.g. a slab, of the
                 system, but still include anisotropic analyses, e.g.
                 spatially discretized analyses).  Note that all
-                lig_change_at_pos_change* scripts and all msd_layer*
-                scripts are excluded.  The msd_layer* scripts are
-                excluded, because msd_layer_serial.py (and
-                msd_layer_parallel.py) must first be fixed for
-                simulations with periodic boundary conditions in the
-                discretized direction (see MDTools Issue
-                `#98 <https://github.com/andthum/mdtools/issues/98>`_).
+                lig_change_at_pos_change* scripts are excluded.
         :2:     All scripts analyzing a slab in xy plane.
 
         :3:     discrete-z_Li and discrete-z_Li_state_lifetime_discrete.
@@ -614,8 +608,8 @@ if __name__ == "__main__":  # noqa: C901
             "  1 = All scripts analyzing the bulk system (i.e. exclude scripts"
             " that analyze only a part, e.g. a slab, of the system, but still"
             " include anisotropic analyses, e.g. spatially discretized"
-            " analyses).  Note that all lig_change_at_pos_change* scripts and"
-            " all msd_layer* are excluded."
+            " analyses).  Note that all lig_change_at_pos_change* scripts are"
+            " excluded."
             "  2 = All scripts analyzing a slab in xy plane."
             ""
             "  3 = discrete-z_Li and discrete-z_Li_state_lifetime_discrete."
@@ -1421,12 +1415,8 @@ if __name__ == "__main__":  # noqa: C901
                 "axial_hex_dist" in batch_script
                 or "contact_hist_slab-z" in batch_script
                 or "discrete-hex" in batch_script
-                or "msd_layer" in batch_script
             ):
                 # Only bulk scripts.
-                # msd_layer_serial.py (and msd_layer_parallel.py) must
-                # first be fixed for simulations with periodic boundary
-                # conditions in the discretized direction.
                 continue
             if batch_script in (
                 "create_mda_universe",
