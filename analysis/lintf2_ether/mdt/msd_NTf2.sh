@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#SBATCH --time=7-00:00:00
+#SBATCH --time=0-06:00:00
 #SBATCH --job-name="mdt_msd_NTf2"
 #SBATCH --output="mdt_msd_NTf2_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=4G
+#SBATCH --mem=6G
 # The above options are only default values that can be overwritten by
 # command-line arguments
 

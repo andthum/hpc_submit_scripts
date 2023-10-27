@@ -1,16 +1,16 @@
 #!/bin/bash
 
-#SBATCH --time=2-00:00:00
+#SBATCH --time=0-02:00:00
 #SBATCH --job-name="mdt_lig_change_at_pos_change_blocks_Li-OBT"
 #SBATCH --output="mdt_lig_change_at_pos_change_blocks_Li-OBT_slurm-%j.out"
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=2
-#SBATCH --mem=1G
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=3G
 # The above options are only default values that can be overwritten by
 # command-line arguments
 
 # MIT License
-# Copyright (c) 2021, 2022  All authors listed in the file AUTHORS.rst
+# Copyright (c) 2021-2023  All authors listed in the file AUTHORS.rst
 
 # This script is meant to be submitted by
 # submit_mdt_analyses_lintf2_ether.py

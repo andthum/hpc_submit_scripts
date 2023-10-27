@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#SBATCH --time=7-00:00:00
+#SBATCH --time=3-00:00:00
 #SBATCH --job-name="mdt_msd_layer_ether"
 #SBATCH --output="mdt_msd_layer_ether_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=24G
+#SBATCH --mem=16G
 # The above options are only default values that can be overwritten by
 # command-line arguments
 

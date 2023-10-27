@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=7-00:00:00
+#SBATCH --time=1-00:00:00
 #SBATCH --job-name="mdt_msd_ether"
 #SBATCH --output="mdt_msd_ether_slurm-%j.out"
 #SBATCH --nodes=1

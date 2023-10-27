@@ -5,7 +5,7 @@
 #SBATCH --output="mdt_discrete-z_Li_state_lifetime_discrete_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=4G
+#SBATCH --mem=24G
 # The above options are only default values that can be overwritten by
 # command-line arguments
 

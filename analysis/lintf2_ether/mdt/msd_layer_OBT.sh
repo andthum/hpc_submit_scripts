@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=7-00:00:00
+#SBATCH --time=6-00:00:00
 #SBATCH --job-name="mdt_msd_layer_OBT"
 #SBATCH --output="mdt_msd_layer_OBT_slurm-%j.out"
 #SBATCH --nodes=1
