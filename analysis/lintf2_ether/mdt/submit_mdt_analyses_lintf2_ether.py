@@ -46,7 +46,7 @@ Required Arguments
                 lig_change_at_pos_change* scripts are excluded.
         :2:     All scripts analyzing a slab in xy plane.
 
-        :3:     discrete-z_Li and discrete-z_Li_state_lifetime_discrete.
+        :3:     All discrete-z_Li* scripts.
         :4:     All hexagonal discretizations.
         :5:     All density distributions along hexagonal axes.
 
@@ -382,6 +382,8 @@ REQUIRE_XTC_UNWRAPPED = (
 )
 REQUIRE_DTRJ_DISCRETE_Z = (
     # `${settings}_${system}_discrete-z_Li_dtrj.npy` or `.npz`
+    "discrete-z_Li_back_jump_prob_discrete",
+    "discrete-z_Li_kaplan_meier_discrete",
     "discrete-z_Li_state_lifetime_discrete",
     "renewal_events_Li-ether_state_lifetime_discrete",
     "renewal_events_Li-NTf2_state_lifetime_discrete",
@@ -612,7 +614,7 @@ if __name__ == "__main__":  # noqa: C901
             " excluded."
             "  2 = All scripts analyzing a slab in xy plane."
             ""
-            "  3 = discrete-z_Li and discrete-z_Li_state_lifetime_discrete."
+            "  3 = All discrete-z_Li* scripts."
             "  4 = All hexagonal discretizations."
             "  5 = All density distributions along hexagonal axes."
             ""
@@ -1003,7 +1005,7 @@ if __name__ == "__main__":  # noqa: C901
         elif script == "2":  # All slab scripts.
             files.setdefault("run input", TPR_FILE)
             files.setdefault("wrapped compressed trajectory", XTC_FILE_WRAPPED)
-        elif script == "3":  # All discrete-z_Li*.
+        elif script == "3":  # All discrete-z_Li* scripts.
             files.setdefault("run input", TPR_FILE)
             files.setdefault("wrapped compressed trajectory", XTC_FILE_WRAPPED)
             files.setdefault("bin", BIN_FILE)
@@ -1227,6 +1229,8 @@ if __name__ == "__main__":  # noqa: C901
         "discrete-hex_OBT": posargs_general + posargs_trj + posargs_slab,
         "discrete-hex_OE": posargs_general + posargs_trj + posargs_slab,
         "discrete-z_Li": posargs_general + posargs_trj[:3],
+        "discrete-z_Li_back_jump_prob_discrete": posargs_general,
+        "discrete-z_Li_kaplan_meier_discrete": posargs_general,
         "discrete-z_Li_state_lifetime_discrete": (
             posargs_general + [posargs_trj[4]]
         ),
@@ -1416,7 +1420,7 @@ if __name__ == "__main__":  # noqa: C901
                 or "contact_hist_slab-z" in batch_script
                 or "discrete-hex" in batch_script
             ):
-                # Only bulk scripts.
+                # Submit only bulk scripts.
                 continue
             if batch_script in (
                 "create_mda_universe",
@@ -1424,6 +1428,7 @@ if __name__ == "__main__":  # noqa: C901
                 "renewal_events_Li-ether",
                 "renewal_events_Li-NTf2",
             ):
+                # Scripts have already been submitted above.
                 continue
             if batch_script == "energy_dist":
                 # Exclude all scripts that take an .edr file as input.
@@ -1453,7 +1458,7 @@ if __name__ == "__main__":  # noqa: C901
             ):
                 n_scripts_submitted += _submit(args_sbatch, batch_script)
     if "3" in args["scripts"].split():
-        # All discrete-z_Li*.
+        # All discrete-z_Li* scripts.
         # discrete-z_Li
         submit = _assemble_submit_cmd(args_sbatch, "discrete-z_Li")
         job_id = subproc.check_output(shlex.split(submit))
@@ -1461,12 +1466,11 @@ if __name__ == "__main__":  # noqa: C901
         args_sbatch_dep = copy.deepcopy(args_sbatch_no_dep)
         args_sbatch_dep["dependency"] = "afterok:{}".format(job_id)
         n_scripts_submitted += 1
-        # discrete-z_Li_state_lifetime_discrete
-        submit = _assemble_submit_cmd(
-            args_sbatch_dep, "discrete-z_Li_state_lifetime_discrete"
-        )
-        subproc.check_output(shlex.split(submit))
-        n_scripts_submitted += 1
+        for batch_script in posargs.keys():
+            if "discrete-z_Li_" in batch_script:
+                submit = _assemble_submit_cmd(args_sbatch_dep, batch_script)
+                subproc.check_output(shlex.split(submit))
+                n_scripts_submitted += 1
     if "4" in args["scripts"].split():
         # All hexagonal discretizations.
         for batch_script in posargs.keys():
