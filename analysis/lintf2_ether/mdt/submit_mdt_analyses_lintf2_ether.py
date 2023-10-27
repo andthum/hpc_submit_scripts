@@ -65,9 +65,10 @@ Required Arguments
         :10:    All lifetime autocorrelations.
         :11:    All renewal event analyses.
         :11.1:  All scripts extracting renewal events.
-        :11.2:  All scripts calculating renewal event lifetimes.
-        :11.3:  All "normal" bulk renewal event lifetimes.
-        :11.4:  All spatially discretized renewal event lifetimes.
+        :11.2:  All scripts working on renewal event trajectories.
+        :11.3:  All bulk scripts working on renewal event trajectories.
+        :11.4:  All spatially discretized scripts working on renewal
+                event trajectories.
 
         :12:    All scripts that take an |edr_file| or an |trr_file| as
                 input.
@@ -385,16 +386,28 @@ REQUIRE_DTRJ_DISCRETE_Z = (
     "discrete-z_Li_back_jump_prob_discrete",
     "discrete-z_Li_kaplan_meier_discrete",
     "discrete-z_Li_state_lifetime_discrete",
+    "renewal_events_Li-ether_back_jump_prob_discrete",
+    "renewal_events_Li-ether_kaplan_meier_discrete",
     "renewal_events_Li-ether_state_lifetime_discrete",
+    "renewal_events_Li-NTf2_back_jump_prob_discrete",
+    "renewal_events_Li-NTf2_kaplan_meier_discrete",
     "renewal_events_Li-NTf2_state_lifetime_discrete",
 )
 REQUIRE_DTRJ_RENEWAL_ETHER = (
     # `${settings}_${system}_renewal_events_Li-ether_dtrj.npy` or `.npz`
+    "renewal_events_Li-ether_back_jump_prob",
+    "renewal_events_Li-ether_back_jump_prob_discrete",
+    "renewal_events_Li-ether_kaplan_meier",
+    "renewal_events_Li-ether_kaplan_meier_discrete",
     "renewal_events_Li-ether_state_lifetime",
     "renewal_events_Li-ether_state_lifetime_discrete",
 )
 REQUIRE_DTRJ_RENEWAL_TFSI = (
     # `${settings}_${system}_renewal_events_Li-NTf2_dtrj.npy` or `.npz`
+    "renewal_events_Li-NTf2_back_jump_prob",
+    "renewal_events_Li-NTf2_back_jump_prob_discrete",
+    "renewal_events_Li-NTf2_kaplan_meier",
+    "renewal_events_Li-NTf2_kaplan_meier_discrete",
     "renewal_events_Li-NTf2_state_lifetime",
     "renewal_events_Li-NTf2_state_lifetime_discrete",
 )
@@ -633,9 +646,10 @@ if __name__ == "__main__":  # noqa: C901
             "  10 = All lifetime autocorrelations."
             "  11 = All renewal event analyses."
             "  11.1 = All scripts extracting renewal events."
-            "  11.2 = All scripts calculating renewal event lifetimes."
-            "  11.3 = All 'normal' bulk renewal event lifetimes."
-            "  11.4 = All spatially discretized renewal event lifetimes."
+            "  11.2 = All scripts working on renewal event trajectories."
+            "  11.3 = All bulk scripts working on renewal event trajectories."
+            "  11.4 = All spatially discretized scripts working on renewal"
+            " event trajectories."
             ""
             "  12 =   All scripts that take an |edr_file| or an |trr_file| as"
             " input."
@@ -1074,7 +1088,7 @@ if __name__ == "__main__":  # noqa: C901
             files.setdefault(
                 "unwrapped compressed trajectory", XTC_FILE_UNWRAPPED
             )
-        elif script == "11.2":  # All renewal event lifetimes.
+        elif script == "11.2":  # All scripts working on renewal trj.
             files.setdefault(
                 "discretized trajectory (spatial z)", DTRJ_DISCRETE_Z_FILE
             )
@@ -1086,7 +1100,7 @@ if __name__ == "__main__":  # noqa: C901
                 "discretized trajectory (renewal Li-TFSI)",
                 DTRJ_RENEWAL_TFSI_FILE,
             )
-        elif script == "11.3":  # All bulk renewal event lifetimes.
+        elif script == "11.3":  # All bulk scripts working on renew trj.
             files.setdefault(
                 "discretized trajectory (renewal Li-ether)",
                 DTRJ_RENEWAL_ETHER_FILE,
@@ -1095,7 +1109,7 @@ if __name__ == "__main__":  # noqa: C901
                 "discretized trajectory (renewal Li-TFSI)",
                 DTRJ_RENEWAL_TFSI_FILE,
             )
-        elif script == "11.4":  # All spatially discretized renew times.
+        elif script == "11.4":  # All spatial scripts working on ren trj
             files.setdefault(
                 "discretized trajectory (spatial z)", DTRJ_DISCRETE_Z_FILE
             )
@@ -1325,6 +1339,10 @@ if __name__ == "__main__":  # noqa: C901
             + posargs_contact
             + [posargs_discrete[0]]
         ),
+        "renewal_events_Li-ether_back_jump_prob": (posargs_general),
+        "renewal_events_Li-ether_back_jump_prob_discrete": (posargs_general),
+        "renewal_events_Li-ether_kaplan_meier": (posargs_general),
+        "renewal_events_Li-ether_kaplan_meier_discrete": (posargs_general),
         "renewal_events_Li-ether_state_lifetime": (
             posargs_general + posargs_trj[3:]
         ),
@@ -1337,6 +1355,10 @@ if __name__ == "__main__":  # noqa: C901
             + posargs_contact
             + [posargs_discrete[0]]
         ),
+        "renewal_events_Li-NTf2_back_jump_prob": (posargs_general),
+        "renewal_events_Li-NTf2_back_jump_prob_discrete": (posargs_general),
+        "renewal_events_Li-NTf2_kaplan_meier": (posargs_general),
+        "renewal_events_Li-NTf2_kaplan_meier_discrete": (posargs_general),
         "renewal_events_Li-NTf2_state_lifetime": (
             posargs_general + posargs_trj[3:]
         ),
@@ -1569,10 +1591,13 @@ if __name__ == "__main__":  # noqa: C901
         )
         n_scripts_submitted += 1
         for batch_script in posargs.keys():
-            if (
-                "renewal_events" in batch_script
-                and "state_lifetime" in batch_script
+            if batch_script in (
+                "renewal_events_Li-ether",
+                "renewal_events_Li-NTf2",
             ):
+                # Scripts have already been submitted above.
+                continue
+            if "renewal_events" in batch_script:
                 if batch_script in REQUIRE_DTRJ_RENEWAL_ETHER:
                     sbatch_opts = args_sbatch_dep_renewal_ether
                 elif batch_script in REQUIRE_DTRJ_RENEWAL_TFSI:
@@ -1587,35 +1612,43 @@ if __name__ == "__main__":  # noqa: C901
     if "11.1" in args["scripts"].split():
         # All scripts extracting renewal events.
         for batch_script in posargs.keys():
-            if (
-                "renewal_events" in batch_script
-                and "state_lifetime" not in batch_script
+            if batch_script in (
+                "renewal_events_Li-ether",
+                "renewal_events_Li-NTf2",
             ):
                 n_scripts_submitted += _submit(args_sbatch, batch_script)
     if "11.2" in args["scripts"].split():
-        # All renewal event lifetimes.
+        # All scripts working on renewal event trajectories.
         for batch_script in posargs.keys():
-            if (
-                "renewal_events" in batch_script
-                and "state_lifetime" in batch_script
+            if batch_script in (
+                "renewal_events_Li-ether",
+                "renewal_events_Li-NTf2",
             ):
+                continue
+            if "renewal_events" in batch_script:
                 n_scripts_submitted += _submit(args_sbatch, batch_script)
     if "11.3" in args["scripts"].split():
-        # All "normal" bulk renewal event lifetimes.
+        # All bulk scripts working on renewal event trajectories.
         for batch_script in posargs.keys():
+            if batch_script in (
+                "renewal_events_Li-ether",
+                "renewal_events_Li-NTf2",
+            ):
+                continue
             if (
                 "renewal_events" in batch_script
-                and "state_lifetime" in batch_script
                 and "discrete" not in batch_script
             ):
                 n_scripts_submitted += _submit(args_sbatch, batch_script)
     if "11.4" in args["scripts"].split():
-        # All spatially discretized renewal event lifetimes.
+        # All spatially discretized scripts working on renew ev trj.
         for batch_script in posargs.keys():
-            if (
-                "renewal_events" in batch_script
-                and "state_lifetime_discrete" in batch_script
+            if batch_script in (
+                "renewal_events_Li-ether",
+                "renewal_events_Li-NTf2",
             ):
+                continue
+            if "renewal_events" in batch_script and "discrete" in batch_script:
                 n_scripts_submitted += _submit(args_sbatch, batch_script)
     if "12" in args["scripts"].split():
         # All scripts that take an .edr file or an .trr file as input.
