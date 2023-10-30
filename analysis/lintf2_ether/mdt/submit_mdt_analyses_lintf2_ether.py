@@ -43,16 +43,10 @@ Required Arguments
                 scripts that analyze only a part, e.g. a slab, of the
                 system, but still include anisotropic analyses, e.g.
                 spatially discretized analyses).  Note that all
-                lig_change_at_pos_change* scripts and all msd_layer*
-                scripts are excluded.  The msd_layer* scripts are
-                excluded, because msd_layer_serial.py (and
-                msd_layer_parallel.py) must first be fixed for
-                simulations with periodic boundary conditions in the
-                discretized direction (see MDTools Issue
-                `#98 <https://github.com/andthum/mdtools/issues/98>`_).
+                lig_change_at_pos_change* scripts are excluded.
         :2:     All scripts analyzing a slab in xy plane.
 
-        :3:     discrete-z_Li and discrete-z_Li_state_lifetime_discrete.
+        :3:     All discrete-z_Li* scripts.
         :4:     All hexagonal discretizations.
         :5:     All density distributions along hexagonal axes.
 
@@ -71,9 +65,10 @@ Required Arguments
         :10:    All lifetime autocorrelations.
         :11:    All renewal event analyses.
         :11.1:  All scripts extracting renewal events.
-        :11.2:  All scripts calculating renewal event lifetimes.
-        :11.3:  All "normal" bulk renewal event lifetimes.
-        :11.4:  All spatially discretized renewal event lifetimes.
+        :11.2:  All scripts working on renewal event trajectories.
+        :11.3:  All bulk scripts working on renewal event trajectories.
+        :11.4:  All spatially discretized scripts working on renewal
+                event trajectories.
 
         :12:    All scripts that take an |edr_file| or an |trr_file| as
                 input.
@@ -388,17 +383,31 @@ REQUIRE_XTC_UNWRAPPED = (
 )
 REQUIRE_DTRJ_DISCRETE_Z = (
     # `${settings}_${system}_discrete-z_Li_dtrj.npy` or `.npz`
+    "discrete-z_Li_back_jump_prob_discrete",
+    "discrete-z_Li_kaplan_meier_discrete",
     "discrete-z_Li_state_lifetime_discrete",
+    "renewal_events_Li-ether_back_jump_prob_discrete",
+    "renewal_events_Li-ether_kaplan_meier_discrete",
     "renewal_events_Li-ether_state_lifetime_discrete",
+    "renewal_events_Li-NTf2_back_jump_prob_discrete",
+    "renewal_events_Li-NTf2_kaplan_meier_discrete",
     "renewal_events_Li-NTf2_state_lifetime_discrete",
 )
 REQUIRE_DTRJ_RENEWAL_ETHER = (
     # `${settings}_${system}_renewal_events_Li-ether_dtrj.npy` or `.npz`
+    "renewal_events_Li-ether_back_jump_prob",
+    "renewal_events_Li-ether_back_jump_prob_discrete",
+    "renewal_events_Li-ether_kaplan_meier",
+    "renewal_events_Li-ether_kaplan_meier_discrete",
     "renewal_events_Li-ether_state_lifetime",
     "renewal_events_Li-ether_state_lifetime_discrete",
 )
 REQUIRE_DTRJ_RENEWAL_TFSI = (
     # `${settings}_${system}_renewal_events_Li-NTf2_dtrj.npy` or `.npz`
+    "renewal_events_Li-NTf2_back_jump_prob",
+    "renewal_events_Li-NTf2_back_jump_prob_discrete",
+    "renewal_events_Li-NTf2_kaplan_meier",
+    "renewal_events_Li-NTf2_kaplan_meier_discrete",
     "renewal_events_Li-NTf2_state_lifetime",
     "renewal_events_Li-NTf2_state_lifetime_discrete",
 )
@@ -614,11 +623,11 @@ if __name__ == "__main__":  # noqa: C901
             "  1 = All scripts analyzing the bulk system (i.e. exclude scripts"
             " that analyze only a part, e.g. a slab, of the system, but still"
             " include anisotropic analyses, e.g. spatially discretized"
-            " analyses).  Note that all lig_change_at_pos_change* scripts and"
-            " all msd_layer* are excluded."
+            " analyses).  Note that all lig_change_at_pos_change* scripts are"
+            " excluded."
             "  2 = All scripts analyzing a slab in xy plane."
             ""
-            "  3 = discrete-z_Li and discrete-z_Li_state_lifetime_discrete."
+            "  3 = All discrete-z_Li* scripts."
             "  4 = All hexagonal discretizations."
             "  5 = All density distributions along hexagonal axes."
             ""
@@ -637,9 +646,10 @@ if __name__ == "__main__":  # noqa: C901
             "  10 = All lifetime autocorrelations."
             "  11 = All renewal event analyses."
             "  11.1 = All scripts extracting renewal events."
-            "  11.2 = All scripts calculating renewal event lifetimes."
-            "  11.3 = All 'normal' bulk renewal event lifetimes."
-            "  11.4 = All spatially discretized renewal event lifetimes."
+            "  11.2 = All scripts working on renewal event trajectories."
+            "  11.3 = All bulk scripts working on renewal event trajectories."
+            "  11.4 = All spatially discretized scripts working on renewal"
+            " event trajectories."
             ""
             "  12 =   All scripts that take an |edr_file| or an |trr_file| as"
             " input."
@@ -1009,7 +1019,7 @@ if __name__ == "__main__":  # noqa: C901
         elif script == "2":  # All slab scripts.
             files.setdefault("run input", TPR_FILE)
             files.setdefault("wrapped compressed trajectory", XTC_FILE_WRAPPED)
-        elif script == "3":  # All discrete-z_Li*.
+        elif script == "3":  # All discrete-z_Li* scripts.
             files.setdefault("run input", TPR_FILE)
             files.setdefault("wrapped compressed trajectory", XTC_FILE_WRAPPED)
             files.setdefault("bin", BIN_FILE)
@@ -1078,7 +1088,7 @@ if __name__ == "__main__":  # noqa: C901
             files.setdefault(
                 "unwrapped compressed trajectory", XTC_FILE_UNWRAPPED
             )
-        elif script == "11.2":  # All renewal event lifetimes.
+        elif script == "11.2":  # All scripts working on renewal trj.
             files.setdefault(
                 "discretized trajectory (spatial z)", DTRJ_DISCRETE_Z_FILE
             )
@@ -1090,7 +1100,7 @@ if __name__ == "__main__":  # noqa: C901
                 "discretized trajectory (renewal Li-TFSI)",
                 DTRJ_RENEWAL_TFSI_FILE,
             )
-        elif script == "11.3":  # All bulk renewal event lifetimes.
+        elif script == "11.3":  # All bulk scripts working on renew trj.
             files.setdefault(
                 "discretized trajectory (renewal Li-ether)",
                 DTRJ_RENEWAL_ETHER_FILE,
@@ -1099,7 +1109,7 @@ if __name__ == "__main__":  # noqa: C901
                 "discretized trajectory (renewal Li-TFSI)",
                 DTRJ_RENEWAL_TFSI_FILE,
             )
-        elif script == "11.4":  # All spatially discretized renew times.
+        elif script == "11.4":  # All spatial scripts working on ren trj
             files.setdefault(
                 "discretized trajectory (spatial z)", DTRJ_DISCRETE_Z_FILE
             )
@@ -1233,6 +1243,8 @@ if __name__ == "__main__":  # noqa: C901
         "discrete-hex_OBT": posargs_general + posargs_trj + posargs_slab,
         "discrete-hex_OE": posargs_general + posargs_trj + posargs_slab,
         "discrete-z_Li": posargs_general + posargs_trj[:3],
+        "discrete-z_Li_back_jump_prob_discrete": posargs_general,
+        "discrete-z_Li_kaplan_meier_discrete": posargs_general,
         "discrete-z_Li_state_lifetime_discrete": (
             posargs_general + [posargs_trj[4]]
         ),
@@ -1327,6 +1339,10 @@ if __name__ == "__main__":  # noqa: C901
             + posargs_contact
             + [posargs_discrete[0]]
         ),
+        "renewal_events_Li-ether_back_jump_prob": (posargs_general),
+        "renewal_events_Li-ether_back_jump_prob_discrete": (posargs_general),
+        "renewal_events_Li-ether_kaplan_meier": (posargs_general),
+        "renewal_events_Li-ether_kaplan_meier_discrete": (posargs_general),
         "renewal_events_Li-ether_state_lifetime": (
             posargs_general + posargs_trj[3:]
         ),
@@ -1339,6 +1355,10 @@ if __name__ == "__main__":  # noqa: C901
             + posargs_contact
             + [posargs_discrete[0]]
         ),
+        "renewal_events_Li-NTf2_back_jump_prob": (posargs_general),
+        "renewal_events_Li-NTf2_back_jump_prob_discrete": (posargs_general),
+        "renewal_events_Li-NTf2_kaplan_meier": (posargs_general),
+        "renewal_events_Li-NTf2_kaplan_meier_discrete": (posargs_general),
         "renewal_events_Li-NTf2_state_lifetime": (
             posargs_general + posargs_trj[3:]
         ),
@@ -1421,12 +1441,8 @@ if __name__ == "__main__":  # noqa: C901
                 "axial_hex_dist" in batch_script
                 or "contact_hist_slab-z" in batch_script
                 or "discrete-hex" in batch_script
-                or "msd_layer" in batch_script
             ):
-                # Only bulk scripts.
-                # msd_layer_serial.py (and msd_layer_parallel.py) must
-                # first be fixed for simulations with periodic boundary
-                # conditions in the discretized direction.
+                # Submit only bulk scripts.
                 continue
             if batch_script in (
                 "create_mda_universe",
@@ -1434,6 +1450,7 @@ if __name__ == "__main__":  # noqa: C901
                 "renewal_events_Li-ether",
                 "renewal_events_Li-NTf2",
             ):
+                # Scripts have already been submitted above.
                 continue
             if batch_script == "energy_dist":
                 # Exclude all scripts that take an .edr file as input.
@@ -1463,7 +1480,7 @@ if __name__ == "__main__":  # noqa: C901
             ):
                 n_scripts_submitted += _submit(args_sbatch, batch_script)
     if "3" in args["scripts"].split():
-        # All discrete-z_Li*.
+        # All discrete-z_Li* scripts.
         # discrete-z_Li
         submit = _assemble_submit_cmd(args_sbatch, "discrete-z_Li")
         job_id = subproc.check_output(shlex.split(submit))
@@ -1471,12 +1488,11 @@ if __name__ == "__main__":  # noqa: C901
         args_sbatch_dep = copy.deepcopy(args_sbatch_no_dep)
         args_sbatch_dep["dependency"] = "afterok:{}".format(job_id)
         n_scripts_submitted += 1
-        # discrete-z_Li_state_lifetime_discrete
-        submit = _assemble_submit_cmd(
-            args_sbatch_dep, "discrete-z_Li_state_lifetime_discrete"
-        )
-        subproc.check_output(shlex.split(submit))
-        n_scripts_submitted += 1
+        for batch_script in posargs.keys():
+            if "discrete-z_Li_" in batch_script:
+                submit = _assemble_submit_cmd(args_sbatch_dep, batch_script)
+                subproc.check_output(shlex.split(submit))
+                n_scripts_submitted += 1
     if "4" in args["scripts"].split():
         # All hexagonal discretizations.
         for batch_script in posargs.keys():
@@ -1575,10 +1591,13 @@ if __name__ == "__main__":  # noqa: C901
         )
         n_scripts_submitted += 1
         for batch_script in posargs.keys():
-            if (
-                "renewal_events" in batch_script
-                and "state_lifetime" in batch_script
+            if batch_script in (
+                "renewal_events_Li-ether",
+                "renewal_events_Li-NTf2",
             ):
+                # Scripts have already been submitted above.
+                continue
+            if "renewal_events" in batch_script:
                 if batch_script in REQUIRE_DTRJ_RENEWAL_ETHER:
                     sbatch_opts = args_sbatch_dep_renewal_ether
                 elif batch_script in REQUIRE_DTRJ_RENEWAL_TFSI:
@@ -1593,35 +1612,43 @@ if __name__ == "__main__":  # noqa: C901
     if "11.1" in args["scripts"].split():
         # All scripts extracting renewal events.
         for batch_script in posargs.keys():
-            if (
-                "renewal_events" in batch_script
-                and "state_lifetime" not in batch_script
+            if batch_script in (
+                "renewal_events_Li-ether",
+                "renewal_events_Li-NTf2",
             ):
                 n_scripts_submitted += _submit(args_sbatch, batch_script)
     if "11.2" in args["scripts"].split():
-        # All renewal event lifetimes.
+        # All scripts working on renewal event trajectories.
         for batch_script in posargs.keys():
-            if (
-                "renewal_events" in batch_script
-                and "state_lifetime" in batch_script
+            if batch_script in (
+                "renewal_events_Li-ether",
+                "renewal_events_Li-NTf2",
             ):
+                continue
+            if "renewal_events" in batch_script:
                 n_scripts_submitted += _submit(args_sbatch, batch_script)
     if "11.3" in args["scripts"].split():
-        # All "normal" bulk renewal event lifetimes.
+        # All bulk scripts working on renewal event trajectories.
         for batch_script in posargs.keys():
+            if batch_script in (
+                "renewal_events_Li-ether",
+                "renewal_events_Li-NTf2",
+            ):
+                continue
             if (
                 "renewal_events" in batch_script
-                and "state_lifetime" in batch_script
                 and "discrete" not in batch_script
             ):
                 n_scripts_submitted += _submit(args_sbatch, batch_script)
     if "11.4" in args["scripts"].split():
-        # All spatially discretized renewal event lifetimes.
+        # All spatially discretized scripts working on renew ev trj.
         for batch_script in posargs.keys():
-            if (
-                "renewal_events" in batch_script
-                and "state_lifetime_discrete" in batch_script
+            if batch_script in (
+                "renewal_events_Li-ether",
+                "renewal_events_Li-NTf2",
             ):
+                continue
+            if "renewal_events" in batch_script and "discrete" in batch_script:
                 n_scripts_submitted += _submit(args_sbatch, batch_script)
     if "12" in args["scripts"].split():
         # All scripts that take an .edr file or an .trr file as input.

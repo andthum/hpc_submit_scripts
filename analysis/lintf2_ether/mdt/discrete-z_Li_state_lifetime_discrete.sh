@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=2-00:00:00
+#SBATCH --time=1-00:00:00
 #SBATCH --job-name="mdt_discrete-z_Li_state_lifetime_discrete"
 #SBATCH --output="mdt_discrete-z_Li_state_lifetime_discrete_slurm-%j.out"
 #SBATCH --nodes=1

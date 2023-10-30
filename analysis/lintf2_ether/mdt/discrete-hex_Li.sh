@@ -5,12 +5,12 @@
 #SBATCH --output="mdt_discrete-hex_Li_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=2G
+#SBATCH --mem=12G
 # The above options are only default values that can be overwritten by
 # command-line arguments
 
 # MIT License
-# Copyright (c) 2021, 2022  All authors listed in the file AUTHORS.rst
+# Copyright (c) 2021-2023  All authors listed in the file AUTHORS.rst
 
 # This script is meant to be submitted by
 # submit_mdt_analyses_lintf2_ether.py
@@ -109,6 +109,57 @@ ${py_exe} -u \
 echo "================================================================="
 
 echo -e "\n"
+echo "#################################################################"
+echo -e "\n"
+echo "back_jump_prob.py --continuous"
+echo "================================================================="
+${py_exe} -u \
+    "${mdt_path}/scripts/discretization/back_jump_prob.py" \
+    -f "${settings}_${system}_${analysis}_${zmin}-${zmax}A_dtrj.npz" \
+    -o "${settings}_${system}_${analysis}_${zmin}-${zmax}A_back_jump_prob_discard-all-neg_continuous.txt.gz" \
+    -b "0" \
+    -e "-1" \
+    --every "1" \
+    --discard-neg \
+    --discard-neg-btw \
+    --continuous ||
+    exit
+echo "================================================================="
+
+echo -e "\n"
+echo "back_jump_prob.py"
+echo "================================================================="
+${py_exe} -u \
+    "${mdt_path}/scripts/discretization/back_jump_prob.py" \
+    -f "${settings}_${system}_${analysis}_${zmin}-${zmax}A_dtrj.npz" \
+    -o "${settings}_${system}_${analysis}_${zmin}-${zmax}A_back_jump_prob_discard-all-neg.txt.gz" \
+    -b "0" \
+    -e "-1" \
+    --every "1" \
+    --discard-neg \
+    --discard-neg-btw ||
+    exit
+echo "================================================================="
+
+echo -e "\n"
+echo "#################################################################"
+echo -e "\n"
+echo "kaplan_meier.py"
+echo "================================================================="
+${py_exe} -u \
+    "${mdt_path}/scripts/discretization/kaplan_meier.py" \
+    -f "${settings}_${system}_${analysis}_${zmin}-${zmax}A_dtrj.npz" \
+    -o "${settings}_${system}_${analysis}_${zmin}-${zmax}A_kaplan_meier_discard-all-neg.txt.gz" \
+    -b "0" \
+    -e "-1" \
+    --every "1" \
+    --discard-all-neg ||
+    exit
+echo "================================================================="
+
+echo -e "\n"
+echo "#################################################################"
+echo -e "\n"
 echo "state_lifetime.py --continuous"
 echo "================================================================="
 ${py_exe} -u \
@@ -153,9 +204,12 @@ if [[ ! -d ${save_dir} ]]; then
         "${settings}_${system}_${analysis}_${zmin}-${zmax}A_lattice_faces.npz" \
         "${settings}_${system}_${analysis}_${zmin}-${zmax}A_lattice_vertices.npz" \
         "${settings}_${system}_${analysis}_${zmin}-${zmax}A_dtrj.npz" \
-        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_slurm-${SLURM_JOB_ID}.out" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_back_jump_prob_discard-all-neg.txt.gz" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_back_jump_prob_discard-all-neg_continuous.txt.gz" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_kaplan_meier_discard-all-neg.txt.gz" \
         "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg.txt.gz" \
         "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg_continuous.txt.gz" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
         "${system}" \
