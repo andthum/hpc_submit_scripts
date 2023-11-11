@@ -5,7 +5,7 @@
 #SBATCH --output="mdt_renewal_events_Li-NTf2_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=40G
+#SBATCH --mem=42G
 # The above options are only default values that can be overwritten by
 # command-line arguments
 
