@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=2-00:00:00
+#SBATCH --time=1-00:00:00
 #SBATCH --job-name="mdt_discrete-hex_NBT"
 #SBATCH --output="mdt_discrete-hex_NBT_slurm-%j.out"
 #SBATCH --nodes=1
@@ -209,7 +209,7 @@ if [[ ! -d ${save_dir} ]]; then
         "${settings}_${system}_${analysis}_${zmin}-${zmax}A_kaplan_meier_discard-all-neg.txt.gz" \
         "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg.txt.gz" \
         "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg_continuous.txt.gz" \
-        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_slurm-${SLURM_JOB_ID}.out" \
+        "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
         "${system}" \
