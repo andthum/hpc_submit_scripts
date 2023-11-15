@@ -92,7 +92,7 @@ echo "discrete_hex.py"
 echo "OBT ${zmin}-${zmax} A"
 echo "================================================================="
 ${py_exe} -u \
-    "${mdt_path}/scripts/structure/discrete_hex.py" \
+    "${mdt_path}/scripts/discretization/discrete_hex.py" \
     -f "${settings}_out_${system}_pbc_whole_mol.xtc" \
     -s "${settings}_${system}.tpr" \
     -o "${settings}_${system}_${analysis}_${zmin}-${zmax}A" \
