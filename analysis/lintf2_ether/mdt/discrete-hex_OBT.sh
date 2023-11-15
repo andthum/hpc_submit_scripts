@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#SBATCH --time=2-00:00:00
+#SBATCH --time=1-00:00:00
 #SBATCH --job-name="mdt_discrete-hex_OBT"
 #SBATCH --output="mdt_discrete-hex_OBT_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=12G
+#SBATCH --mem=48G
 # The above options are only default values that can be overwritten by
 # command-line arguments
 
@@ -92,7 +92,7 @@ echo "discrete_hex.py"
 echo "OBT ${zmin}-${zmax} A"
 echo "================================================================="
 ${py_exe} -u \
-    "${mdt_path}/scripts/structure/discrete_hex.py" \
+    "${mdt_path}/scripts/discretization/discrete_hex.py" \
     -f "${settings}_out_${system}_pbc_whole_mol.xtc" \
     -s "${settings}_${system}.tpr" \
     -o "${settings}_${system}_${analysis}_${zmin}-${zmax}A" \
@@ -209,7 +209,7 @@ if [[ ! -d ${save_dir} ]]; then
         "${settings}_${system}_${analysis}_${zmin}-${zmax}A_kaplan_meier_discard-all-neg.txt.gz" \
         "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg.txt.gz" \
         "${settings}_${system}_${analysis}_${zmin}-${zmax}A_state_lifetime_discard-all-neg_continuous.txt.gz" \
-        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_slurm-${SLURM_JOB_ID}.out" \
+        "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
         "${system}" \

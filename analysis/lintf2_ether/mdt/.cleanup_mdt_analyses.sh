@@ -77,7 +77,7 @@ gather_cmps "contact_hist_slab-z" "Li-OBT Li-OE"
 gather "contact_hist_at_pos_change"
 gather "contact_hist"
 
-gather_cmps "discrete_hex" "Li NBT OBT OE"
+gather_cmps "discrete-hex" "Li NBT OBT OE"
 gather "discrete-z"
 
 gather_cmps "msd_layer" "Li NBT OBT OE NTf2 ether"
