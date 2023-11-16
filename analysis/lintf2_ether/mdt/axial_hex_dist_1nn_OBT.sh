@@ -15,7 +15,7 @@
 # This script is meant to be submitted by
 # submit_mdt_analyses_lintf2_ether.py
 
-analysis="_axial_hex_dist_1nn_OBT"
+analysis="axial_hex_dist_1nn_OBT"
 thisfile=$(basename "${BASH_SOURCE[0]}")
 echo "${thisfile}"
 start_time=$(date --rfc-3339=seconds || exit)
