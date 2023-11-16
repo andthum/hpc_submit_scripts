@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=1-00:00:00
+#SBATCH --time=0-06:00:00
 #SBATCH --job-name="mdt_axial_hex_dist_1nn_OBT"
 #SBATCH --output="mdt_axial_hex_dist_1nn_OBT_slurm-%j.out"
 #SBATCH --nodes=1
@@ -15,7 +15,7 @@
 # This script is meant to be submitted by
 # submit_mdt_analyses_lintf2_ether.py
 
-analysis="_axial_hex_dist_1nn_OBT"
+analysis="axial_hex_dist_1nn_OBT"
 thisfile=$(basename "${BASH_SOURCE[0]}")
 echo "${thisfile}"
 start_time=$(date --rfc-3339=seconds || exit)
@@ -105,13 +105,18 @@ echo "=================================================================="
 # Cleanup                                                              #
 ########################################################################
 
+echo -e "\n"
+mv -v \
+    "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
+    "${settings}_${system}_${analysis}_${zmin}-${zmax}A_slurm-${SLURM_JOB_ID}.out"
+
 save_dir="${analysis}_${zmin}-${zmax}A_slurm-${SLURM_JOB_ID}"
 if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
         "${settings}_${system}_${analysis}_${zmin}-${zmax}A.txt.gz" \
-        "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
         "${system}" \

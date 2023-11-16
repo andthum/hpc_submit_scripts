@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=1-00:00:00
+#SBATCH --time=0-06:00:00
 #SBATCH --job-name="mdt_axial_hex_dist_2nn_OBT"
 #SBATCH --output="mdt_axial_hex_dist_2nn_OBT_slurm-%j.out"
 #SBATCH --nodes=1
@@ -105,13 +105,18 @@ echo "=================================================================="
 # Cleanup                                                              #
 ########################################################################
 
+echo -e "\n"
+mv -v \
+    "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
+    "${settings}_${system}_${analysis}_${zmin}-${zmax}A_slurm-${SLURM_JOB_ID}.out"
+
 save_dir="${analysis}_${zmin}-${zmax}A_slurm-${SLURM_JOB_ID}"
 if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
     mkdir -v "${save_dir}" || exit
     mv -v \
         "${settings}_${system}_${analysis}_${zmin}-${zmax}A.txt.gz" \
-        "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}A_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
         "${system}" \
