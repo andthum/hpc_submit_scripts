@@ -116,6 +116,11 @@ gzip --best --verbose "${settings}_${system}_cn${analysis}_${zmin}-${zmax}nm.xvg
 # Cleanup                                                              #
 ########################################################################
 
+echo -e "\n"
+mv -v \
+    "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
+    "${settings}_${system}_${analysis}_${zmin}-${zmax}nm_slurm-${SLURM_JOB_ID}.out"
+
 save_dir="${analysis}_${zmin}-${zmax}nm_slurm-${SLURM_JOB_ID}"
 if [[ ! -d ${save_dir} ]]; then
     echo -e "\n"
@@ -123,7 +128,7 @@ if [[ ! -d ${save_dir} ]]; then
     mv -v \
         "${settings}_${system}_${analysis}_${zmin}-${zmax}nm.xvg.gz" \
         "${settings}_${system}_cn${analysis}_${zmin}-${zmax}nm.xvg.gz" \
-        "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
+        "${settings}_${system}_${analysis}_${zmin}-${zmax}nm_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
         "${system}" \
