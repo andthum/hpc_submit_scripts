@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#SBATCH --time=1-00:00:00
+#SBATCH --time=0-06:00:00
 #SBATCH --job-name="mdt_axial_hex_dist_1nn_NBT"
 #SBATCH --output="mdt_axial_hex_dist_1nn_NBT_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=1G
+#SBATCH --mem=256M
 # The above options are only default values that can be overwritten by
 # command-line arguments
 

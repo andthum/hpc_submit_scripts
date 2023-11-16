@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=1-00:00:00
+#SBATCH --time=0-06:00:00
 #SBATCH --job-name="mdt_axial_hex_dist_1nn_OBT"
 #SBATCH --output="mdt_axial_hex_dist_1nn_OBT_slurm-%j.out"
 #SBATCH --nodes=1
