@@ -5,7 +5,7 @@
 #SBATCH --output="mdt_contact_hist_slab-z_Li-OE_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=2
-#SBATCH --mem=1G
+#SBATCH --mem=512M
 # The above options are only default values that can be overwritten by
 # command-line arguments
 
