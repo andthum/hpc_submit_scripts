@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#SBATCH --time=1-00:00:00
+#SBATCH --time=0-06:00:00
 #SBATCH --job-name="gmx_densmap-z_gra"
 #SBATCH --output="gmx_densmap-z_gra_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=1G
+#SBATCH --mem=32M
 # The above options are only default values that can be overwritten by
 # command-line arguments
 
