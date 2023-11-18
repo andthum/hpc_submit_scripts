@@ -6,8 +6,9 @@ HPC Submit Scripts (hpcss)
 ##########################
 
 |pre-commit| |pre-commit.ci_status| |Test_Status| |CodeQL_Status|
-|Documentation_Status| |License_MIT| |Made_with_Bash| |Made_with_Python|
-|Code_style_black| |Made_with_Sphinx| |Doc_style_numpy|
+|Documentation_Status| |License_MIT| |DOI| |Made_with_Bash|
+|Made_with_Python| |Code_style_black| |Made_with_Sphinx|
+|Doc_style_numpy|
 
 |logo|
 
@@ -100,6 +101,9 @@ details.
 .. |License_MIT| image:: https://img.shields.io/badge/License-MIT-blue.svg
     :alt: MIT License
     :target: https://mit-license.org/
+.. |DOI| image:: https://zenodo.org/badge/447523192.svg
+    :alt: DOI
+    :target: https://zenodo.org/doi/10.5281/zenodo.10154885
 .. |Made_with_Bash| image:: https://img.shields.io/badge/Made%20with-Bash-1f425f.svg
     :alt: Made with Bash
     :target: https://www.gnu.org/software/bash/
