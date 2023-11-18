@@ -1,0 +1,57 @@
+# Citation File Format (cff).
+# See https://citation-file-format.github.io/
+
+cff-version: "1.2.0"
+message: "If you use this software, please cite it using these metadata."
+
+# Keep project metadata in sync with pyproject.toml and AUTHORS.rst!
+type: "software"
+title: "hpcss"
+abstract: >-
+  Slurm job scripts to run and analyze molecular dynamics simulations on
+  high performance computers.
+authors:
+  - given-names: "Andreas"
+    family-names: "Thum"
+    alias: "andthum"
+    email: "coding.andthum@e.mail.de"
+    tel: "+49 251 83-29179"
+    fax: "+49 251 83-29159"
+    affiliation: "University of Münster, Institute for Physical Chemistry"
+    address: "Corrensstraße 28/30"
+    city: "Münster"
+    post-code: 48149
+    country: "DE"
+    region: "North Rhine-Westphalia"
+    orcid: "https://orcid.org/0000-0002-2262-8507"
+contact:
+  - given-names: "Andreas"
+    family-names: "Thum"
+    email: "coding.andthum@e.mail.de"
+# identifiers:
+#   - description: "The concept DOI of the software."
+#     type: "doi"
+#     value: "10.5281/zenodo.7615177"
+url: "https://github.com/andthum/hpc_submit_scripts"
+repository-code: "https://github.com/andthum/hpc_submit_scripts"
+license: "MIT"
+license-url: "https://mit-license.org/"
+keywords:
+  - "Scripts Collection"
+  - "Python Scripts"
+  - "Batch Scripts"
+  - "Slurm"
+  - "Slurm Workload Manager"
+  - "Slurm Job Scripts"
+  - "High Performance Computing"
+  - "HPC Cluster"
+  - "Science"
+  - "Scientific Computing"
+  - "Computational Science"
+  - "Molecular Simulation"
+  - "Molecular Modeling"
+  - "Molecular Mechanics"
+  - "Molecular Dynamics"
+  - "Molecular Dynamics Simulation"
+  - "Trajectory Analysis"
+  - "Gromacs"
