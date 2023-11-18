@@ -28,10 +28,10 @@ contact:
   - given-names: "Andreas"
     family-names: "Thum"
     email: "coding.andthum@e.mail.de"
-# identifiers:
-#   - description: "The concept DOI of the software."
-#     type: "doi"
-#     value: "10.5281/zenodo.7615177"
+identifiers:
+  - description: "The concept DOI of the software."
+    type: "doi"
+    value: "10.5281/zenodo.10154885"
 url: "https://github.com/andthum/hpc_submit_scripts"
 repository-code: "https://github.com/andthum/hpc_submit_scripts"
 license: "MIT"
