@@ -27,6 +27,10 @@ Upcoming release
       `[project]` section in `pyproject.toml`.
     * Andreas Thum
 
+0.4.0
+
+    * Andreas Thum
+
 0.3.0
 
     * Andreas Thum
