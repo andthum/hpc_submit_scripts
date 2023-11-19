@@ -80,6 +80,7 @@ ${py_exe} -u \
     --f1 "${infile1}" \
     --f2 "${infile2}" \
     -o "${settings}_${system}_${analysis}_discard-neg_continuous.txt.gz" \
+    --norm-out "${settings}_${system}_${analysis}_discard-neg_continuous_norm.txt.gz" \
     -b "0" \
     -e "-1" \
     --every "1" \
@@ -96,6 +97,7 @@ ${py_exe} -u \
     --f1 "${infile1}" \
     --f2 "${infile2}" \
     -o "${settings}_${system}_${analysis}_discard-neg.txt.gz" \
+    --norm-out "${settings}_${system}_${analysis}_discard-neg_norm.txt.gz" \
     -b "0" \
     -e "-1" \
     --every "1" \
@@ -113,7 +115,9 @@ if [[ ! -d ${save_dir} ]]; then
     mkdir -v "${save_dir}" || exit
     mv -v \
         "${settings}_${system}_${analysis}_discard-neg.txt.gz" \
+        "${settings}_${system}_${analysis}_discard-neg_norm.txt.gz" \
         "${settings}_${system}_${analysis}_discard-neg_continuous.txt.gz" \
+        "${settings}_${system}_${analysis}_discard-neg_continuous_norm.txt.gz" \
         "${settings}_${system}_${analysis}_slurm-${SLURM_JOB_ID}.out" \
         "${save_dir}"
     bash "${bash_dir}/cleanup_analysis.sh" \
