@@ -331,7 +331,6 @@ def _submit_discretized(sbatch_opts, job_script, bins):
     sbatch += opthandler.optdict2str(
         sbatch_opts, skiped_opts=("None", "False"), dumped_vals=("True",)
     )
-    submit = sbatch
 
     n_jobs_submitted = 0
     for i, zmax in enumerate(bins[1:], 1):
@@ -339,6 +338,7 @@ def _submit_discretized(sbatch_opts, job_script, bins):
         slab_str = "_{:.{prec}f}-{:.{prec}f}nm".format(
             slab[0], slab[1], prec=ARG_PREC
         )
+        submit = sbatch
         if "job-name" not in sbatch_opts and "J" not in sbatch_opts:
             sbatch_jobname = " --job-name " + gmx_infile_pattern + "_"
             submit += sbatch_jobname + job_script + slab_str
