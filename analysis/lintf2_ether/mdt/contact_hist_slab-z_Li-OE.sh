@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#SBATCH --time=1-00:00:00
+#SBATCH --time=0-06:00:00
 #SBATCH --job-name="mdt_contact_hist_slab-z_Li-OE"
 #SBATCH --output="mdt_contact_hist_slab-z_Li-OE_slurm-%j.out"
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=2
-#SBATCH --mem=512M
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
 # The above options are only default values that can be overwritten by
 # command-line arguments
 

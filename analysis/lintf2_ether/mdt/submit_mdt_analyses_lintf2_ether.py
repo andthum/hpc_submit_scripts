@@ -522,7 +522,6 @@ def _submit_discretized(sbatch_opts, job_script, bins):
     sbatch += opthandler.optdict2str(
         sbatch_opts, skiped_opts=("None", "False"), dumped_vals=("True",)
     )
-    submit = sbatch
 
     n_jobs_submitted = 0
     for i, zmax in enumerate(bins[1:], 1):
@@ -530,6 +529,7 @@ def _submit_discretized(sbatch_opts, job_script, bins):
         slab_str = "_{:.{prec}f}-{:.{prec}f}A".format(
             slab[0], slab[1], prec=ARG_PREC
         )
+        submit = sbatch
         if "job-name" not in sbatch_opts and "J" not in sbatch_opts:
             sbatch_jobname = " --job-name " + gmx_infile_pattern + "_"
             submit += sbatch_jobname + job_script + slab_str
@@ -934,6 +934,7 @@ if __name__ == "__main__":  # noqa: C901
                 " file: '{}'.".format(GRO_FILE)
             )
         box_z = gmx.get_box_from_gro(GRO_FILE)[2]
+        box_z *= 10  # nm -> A
         args["zmin"] = 0.5 * (box_z - args["slabwidth"])
         args["zmax"] = 0.5 * (box_z + args["slabwidth"])
     elif args["zmax"] is None:
@@ -944,6 +945,7 @@ if __name__ == "__main__":  # noqa: C901
                 " manually".format(GRO_FILE)
             )
         args["zmax"] = gmx.get_box_from_gro(GRO_FILE)[2]
+        args["zmax"] *= 10  # nm -> A
     if args["zmax"] <= args["zmin"]:
         raise ValueError(
             "zmax ({}) must be greater than zmin"
