@@ -281,7 +281,14 @@ def _assemble_submit_cmd(sbatch_opts, job_script):
     if "output" not in sbatch_opts and "o" not in sbatch_opts:
         sbatch_output = " --output " + gmx_infile_pattern + "_"
         submit += sbatch_output + job_script + "_slurm-%j.out"
-    submit += " " + job_script + ".sh " + posargs[job_script]
+    job_script_path = os.path.abspath(os.path.join(FILE_ROOT, job_script))
+    job_script_path += ".sh"
+    if not os.path.isfile(job_script_path):
+        raise FileNotFoundError(
+            "No such file: '{}'.  This might happen if you change the"
+            " directory structure of this project".format(job_script_path)
+        )
+    submit += " " + job_script_path + posargs[job_script]
     return submit
 
 
@@ -348,7 +355,14 @@ def _submit_discretized(sbatch_opts, job_script, bins):
         posargs_tmp = opthandler.posargs2str(
             posargs[job_script] + slab, prec=ARG_PREC
         )
-        submit += " " + job_script + ".sh " + posargs_tmp
+        job_script_path = os.path.abspath(os.path.join(FILE_ROOT, job_script))
+        job_script_path += ".sh "
+        if not os.path.isfile(job_script_path):
+            raise FileNotFoundError(
+                "No such file: '{}'.  This might happen if you change the"
+                " directory structure of this project".format(job_script_path)
+            )
+        submit += " " + job_script_path + posargs_tmp
         subproc.check_output(shlex.split(submit))
         n_jobs_submitted += 1
     return n_jobs_submitted
