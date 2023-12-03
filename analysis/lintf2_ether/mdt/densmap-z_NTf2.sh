@@ -5,7 +5,7 @@
 #SBATCH --output="mdt_densmap-z_NTf2_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=8G
+#SBATCH --mem=512M
 # The above options are only default values that can be overwritten by
 # command-line arguments
 
