@@ -288,7 +288,7 @@ def _assemble_submit_cmd(sbatch_opts, job_script):
             "No such file: '{}'.  This might happen if you change the"
             " directory structure of this project".format(job_script_path)
         )
-    submit += " " + job_script_path + posargs[job_script]
+    submit += " " + job_script_path + " " + posargs[job_script]
     return submit
 
 
@@ -356,13 +356,13 @@ def _submit_discretized(sbatch_opts, job_script, bins):
             posargs[job_script] + slab, prec=ARG_PREC
         )
         job_script_path = os.path.abspath(os.path.join(FILE_ROOT, job_script))
-        job_script_path += ".sh "
+        job_script_path += ".sh"
         if not os.path.isfile(job_script_path):
             raise FileNotFoundError(
                 "No such file: '{}'.  This might happen if you change the"
                 " directory structure of this project".format(job_script_path)
             )
-        submit += " " + job_script_path + posargs_tmp
+        submit += " " + job_script_path + " " + posargs_tmp
         subproc.check_output(shlex.split(submit))
         n_jobs_submitted += 1
     return n_jobs_submitted
