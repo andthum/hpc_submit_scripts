@@ -70,6 +70,7 @@ gather "subvolume_charge"
 
 gather_cmps "attribute_hist" "Li NBT OBT OE NTf2 ether"
 gather_cmps "axial_hex_dist" "1nn 2nn"
+gather_cmps "densmap-z" "Li NBT OBT OE NTf2 ether"
 gather_cmps "renewal_events" "Li-ether Li-NTf2"
 gather_cmps "topo_map" "Li-OBT Li-OE"
 

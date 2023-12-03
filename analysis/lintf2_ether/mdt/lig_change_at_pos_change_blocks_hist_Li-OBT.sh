@@ -5,7 +5,7 @@
 #SBATCH --output="mdt_lig_change_at_pos_change_blocks_hist_Li-OBT_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=2
-#SBATCH --mem=2G
+#SBATCH --mem=4G
 # The above options are only default values that can be overwritten by
 # command-line arguments
 

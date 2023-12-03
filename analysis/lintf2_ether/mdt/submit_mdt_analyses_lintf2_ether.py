@@ -74,6 +74,8 @@ Required Arguments
                 input.
         :13:    All attribute histograms (attribute_hist*).
 
+        :14:    All 2D density maps in xy plane (`densmap-z_*.sh`)
+
 Options for Trajectory Reading
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 --begin
@@ -273,6 +275,12 @@ REQUIRE_TPR = (
     "contact_hist_slab-z_Li-OBT",
     "contact_hist_slab-z_Li-OE",
     "create_mda_universe",
+    "densmap-z_ether",
+    "densmap-z_Li",
+    "densmap-z_NBT",
+    "densmap-z_NTf2",
+    "densmap-z_OBT",
+    "densmap-z_OE",
     "discrete-hex_Li",
     "discrete-hex_NBT",
     "discrete-hex_OBT",
@@ -342,6 +350,12 @@ REQUIRE_XTC_WRAPPED = (
     "contact_hist_slab-z_Li-OBT",
     "contact_hist_slab-z_Li-OE",
     "create_mda_universe",
+    "densmap-z_ether",
+    "densmap-z_Li",
+    "densmap-z_NBT",
+    "densmap-z_NTf2",
+    "densmap-z_OBT",
+    "densmap-z_OE",
     "discrete-hex_Li",
     "discrete-hex_NBT",
     "discrete-hex_OBT",
@@ -462,7 +476,14 @@ def _assemble_submit_cmd(sbatch_opts, job_script):
     if "output" not in sbatch_opts and "o" not in sbatch_opts:
         sbatch_output = " --output " + gmx_infile_pattern + "_"
         submit += sbatch_output + job_script + "_slurm-%j.out"
-    submit += " " + job_script + ".sh " + posargs[job_script]
+    job_script_path = os.path.abspath(os.path.join(FILE_ROOT, job_script))
+    job_script_path += ".sh "
+    if not os.path.isfile(job_script_path):
+        raise FileNotFoundError(
+            "No such file: '{}'.  This might happen if you change the"
+            " directory structure of this project".format(job_script_path)
+        )
+    submit += " " + job_script_path + posargs[job_script]
     return submit
 
 
@@ -507,6 +528,12 @@ def _submit_discretized(sbatch_opts, job_script, bins):
         "contact_hist_slab-z_Li-OE": (
             posargs_general + posargs_trj[:3] + posargs_contact
         ),
+        "densmap-z_ether": posargs_general + posargs_trj[:3] + posargs_dist,
+        "densmap-z_Li": posargs_general + posargs_trj[:3] + posargs_dist,
+        "densmap-z_NBT": posargs_general + posargs_trj[:3] + posargs_dist,
+        "densmap-z_NTf2": posargs_general + posargs_trj[:3] + posargs_dist,
+        "densmap-z_OBT": posargs_general + posargs_trj[:3] + posargs_dist,
+        "densmap-z_OE": posargs_general + posargs_trj[:3] + posargs_dist,
         "discrete-hex_Li": posargs_general + posargs_trj,
         "discrete-hex_NBT": posargs_general + posargs_trj,
         "discrete-hex_OBT": posargs_general + posargs_trj,
@@ -539,7 +566,14 @@ def _submit_discretized(sbatch_opts, job_script, bins):
         posargs_tmp = opthandler.posargs2str(
             posargs[job_script] + slab, prec=ARG_PREC
         )
-        submit += " " + job_script + ".sh " + posargs_tmp
+        job_script_path = os.path.abspath(os.path.join(FILE_ROOT, job_script))
+        job_script_path += ".sh "
+        if not os.path.isfile(job_script_path):
+            raise FileNotFoundError(
+                "No such file: '{}'.  This might happen if you change the"
+                " directory structure of this project".format(job_script_path)
+            )
+        submit += " " + job_script_path + posargs_tmp
         subproc.check_output(shlex.split(submit))
         n_jobs_submitted += 1
     return n_jobs_submitted
@@ -576,6 +610,7 @@ def _submit(sbatch_opts, job_script):
     elif args["discretize"] and (
         "axial_hex_dist" in job_script
         or "contact_hist_slab-z" in job_script
+        or "densmap-z" in job_script
         or "discrete-hex" in job_script
     ):
         n_jobs_submitted += _submit_discretized(
@@ -654,6 +689,7 @@ if __name__ == "__main__":  # noqa: C901
             "  12 =   All scripts that take an |edr_file| or an |trr_file| as"
             " input."
             "  13 =   All attribute histograms (attribute_hist*)."
+            "  14 =   All 2D density maps in xy plane (`densmap-z_*.sh`)."
         ),
     )
     parser_trj_reading = parser.add_argument_group(
@@ -962,6 +998,7 @@ if __name__ == "__main__":  # noqa: C901
         if (
             "slab-z" not in args["scripts"]
             and "axial_hex_dist" not in args["scripts"]
+            and "densmap-z" not in args["scripts"]
             and "discrete-hex" not in args["scripts"]
             and "0" not in args["scripts"].split()  # All scripts.
             and "2" not in args["scripts"].split()  # All slab scripts.
@@ -969,6 +1006,7 @@ if __name__ == "__main__":  # noqa: C901
             and "5" not in args["scripts"].split()  # All axial_hex_dist.
             and "6" not in args["scripts"].split()  # All contact_hist.
             and "6.2" not in args["scripts"].split()  # All contact_hist_slab-z
+            and "14" not in args["scripts"].split()  # All 2D density maps.
         ):
             raise ValueError(
                 "--discretize can only be used in conjunction with scripts"
@@ -1123,6 +1161,9 @@ if __name__ == "__main__":  # noqa: C901
                 "discretized trajectory (renewal Li-TFSI)",
                 DTRJ_RENEWAL_TFSI_FILE,
             )
+        elif script == "14":  # All 2D density maps in xy plane.
+            files.setdefault("run input", TPR_FILE)
+            files.setdefault("wrapped compressed trajectory", XTC_FILE_WRAPPED)
     for filetype, filename in files.items():
         if not os.path.isfile(filename):
             fname, extension = os.path.splitext(filename)
@@ -1240,6 +1281,24 @@ if __name__ == "__main__":  # noqa: C901
             posargs_general + posargs_trj[:3] + posargs_contact + posargs_slab
         ),
         "create_mda_universe": posargs_general[:3] + posargs_general[4:],
+        "densmap-z_ether": (
+            posargs_general + posargs_trj[:3] + posargs_dist + posargs_slab
+        ),
+        "densmap-z_Li": (
+            posargs_general + posargs_trj[:3] + posargs_dist + posargs_slab
+        ),
+        "densmap-z_NBT": (
+            posargs_general + posargs_trj[:3] + posargs_dist + posargs_slab
+        ),
+        "densmap-z_NTf2": (
+            posargs_general + posargs_trj[:3] + posargs_dist + posargs_slab
+        ),
+        "densmap-z_OBT": (
+            posargs_general + posargs_trj[:3] + posargs_dist + posargs_slab
+        ),
+        "densmap-z_OE": (
+            posargs_general + posargs_trj[:3] + posargs_dist + posargs_slab
+        ),
         "discrete-hex_Li": posargs_general + posargs_trj + posargs_slab,
         "discrete-hex_NBT": posargs_general + posargs_trj + posargs_slab,
         "discrete-hex_OBT": posargs_general + posargs_trj + posargs_slab,
@@ -1442,6 +1501,7 @@ if __name__ == "__main__":  # noqa: C901
             if "0" not in args["scripts"].split() and (
                 "axial_hex_dist" in batch_script
                 or "contact_hist_slab-z" in batch_script
+                or "densmap-z" in batch_script
                 or "discrete-hex" in batch_script
             ):
                 # Submit only bulk scripts.
@@ -1454,10 +1514,10 @@ if __name__ == "__main__":  # noqa: C901
             ):
                 # Scripts have already been submitted above.
                 continue
-            if batch_script == "energy_dist":
+            if batch_script in REQUIRE_EDR:
                 # Exclude all scripts that take an .edr file as input.
                 continue
-            if "attribute_hist" in batch_script:
+            if batch_script in REQUIRE_TRR:
                 # Exclude all scripts that take an .trr file as input.
                 continue
             if "lig_change_at_pos_change" in batch_script:
@@ -1478,6 +1538,7 @@ if __name__ == "__main__":  # noqa: C901
             if (
                 "axial_hex_dist" in batch_script
                 or "contact_hist_slab-z" in batch_script
+                or "densmap-z" in batch_script
                 or "discrete-hex" in batch_script
             ):
                 n_scripts_submitted += _submit(args_sbatch, batch_script)
@@ -1664,6 +1725,11 @@ if __name__ == "__main__":  # noqa: C901
         # All attribute histograms (attribute_hist*).
         for batch_script in posargs.keys():
             if "attribute_hist" in batch_script:
+                n_scripts_submitted += _submit(args_sbatch, batch_script)
+    if "14" in args["scripts"].split():
+        # All 2D density maps in xy plane.
+        for batch_script in posargs.keys():
+            if "densmap-z" in batch_script:
                 n_scripts_submitted += _submit(args_sbatch, batch_script)
     print("Submitted {} jobs".format(n_scripts_submitted))
     if n_scripts_submitted == 0:
