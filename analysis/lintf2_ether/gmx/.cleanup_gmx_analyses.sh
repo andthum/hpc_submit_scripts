@@ -6,7 +6,7 @@
 # * Move similar analyses into one directory.
 
 gather() {
-    # Gather output of similar analyses scripts.
+    # Gather output of similar analysis scripts.
     local root="${1}"
     if [[ -d ${root} ]]; then
         echo "WARNING: Directory already exists: '${root}'"
@@ -25,7 +25,7 @@ gather() {
 }
 
 gather_cmps() {
-    # Gather output of similar analyses scripts ordered by compounds
+    # Gather output of similar analysis scripts ordered by compounds
     # into sub-directories.
     local root="${1}"
     local cmps="${2}"
