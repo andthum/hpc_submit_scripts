@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=1-00:00:00
+#SBATCH --time=5-00:00:00
 #SBATCH --job-name="mdt_densmap-z_ether"
 #SBATCH --output="mdt_densmap-z_ether_slurm-%j.out"
 #SBATCH --nodes=1
