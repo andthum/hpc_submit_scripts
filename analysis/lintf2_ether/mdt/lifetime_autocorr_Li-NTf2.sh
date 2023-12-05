@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#SBATCH --time=7-00:00:00
+#SBATCH --time=2-00:00:00
 #SBATCH --job-name="mdt_lifetime_autocorr_Li-NTf2"
 #SBATCH --output="mdt_lifetime_autocorr_Li-NTf2_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=2
-#SBATCH --mem=12G
+#SBATCH --mem=48G
 # The above options are only default values that can be overwritten by
 # command-line arguments
 
