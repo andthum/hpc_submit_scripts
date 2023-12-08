@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=0-06:00:00
+#SBATCH --time=1-00:00:00
 #SBATCH --job-name="mdt_discrete-hex_OBT"
 #SBATCH --output="mdt_discrete-hex_OBT_slurm-%j.out"
 #SBATCH --nodes=1
