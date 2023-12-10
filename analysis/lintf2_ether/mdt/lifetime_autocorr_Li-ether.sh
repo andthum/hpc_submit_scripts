@@ -5,7 +5,7 @@
 #SBATCH --output="mdt_lifetime_autocorr_Li-ether_slurm-%j.out"
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=2
-#SBATCH --mem=24G
+#SBATCH --mem=28G
 # The above options are only default values that can be overwritten by
 # command-line arguments
 
