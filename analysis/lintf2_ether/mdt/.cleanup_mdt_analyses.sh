@@ -131,11 +131,15 @@ gather "subvolume_charge"
 
 gather_cmps "attribute_hist" "Li NBT OBT OE NTf2 ether"
 gather_cmps "densmap-z" "Li NBT OBT OE NTf2 ether"
-gather_cmps "lig_change_at_pos_change_blocks_hist" "Li-OBT Li-OE"
-gather_cmps "lig_change_at_pos_change_blocks" "Li-OBT Li-OE"
-gather_cmps "lig_change_at_pos_change" "Li-OBT Li-OE"
 gather_cmps "renewal_events" "Li-ether Li-NTf2"
 gather_cmps "topo_map" "Li-OBT Li-OE"
+
+gather_dirs "lig_change_at_pos_change_blocks_hist_Li-OBT"
+gather_dirs "lig_change_at_pos_change_blocks_hist_Li-OE"
+gather_dirs "lig_change_at_pos_change_blocks_Li-OBT"
+gather_dirs "lig_change_at_pos_change_blocks_Li-OE"
+gather_dirs "lig_change_at_pos_change_Li-OBT"
+gather_dirs "lig_change_at_pos_change_Li-OE"
 
 gather_cmps "axial_hex_dist_1nn" "Li NBT OBT OE"
 gather_cmps "axial_hex_dist_2nn" "Li NBT OBT OE"
