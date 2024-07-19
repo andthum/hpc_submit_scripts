@@ -440,6 +440,17 @@ text_newlines = "native"
 text_secnumber_suffix = html_secnumber_suffix
 
 
+# -- Options for the linkcheck builder ---------------------------------
+
+# List of regular expressions that match URIs that should not be checked
+# when running `make linkcheck`.
+linkcheck_ignore = [
+    # Errno 110 Connection timed out.
+    r"https://confluence\.uni-muenster\.de.",
+]
+linkcheck_retries = 2
+
+
 # -- Extension configuration -------------------------------------------
 # -- Options for autodoc extension -------------------------------------
 
