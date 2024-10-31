@@ -285,7 +285,7 @@ html_theme = "sphinx_rtd_theme"
 # the documentation of that theme.
 html_theme_options = {
     "logo_only": False,
-    "display_version": True,
+    "version_selector": True,
     "prev_next_buttons_location": "both",
     # Table-of-contents options.
     "collapse_navigation": True,
