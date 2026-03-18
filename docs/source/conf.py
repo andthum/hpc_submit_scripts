@@ -447,6 +447,10 @@ text_secnumber_suffix = html_secnumber_suffix
 linkcheck_ignore = [
     # Errno 110 Connection timed out.
     r"https://confluence\.uni-muenster\.de.",
+    # Errno 403 Client Error: Forbidden for url.
+    r"https://docutils\.sourceforge\.io/docs/ref/rst/restructuredtext\.html#bullet-lists",  # noqa: E501
+    r"https://zenodo\.org/badge/447523192\.svg",
+    r"https://zenodo\.org/doi/10\.5281/zenodo\.10154885",
 ]
 linkcheck_retries = 2
 
