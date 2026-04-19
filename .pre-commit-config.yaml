@@ -108,7 +108,7 @@ repos:
       - id: "check-pre-commit-ci-config"
 
   - repo: "https://github.com/python-jsonschema/check-jsonschema"
-    rev: "0.37.0"
+    rev: "0.37.1"
     hooks:
       # Validate Dependabot Config (v2) against the schema provided by
       # SchemaStore.
