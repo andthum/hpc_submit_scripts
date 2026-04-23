@@ -22,4 +22,4 @@ pep8-naming >=0.1, <1.0
 pre-commit >=4.0, <5.0
 pytest >=8.0, <9.0
 shellcheck-py >=0.1, <1.0
-shfmt-py >=3.0, <4.0
+shfmt-py >=3.12.0.2, <4.0
